@@ -1,0 +1,27 @@
+{
+  "description": "abandonment envelope — swearer admits early failure; counts as broken in the public ledger",
+  "kind": "pledge-abandonment",
+  "inputs": {
+    "pledge_id": "c08d3ef9031a89b3274180c27bf4f8df5e72e65b14d2f537266f0742fa2dacc7",
+    "abandoned_at": "2026-08-01T12:00:00Z",
+    "reason": "discovered I needed to spend the bonded utxo for an emergency; admitting break rather than hiding"
+  },
+  "expected": {
+    "canonical_message": "oc-pledge-abandonment/v1\npledge_id: c08d3ef9031a89b3274180c27bf4f8df5e72e65b14d2f537266f0742fa2dacc7\nabandoned_at: 2026-08-01T12:00:00Z\nreason: discovered I needed to spend the bonded utxo for an emergency; admitting break rather than hiding",
+    "canonical_message_bytes_len": 241,
+    "abandonment_id": "8d6a789a8b46cea62a572780d53d423a1f3db1c0cfa5d1204f7ca272277ecf42",
+    "envelope": {
+      "v": 1,
+      "kind": "pledge-abandonment",
+      "id": "8d6a789a8b46cea62a572780d53d423a1f3db1c0cfa5d1204f7ca272277ecf42",
+      "pledge_id": "c08d3ef9031a89b3274180c27bf4f8df5e72e65b14d2f537266f0742fa2dacc7",
+      "abandoned_at": "2026-08-01T12:00:00Z",
+      "reason": "discovered I needed to spend the bonded utxo for an emergency; admitting break rather than hiding",
+      "sig": {
+        "alg": "bip322",
+        "pubkey": "bc1qalice000000000000000000000000000000000",
+        "value": "AAAA"
+      }
+    }
+  }
+}

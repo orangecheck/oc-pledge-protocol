@@ -1,0 +1,23 @@
+{
+  "description": "bilateral pledge — both parties publish consistent outcome; state machine resolves to kept after dispute window",
+  "kind": "state-transition",
+  "inputs": {
+    "pledge_id": "38a096c336069cab04dc8beb78b875c42de6dd6a27f06f7ea22bfa58e8da81e7",
+    "outcomes": [
+      {
+        "author": "bc1qcarol000000000000000000000000000000000",
+        "outcome": "kept",
+        "resolved_at": "2026-06-02T10:00:00Z"
+      },
+      {
+        "author": "bc1qcounter0000000000000000000000000000000",
+        "outcome": "kept",
+        "resolved_at": "2026-06-02T10:01:00Z"
+      }
+    ],
+    "now": "2026-06-10T00:00:00Z"
+  },
+  "expected": {
+    "state": "kept"
+  }
+}

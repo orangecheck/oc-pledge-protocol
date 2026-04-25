@@ -1,0 +1,70 @@
+{
+  "description": "pledge with http_get_hash resolution — open-source delivery shape",
+  "kind": "pledge",
+  "inputs": {
+    "swearer": "bc1qdave000000000000000000000000000000000000",
+    "proposition": "I will publish the v1.0 release tarball at the canonical URL with sha256:abc123… by 2026-07-15.",
+    "resolution": {
+      "mechanism": "http_get_hash",
+      "query": "GET https://example.org/release/v1.0.tar.gz body_sha256 == abc1230000000000000000000000000000000000000000000000000000000000"
+    },
+    "resolves_at": {
+      "time": "2026-07-15T00:00:00Z"
+    },
+    "expires_at": "2026-07-22T00:00:00Z",
+    "bond": {
+      "attestation_id": "4444444444444444444444444444444444444444444444444444444444444444",
+      "min_sats": 750000,
+      "min_days": 60
+    },
+    "counterparty": null,
+    "dispute": {
+      "mechanism": null,
+      "params": null
+    },
+    "remediation": "breach_recorded",
+    "sworn_at": "2026-04-15T10:00:00Z",
+    "nonce": "00112233445566778899aabbccddeeff"
+  },
+  "expected": {
+    "canonical_message": "oc-pledge/v1\nswearer: bc1qdave000000000000000000000000000000000000\nproposition: I will publish the v1.0 release tarball at the canonical URL with sha256:abc123… by 2026-07-15.\nresolution:\n  mechanism: http_get_hash\n  query: GET https://example.org/release/v1.0.tar.gz body_sha256 == abc1230000000000000000000000000000000000000000000000000000000000\nresolves_at:\n  time: 2026-07-15T00:00:00Z\nexpires_at: 2026-07-22T00:00:00Z\nbond:\n  attestation_id: 4444444444444444444444444444444444444444444444444444444444444444\n  min_sats: 750000\n  min_days: 60\ncounterparty: null\ndispute:\n  mechanism: null\n  params: null\nremediation: breach_recorded\nsworn_at: 2026-04-15T10:00:00Z\nnonce: 00112233445566778899aabbccddeeff",
+    "canonical_message_bytes_len": 708,
+    "pledge_id": "f1811555dda823fb1bdadb86c216b52c5cdc73e8d601744df69d825849e7be83",
+    "envelope": {
+      "v": 1,
+      "kind": "pledge",
+      "id": "f1811555dda823fb1bdadb86c216b52c5cdc73e8d601744df69d825849e7be83",
+      "swearer": {
+        "address": "bc1qdave000000000000000000000000000000000000",
+        "alg": "bip322"
+      },
+      "proposition": "I will publish the v1.0 release tarball at the canonical URL with sha256:abc123… by 2026-07-15.",
+      "resolution": {
+        "mechanism": "http_get_hash",
+        "query": "GET https://example.org/release/v1.0.tar.gz body_sha256 == abc1230000000000000000000000000000000000000000000000000000000000"
+      },
+      "resolves_at": {
+        "time": "2026-07-15T00:00:00Z"
+      },
+      "expires_at": "2026-07-22T00:00:00Z",
+      "bond": {
+        "attestation_id": "4444444444444444444444444444444444444444444444444444444444444444",
+        "min_sats": 750000,
+        "min_days": 60
+      },
+      "counterparty": null,
+      "dispute": {
+        "mechanism": null,
+        "params": null
+      },
+      "remediation": "breach_recorded",
+      "sworn_at": "2026-04-15T10:00:00Z",
+      "nonce": "00112233445566778899aabbccddeeff",
+      "sig": {
+        "alg": "bip322",
+        "pubkey": "bc1qdave000000000000000000000000000000000000",
+        "value": "AAAA"
+      }
+    }
+  }
+}

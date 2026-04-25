@@ -1,0 +1,70 @@
+{
+  "description": "block-height resolution with same-block witness — outcome envelope cites the resolving block hash and height; deterministic outcome",
+  "kind": "pledge",
+  "inputs": {
+    "swearer": "bc1qcarol000000000000000000000000000000000",
+    "proposition": "A specific txid will be confirmed at or before block 920500.",
+    "resolution": {
+      "mechanism": "chain_state",
+      "query": "tx(11ffaa22bb33cc44dd55ee66ff77001122334455667788990011223344556677).confirmations >= 1"
+    },
+    "resolves_at": {
+      "block": 920500
+    },
+    "expires_at": "2026-12-31T00:00:00Z",
+    "bond": {
+      "attestation_id": "3333333333333333333333333333333333333333333333333333333333333333",
+      "min_sats": 800000,
+      "min_days": 90
+    },
+    "counterparty": null,
+    "dispute": {
+      "mechanism": null,
+      "params": null
+    },
+    "remediation": "breach_recorded",
+    "sworn_at": "2026-04-15T00:00:00Z",
+    "nonce": "beefcafebeefcafebeefcafebeefcafe"
+  },
+  "expected": {
+    "canonical_message": "oc-pledge/v1\nswearer: bc1qcarol000000000000000000000000000000000\nproposition: A specific txid will be confirmed at or before block 920500.\nresolution:\n  mechanism: chain_state\n  query: tx(11ffaa22bb33cc44dd55ee66ff77001122334455667788990011223344556677).confirmations >= 1\nresolves_at:\n  block: 920500\nexpires_at: 2026-12-31T00:00:00Z\nbond:\n  attestation_id: 3333333333333333333333333333333333333333333333333333333333333333\n  min_sats: 800000\n  min_days: 90\ncounterparty: null\ndispute:\n  mechanism: null\n  params: null\nremediation: breach_recorded\nsworn_at: 2026-04-15T00:00:00Z\nnonce: beefcafebeefcafebeefcafebeefcafe",
+    "canonical_message_bytes_len": 618,
+    "pledge_id": "640aec57b765efad9a9d5bc3ad4bcf1a8624ba914ee698963f564e7cf567e646",
+    "envelope": {
+      "v": 1,
+      "kind": "pledge",
+      "id": "640aec57b765efad9a9d5bc3ad4bcf1a8624ba914ee698963f564e7cf567e646",
+      "swearer": {
+        "address": "bc1qcarol000000000000000000000000000000000",
+        "alg": "bip322"
+      },
+      "proposition": "A specific txid will be confirmed at or before block 920500.",
+      "resolution": {
+        "mechanism": "chain_state",
+        "query": "tx(11ffaa22bb33cc44dd55ee66ff77001122334455667788990011223344556677).confirmations >= 1"
+      },
+      "resolves_at": {
+        "block": 920500
+      },
+      "expires_at": "2026-12-31T00:00:00Z",
+      "bond": {
+        "attestation_id": "3333333333333333333333333333333333333333333333333333333333333333",
+        "min_sats": 800000,
+        "min_days": 90
+      },
+      "counterparty": null,
+      "dispute": {
+        "mechanism": null,
+        "params": null
+      },
+      "remediation": "breach_recorded",
+      "sworn_at": "2026-04-15T00:00:00Z",
+      "nonce": "beefcafebeefcafebeefcafebeefcafe",
+      "sig": {
+        "alg": "bip322",
+        "pubkey": "bc1qcarol000000000000000000000000000000000",
+        "value": "AAAA"
+      }
+    }
+  }
+}

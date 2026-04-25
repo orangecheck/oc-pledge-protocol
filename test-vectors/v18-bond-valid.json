@@ -1,0 +1,23 @@
+{
+  "description": "bond verification — valid: attestation resolves to >= min_sats and >= min_days at resolves_at",
+  "kind": "bond-verification",
+  "inputs": {
+    "pledge_id": "c08d3ef9031a89b3274180c27bf4f8df5e72e65b14d2f537266f0742fa2dacc7",
+    "bond": {
+      "attestation_id": "1111111111111111111111111111111111111111111111111111111111111111",
+      "min_sats": 500000,
+      "min_days": 180
+    },
+    "resolves_at_block": 920000,
+    "attestation_resolved": {
+      "sats_bonded": 600000,
+      "days_unspent": 200,
+      "address": "bc1qalice000000000000000000000000000000000",
+      "valid_at_block": 920000
+    }
+  },
+  "expected": {
+    "ok": true,
+    "code": null
+  }
+}

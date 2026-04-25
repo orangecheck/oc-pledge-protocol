@@ -1,0 +1,74 @@
+{
+  "description": "agent-delegated pledge — pledge envelope created by an agent under principal delegation; pledge counts against principal",
+  "kind": "pledge",
+  "inputs": {
+    "swearer": "bc1qprincipal000000000000000000000000000000",
+    "proposition": "I (via my agent) will not spend the bonded UTXO before block 925000.",
+    "resolution": {
+      "mechanism": "chain_state",
+      "query": "address(bc1qprincipal000000000000000000000000000000).balance >= 1000000 AT block(925000)"
+    },
+    "resolves_at": {
+      "block": 925000
+    },
+    "expires_at": "2027-01-15T00:00:00Z",
+    "bond": {
+      "attestation_id": "6666666666666666666666666666666666666666666666666666666666666666",
+      "min_sats": 1000000,
+      "min_days": 120
+    },
+    "counterparty": null,
+    "dispute": {
+      "mechanism": null,
+      "params": null
+    },
+    "remediation": "breach_recorded",
+    "sworn_at": "2026-05-01T16:00:00Z",
+    "nonce": "cafebabecafebabecafebabecafebabe",
+    "via_delegation": "36d79600191db871baa3fc9aa3b5e77750a5c423b1f620ec26cf16bd122e19a7",
+    "agent_address": "bc1qagent0000000000000000000000000000000000"
+  },
+  "expected": {
+    "canonical_message": "oc-pledge/v1\nswearer: bc1qprincipal000000000000000000000000000000\nproposition: I (via my agent) will not spend the bonded UTXO before block 925000.\nresolution:\n  mechanism: chain_state\n  query: address(bc1qprincipal000000000000000000000000000000).balance >= 1000000 AT block(925000)\nresolves_at:\n  block: 925000\nexpires_at: 2027-01-15T00:00:00Z\nbond:\n  attestation_id: 6666666666666666666666666666666666666666666666666666666666666666\n  min_sats: 1000000\n  min_days: 120\ncounterparty: null\ndispute:\n  mechanism: null\n  params: null\nremediation: breach_recorded\nsworn_at: 2026-05-01T16:00:00Z\nnonce: cafebabecafebabecafebabecafebabe",
+    "canonical_message_bytes_len": 630,
+    "pledge_id": "a8ffcb2f1de1848febb475e6beb3bfb005bc2187726aff4a29424947205c86ff",
+    "envelope": {
+      "v": 1,
+      "kind": "pledge",
+      "id": "a8ffcb2f1de1848febb475e6beb3bfb005bc2187726aff4a29424947205c86ff",
+      "swearer": {
+        "address": "bc1qprincipal000000000000000000000000000000",
+        "alg": "bip322"
+      },
+      "proposition": "I (via my agent) will not spend the bonded UTXO before block 925000.",
+      "resolution": {
+        "mechanism": "chain_state",
+        "query": "address(bc1qprincipal000000000000000000000000000000).balance >= 1000000 AT block(925000)"
+      },
+      "resolves_at": {
+        "block": 925000
+      },
+      "expires_at": "2027-01-15T00:00:00Z",
+      "bond": {
+        "attestation_id": "6666666666666666666666666666666666666666666666666666666666666666",
+        "min_sats": 1000000,
+        "min_days": 120
+      },
+      "counterparty": null,
+      "dispute": {
+        "mechanism": null,
+        "params": null
+      },
+      "remediation": "breach_recorded",
+      "sworn_at": "2026-05-01T16:00:00Z",
+      "nonce": "cafebabecafebabecafebabecafebabe",
+      "sig": {
+        "alg": "bip322",
+        "pubkey": "bc1qprincipal000000000000000000000000000000",
+        "value": "AAAA"
+      },
+      "via_delegation": "36d79600191db871baa3fc9aa3b5e77750a5c423b1f620ec26cf16bd122e19a7",
+      "agent_address": "bc1qagent0000000000000000000000000000000000"
+    }
+  }
+}

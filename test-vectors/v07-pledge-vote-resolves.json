@@ -1,0 +1,70 @@
+{
+  "description": "pledge with vote_resolves resolution — community-judged commitment shape",
+  "kind": "pledge",
+  "inputs": {
+    "swearer": "bc1qbob0000000000000000000000000000000000000",
+    "proposition": "I will ship the OC Pledge reference SDK to feature parity with the spec by 2026-12-01, judged by the maintainers council.",
+    "resolution": {
+      "mechanism": "vote_resolves",
+      "query": "poll_id=2222222222222222222222222222222222222222222222222222222222222222 option=kept threshold=0.66"
+    },
+    "resolves_at": {
+      "time": "2026-12-01T00:00:00Z"
+    },
+    "expires_at": "2026-12-15T00:00:00Z",
+    "bond": {
+      "attestation_id": "2222222222222222222222222222222222222222222222222222222222222222",
+      "min_sats": 5000000,
+      "min_days": 180
+    },
+    "counterparty": null,
+    "dispute": {
+      "mechanism": null,
+      "params": null
+    },
+    "remediation": "breach_recorded",
+    "sworn_at": "2026-04-30T11:00:00Z",
+    "nonce": "99887766554433221100ffeeddccbbaa"
+  },
+  "expected": {
+    "canonical_message": "oc-pledge/v1\nswearer: bc1qbob0000000000000000000000000000000000000\nproposition: I will ship the OC Pledge reference SDK to feature parity with the spec by 2026-12-01, judged by the maintainers council.\nresolution:\n  mechanism: vote_resolves\n  query: poll_id=2222222222222222222222222222222222222222222222222222222222222222 option=kept threshold=0.66\nresolves_at:\n  time: 2026-12-01T00:00:00Z\nexpires_at: 2026-12-15T00:00:00Z\nbond:\n  attestation_id: 2222222222222222222222222222222222222222222222222222222222222222\n  min_sats: 5000000\n  min_days: 180\ncounterparty: null\ndispute:\n  mechanism: null\n  params: null\nremediation: breach_recorded\nsworn_at: 2026-04-30T11:00:00Z\nnonce: 99887766554433221100ffeeddccbbaa",
+    "canonical_message_bytes_len": 710,
+    "pledge_id": "0747063c52f917deaf8ee9d76917ed61f4facebf813e2e3c075cc8ac3681fcf7",
+    "envelope": {
+      "v": 1,
+      "kind": "pledge",
+      "id": "0747063c52f917deaf8ee9d76917ed61f4facebf813e2e3c075cc8ac3681fcf7",
+      "swearer": {
+        "address": "bc1qbob0000000000000000000000000000000000000",
+        "alg": "bip322"
+      },
+      "proposition": "I will ship the OC Pledge reference SDK to feature parity with the spec by 2026-12-01, judged by the maintainers council.",
+      "resolution": {
+        "mechanism": "vote_resolves",
+        "query": "poll_id=2222222222222222222222222222222222222222222222222222222222222222 option=kept threshold=0.66"
+      },
+      "resolves_at": {
+        "time": "2026-12-01T00:00:00Z"
+      },
+      "expires_at": "2026-12-15T00:00:00Z",
+      "bond": {
+        "attestation_id": "2222222222222222222222222222222222222222222222222222222222222222",
+        "min_sats": 5000000,
+        "min_days": 180
+      },
+      "counterparty": null,
+      "dispute": {
+        "mechanism": null,
+        "params": null
+      },
+      "remediation": "breach_recorded",
+      "sworn_at": "2026-04-30T11:00:00Z",
+      "nonce": "99887766554433221100ffeeddccbbaa",
+      "sig": {
+        "alg": "bip322",
+        "pubkey": "bc1qbob0000000000000000000000000000000000000",
+        "value": "AAAA"
+      }
+    }
+  }
+}

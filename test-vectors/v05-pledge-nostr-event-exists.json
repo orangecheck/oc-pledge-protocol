@@ -1,0 +1,70 @@
+{
+  "description": "pledge with nostr_event_exists resolution — public-statement-by-deadline shape",
+  "kind": "pledge",
+  "inputs": {
+    "swearer": "bc1qerin000000000000000000000000000000000000",
+    "proposition": "I will publish a kind-1 Nostr event tagged #ocpledge-fulfilled before 2026-05-30.",
+    "resolution": {
+      "mechanism": "nostr_event_exists",
+      "query": "kind=1 author=npub1erinpubkeyxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx tag(t)=ocpledge-fulfilled created_at_before=2026-05-30T00:00:00Z"
+    },
+    "resolves_at": {
+      "time": "2026-05-30T00:00:00Z"
+    },
+    "expires_at": "2026-06-06T00:00:00Z",
+    "bond": {
+      "attestation_id": "5555555555555555555555555555555555555555555555555555555555555555",
+      "min_sats": 200000,
+      "min_days": 30
+    },
+    "counterparty": null,
+    "dispute": {
+      "mechanism": null,
+      "params": null
+    },
+    "remediation": "breach_recorded",
+    "sworn_at": "2026-04-10T08:00:00Z",
+    "nonce": "aaaabbbbccccddddeeeeffff00001111"
+  },
+  "expected": {
+    "canonical_message": "oc-pledge/v1\nswearer: bc1qerin000000000000000000000000000000000000\nproposition: I will publish a kind-1 Nostr event tagged #ocpledge-fulfilled before 2026-05-30.\nresolution:\n  mechanism: nostr_event_exists\n  query: kind=1 author=npub1erinpubkeyxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx tag(t)=ocpledge-fulfilled created_at_before=2026-05-30T00:00:00Z\nresolves_at:\n  time: 2026-05-30T00:00:00Z\nexpires_at: 2026-06-06T00:00:00Z\nbond:\n  attestation_id: 5555555555555555555555555555555555555555555555555555555555555555\n  min_sats: 200000\n  min_days: 30\ncounterparty: null\ndispute:\n  mechanism: null\n  params: null\nremediation: breach_recorded\nsworn_at: 2026-04-10T08:00:00Z\nnonce: aaaabbbbccccddddeeeeffff00001111",
+    "canonical_message_bytes_len": 703,
+    "pledge_id": "9da51050faa8dbdb51c0b940b1e911ff6bee79e69755a0aca75e198a50bf04c9",
+    "envelope": {
+      "v": 1,
+      "kind": "pledge",
+      "id": "9da51050faa8dbdb51c0b940b1e911ff6bee79e69755a0aca75e198a50bf04c9",
+      "swearer": {
+        "address": "bc1qerin000000000000000000000000000000000000",
+        "alg": "bip322"
+      },
+      "proposition": "I will publish a kind-1 Nostr event tagged #ocpledge-fulfilled before 2026-05-30.",
+      "resolution": {
+        "mechanism": "nostr_event_exists",
+        "query": "kind=1 author=npub1erinpubkeyxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx tag(t)=ocpledge-fulfilled created_at_before=2026-05-30T00:00:00Z"
+      },
+      "resolves_at": {
+        "time": "2026-05-30T00:00:00Z"
+      },
+      "expires_at": "2026-06-06T00:00:00Z",
+      "bond": {
+        "attestation_id": "5555555555555555555555555555555555555555555555555555555555555555",
+        "min_sats": 200000,
+        "min_days": 30
+      },
+      "counterparty": null,
+      "dispute": {
+        "mechanism": null,
+        "params": null
+      },
+      "remediation": "breach_recorded",
+      "sworn_at": "2026-04-10T08:00:00Z",
+      "nonce": "aaaabbbbccccddddeeeeffff00001111",
+      "sig": {
+        "alg": "bip322",
+        "pubkey": "bc1qerin000000000000000000000000000000000000",
+        "value": "AAAA"
+      }
+    }
+  }
+}

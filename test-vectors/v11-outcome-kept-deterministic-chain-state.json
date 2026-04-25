@@ -1,0 +1,37 @@
+{
+  "description": "outcome envelope: kept, deterministic chain_state result for V01",
+  "kind": "pledge-outcome",
+  "inputs": {
+    "pledge_id": "c08d3ef9031a89b3274180c27bf4f8df5e72e65b14d2f537266f0742fa2dacc7",
+    "outcome": "kept",
+    "resolved_at": "2026-12-15T12:00:00Z",
+    "resolved_by": "deterministic",
+    "evidence": {
+      "mechanism": "chain_state",
+      "result": "true",
+      "witness": "chain_height=920003 chain_hash=000000000000000000049a67c59c2c5b1f2db4d2e1c8e0a23c5e6e7c8f9a0b1c"
+    },
+    "dispute_window_ends_at": "2026-12-22T12:00:00Z"
+  },
+  "expected": {
+    "canonical_message": "oc-pledge-outcome/v1\npledge_id: c08d3ef9031a89b3274180c27bf4f8df5e72e65b14d2f537266f0742fa2dacc7\noutcome: kept\nresolved_at: 2026-12-15T12:00:00Z\nresolved_by: deterministic\nevidence:\n  mechanism: chain_state\n  result: true\n  witness: chain_height=920003 chain_hash=000000000000000000049a67c59c2c5b1f2db4d2e1c8e0a23c5e6e7c8f9a0b1c\ndispute_window_ends_at: 2026-12-22T12:00:00Z",
+    "canonical_message_bytes_len": 373,
+    "outcome_id": "c18ab8f5987730e8cfd57eec5cf346c2dd177036f2586629d6123286468aa8a9",
+    "envelope": {
+      "v": 1,
+      "kind": "pledge-outcome",
+      "id": "c18ab8f5987730e8cfd57eec5cf346c2dd177036f2586629d6123286468aa8a9",
+      "pledge_id": "c08d3ef9031a89b3274180c27bf4f8df5e72e65b14d2f537266f0742fa2dacc7",
+      "outcome": "kept",
+      "resolved_at": "2026-12-15T12:00:00Z",
+      "resolved_by": "deterministic",
+      "evidence": {
+        "mechanism": "chain_state",
+        "result": "true",
+        "witness": "chain_height=920003 chain_hash=000000000000000000049a67c59c2c5b1f2db4d2e1c8e0a23c5e6e7c8f9a0b1c"
+      },
+      "dispute_window_ends_at": "2026-12-22T12:00:00Z",
+      "sig": null
+    }
+  }
+}

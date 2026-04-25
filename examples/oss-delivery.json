@@ -1,0 +1,46 @@
+{
+  "_comment": "OC Pledge example — open-source delivery. A maintainer commits to publishing a v1.0 release tarball at a canonical URL with a specific SHA-256 by a deadline. Resolution is deterministic: any verifier curls the URL, hashes the body, compares. No signature needed at the outcome envelope layer — the deterministic mechanism produces the same byte-identical envelope from every verifier with the same public state. If the URL 404s or hashes wrong on or before resolves_at, the deterministic outcome is `broken` and the pledge attaches to bc1qdave's address as broken forever. The bond (750K sats × 60 days) is a real signal of commitment; no protocol actor can seize it. To run this example: (1) BIP-322-sign the canonical message, (2) publish to Nostr kind-30078 d-tag oc-pledge:<id>, (3) at the deadline, any verifier classifies the pledge automatically.",
+  "_flow": "PROTOCOL.md Flow 3 — Open-source delivery commitment (http_get_hash)",
+  "_mechanism": "http_get_hash",
+  "_resolves_to": "deterministic kept iff URL body sha256 matches expected; deterministic broken otherwise",
+
+  "v": 1,
+  "kind": "pledge",
+  "id": "f1811555dda823fb1bdadb86c216b52c5cdc73e8d601744df69d825849e7be83",
+
+  "swearer": {
+    "address": "bc1qdave000000000000000000000000000000000000",
+    "alg": "bip322"
+  },
+
+  "proposition": "I will publish the v1.0 release tarball at the canonical URL with sha256:abc123… by 2026-07-15.",
+
+  "resolution": {
+    "mechanism": "http_get_hash",
+    "query": "GET https://example.org/release/v1.0.tar.gz body_sha256 == abc1230000000000000000000000000000000000000000000000000000000000"
+  },
+
+  "resolves_at": { "time": "2026-07-15T00:00:00Z" },
+  "expires_at": "2026-07-22T00:00:00Z",
+
+  "bond": {
+    "attestation_id": "4444444444444444444444444444444444444444444444444444444444444444",
+    "min_sats": 750000,
+    "min_days": 60
+  },
+
+  "counterparty": null,
+
+  "dispute": { "mechanism": null, "params": null },
+
+  "remediation": "breach_recorded",
+
+  "sworn_at": "2026-04-15T10:00:00Z",
+  "nonce": "00112233445566778899aabbccddeeff",
+
+  "sig": {
+    "alg": "bip322",
+    "pubkey": "bc1qdave000000000000000000000000000000000000",
+    "value": "<base64 BIP-322 signature by bc1qdave over hex pledge_id>"
+  }
+}

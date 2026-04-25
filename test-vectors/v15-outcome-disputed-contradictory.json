@@ -1,0 +1,41 @@
+{
+  "description": "outcome envelope: disputed, contradictory counterparty outcome triggers vote-resolves dispute path",
+  "kind": "pledge-outcome",
+  "inputs": {
+    "pledge_id": "38a096c336069cab04dc8beb78b875c42de6dd6a27f06f7ea22bfa58e8da81e7",
+    "outcome": "disputed",
+    "resolved_at": "2026-06-03T11:00:00Z",
+    "resolved_by": "bc1qcounter0000000000000000000000000000000",
+    "evidence": {
+      "mechanism": "counterparty_signs",
+      "result": "broken",
+      "witness": "counterparty_sig=H2+contradictoryBIP322signaturebase64=="
+    },
+    "dispute_window_ends_at": "2026-06-10T11:00:00Z"
+  },
+  "expected": {
+    "canonical_message": "oc-pledge-outcome/v1\npledge_id: 38a096c336069cab04dc8beb78b875c42de6dd6a27f06f7ea22bfa58e8da81e7\noutcome: disputed\nresolved_at: 2026-06-03T11:00:00Z\nresolved_by: bc1qcounter0000000000000000000000000000000\nevidence:\n  mechanism: counterparty_signs\n  result: broken\n  witness: counterparty_sig=H2+contradictoryBIP322signaturebase64==\ndispute_window_ends_at: 2026-06-10T11:00:00Z",
+    "canonical_message_bytes_len": 376,
+    "outcome_id": "9752364977013c06ba14b2cb19b611d8abc3a7b471932d502290826b15a9d595",
+    "envelope": {
+      "v": 1,
+      "kind": "pledge-outcome",
+      "id": "9752364977013c06ba14b2cb19b611d8abc3a7b471932d502290826b15a9d595",
+      "pledge_id": "38a096c336069cab04dc8beb78b875c42de6dd6a27f06f7ea22bfa58e8da81e7",
+      "outcome": "disputed",
+      "resolved_at": "2026-06-03T11:00:00Z",
+      "resolved_by": "bc1qcounter0000000000000000000000000000000",
+      "evidence": {
+        "mechanism": "counterparty_signs",
+        "result": "broken",
+        "witness": "counterparty_sig=H2+contradictoryBIP322signaturebase64=="
+      },
+      "dispute_window_ends_at": "2026-06-10T11:00:00Z",
+      "sig": {
+        "alg": "bip322",
+        "pubkey": "bc1qcounter0000000000000000000000000000000",
+        "value": "AAAA"
+      }
+    }
+  }
+}

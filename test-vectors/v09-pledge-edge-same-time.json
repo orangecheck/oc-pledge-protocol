@@ -1,0 +1,70 @@
+{
+  "description": "edge case — resolves_at equals expires_at (zero grace window). Implementations MUST NOT reject; pledge transitions pending → resolvable → terminal in the same instant.",
+  "kind": "pledge",
+  "inputs": {
+    "swearer": "bc1qalice000000000000000000000000000000000",
+    "proposition": "I will publish a stamp by exactly 2026-06-01T00:00:00Z.",
+    "resolution": {
+      "mechanism": "stamp_published",
+      "query": "stamp(content_hash=sha256:1111111111111111111111111111111111111111111111111111111111111111, signer=bc1qalice000000000000000000000000000000000)"
+    },
+    "resolves_at": {
+      "time": "2026-06-01T00:00:00Z"
+    },
+    "expires_at": "2026-06-01T00:00:00Z",
+    "bond": {
+      "attestation_id": "1111111111111111111111111111111111111111111111111111111111111111",
+      "min_sats": 100000,
+      "min_days": 7
+    },
+    "counterparty": null,
+    "dispute": {
+      "mechanism": null,
+      "params": null
+    },
+    "remediation": "breach_recorded",
+    "sworn_at": "2026-04-01T00:00:00Z",
+    "nonce": "deadbeefdeadbeefdeadbeefdeadbeef"
+  },
+  "expected": {
+    "canonical_message": "oc-pledge/v1\nswearer: bc1qalice000000000000000000000000000000000\nproposition: I will publish a stamp by exactly 2026-06-01T00:00:00Z.\nresolution:\n  mechanism: stamp_published\n  query: stamp(content_hash=sha256:1111111111111111111111111111111111111111111111111111111111111111, signer=bc1qalice000000000000000000000000000000000)\nresolves_at:\n  time: 2026-06-01T00:00:00Z\nexpires_at: 2026-06-01T00:00:00Z\nbond:\n  attestation_id: 1111111111111111111111111111111111111111111111111111111111111111\n  min_sats: 100000\n  min_days: 7\ncounterparty: null\ndispute:\n  mechanism: null\n  params: null\nremediation: breach_recorded\nsworn_at: 2026-04-01T00:00:00Z\nnonce: deadbeefdeadbeefdeadbeefdeadbeef",
+    "canonical_message_bytes_len": 684,
+    "pledge_id": "2a2e17faed653bc25f1a9945dab5747958a913ed5ab6458fa1c1dd252d420e35",
+    "envelope": {
+      "v": 1,
+      "kind": "pledge",
+      "id": "2a2e17faed653bc25f1a9945dab5747958a913ed5ab6458fa1c1dd252d420e35",
+      "swearer": {
+        "address": "bc1qalice000000000000000000000000000000000",
+        "alg": "bip322"
+      },
+      "proposition": "I will publish a stamp by exactly 2026-06-01T00:00:00Z.",
+      "resolution": {
+        "mechanism": "stamp_published",
+        "query": "stamp(content_hash=sha256:1111111111111111111111111111111111111111111111111111111111111111, signer=bc1qalice000000000000000000000000000000000)"
+      },
+      "resolves_at": {
+        "time": "2026-06-01T00:00:00Z"
+      },
+      "expires_at": "2026-06-01T00:00:00Z",
+      "bond": {
+        "attestation_id": "1111111111111111111111111111111111111111111111111111111111111111",
+        "min_sats": 100000,
+        "min_days": 7
+      },
+      "counterparty": null,
+      "dispute": {
+        "mechanism": null,
+        "params": null
+      },
+      "remediation": "breach_recorded",
+      "sworn_at": "2026-04-01T00:00:00Z",
+      "nonce": "deadbeefdeadbeefdeadbeefdeadbeef",
+      "sig": {
+        "alg": "bip322",
+        "pubkey": "bc1qalice000000000000000000000000000000000",
+        "value": "AAAA"
+      }
+    }
+  }
+}

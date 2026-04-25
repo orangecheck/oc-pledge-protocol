@@ -1,0 +1,70 @@
+{
+  "description": "pledge with dns_record resolution — domain-control attestation shape",
+  "kind": "pledge",
+  "inputs": {
+    "swearer": "bc1qalice000000000000000000000000000000000",
+    "proposition": "I will publish DNS TXT _ocpledge.example.com with value sha256:deadbeef… before 2026-08-01.",
+    "resolution": {
+      "mechanism": "dns_record",
+      "query": "TXT _ocpledge.example.com == sha256:deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef"
+    },
+    "resolves_at": {
+      "time": "2026-08-01T00:00:00Z"
+    },
+    "expires_at": "2026-08-08T00:00:00Z",
+    "bond": {
+      "attestation_id": "1111111111111111111111111111111111111111111111111111111111111111",
+      "min_sats": 300000,
+      "min_days": 45
+    },
+    "counterparty": null,
+    "dispute": {
+      "mechanism": null,
+      "params": null
+    },
+    "remediation": "breach_recorded",
+    "sworn_at": "2026-04-25T14:00:00Z",
+    "nonce": "11112222333344445555666677778888"
+  },
+  "expected": {
+    "canonical_message": "oc-pledge/v1\nswearer: bc1qalice000000000000000000000000000000000\nproposition: I will publish DNS TXT _ocpledge.example.com with value sha256:deadbeef… before 2026-08-01.\nresolution:\n  mechanism: dns_record\n  query: TXT _ocpledge.example.com == sha256:deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef\nresolves_at:\n  time: 2026-08-01T00:00:00Z\nexpires_at: 2026-08-08T00:00:00Z\nbond:\n  attestation_id: 1111111111111111111111111111111111111111111111111111111111111111\n  min_sats: 300000\n  min_days: 45\ncounterparty: null\ndispute:\n  mechanism: null\n  params: null\nremediation: breach_recorded\nsworn_at: 2026-04-25T14:00:00Z\nnonce: 11112222333344445555666677778888",
+    "canonical_message_bytes_len": 676,
+    "pledge_id": "1f0102284a47e422f031f165d8404436314120dca10704aea11899ec7f5f9c96",
+    "envelope": {
+      "v": 1,
+      "kind": "pledge",
+      "id": "1f0102284a47e422f031f165d8404436314120dca10704aea11899ec7f5f9c96",
+      "swearer": {
+        "address": "bc1qalice000000000000000000000000000000000",
+        "alg": "bip322"
+      },
+      "proposition": "I will publish DNS TXT _ocpledge.example.com with value sha256:deadbeef… before 2026-08-01.",
+      "resolution": {
+        "mechanism": "dns_record",
+        "query": "TXT _ocpledge.example.com == sha256:deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef"
+      },
+      "resolves_at": {
+        "time": "2026-08-01T00:00:00Z"
+      },
+      "expires_at": "2026-08-08T00:00:00Z",
+      "bond": {
+        "attestation_id": "1111111111111111111111111111111111111111111111111111111111111111",
+        "min_sats": 300000,
+        "min_days": 45
+      },
+      "counterparty": null,
+      "dispute": {
+        "mechanism": null,
+        "params": null
+      },
+      "remediation": "breach_recorded",
+      "sworn_at": "2026-04-25T14:00:00Z",
+      "nonce": "11112222333344445555666677778888",
+      "sig": {
+        "alg": "bip322",
+        "pubkey": "bc1qalice000000000000000000000000000000000",
+        "value": "AAAA"
+      }
+    }
+  }
+}

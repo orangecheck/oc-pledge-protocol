@@ -1,0 +1,49 @@
+{
+  "description": "state machine — outcome=kept, dispute window passed → kept",
+  "kind": "state-transition",
+  "inputs": {
+    "pledge_id": "c08d3ef9031a89b3274180c27bf4f8df5e72e65b14d2f537266f0742fa2dacc7",
+    "pledge": {
+      "swearer": "bc1qalice000000000000000000000000000000000",
+      "proposition": "I will not spend the bonded UTXO before block 920000.",
+      "resolution": {
+        "mechanism": "chain_state",
+        "query": "address(bc1qalice000000000000000000000000000000000).utxo_count >= 1 AND address(bc1qalice000000000000000000000000000000000).balance >= 500000"
+      },
+      "resolves_at": {
+        "block": 920000
+      },
+      "expires_at": "2026-12-31T00:00:00Z",
+      "bond": {
+        "attestation_id": "1111111111111111111111111111111111111111111111111111111111111111",
+        "min_sats": 500000,
+        "min_days": 180
+      },
+      "counterparty": null,
+      "dispute": {
+        "mechanism": null,
+        "params": null
+      },
+      "remediation": "breach_recorded",
+      "sworn_at": "2026-04-24T18:30:00Z",
+      "nonce": "0123456789abcdef0123456789abcdef"
+    },
+    "outcome_envelope": {
+      "pledge_id": "c08d3ef9031a89b3274180c27bf4f8df5e72e65b14d2f537266f0742fa2dacc7",
+      "outcome": "kept",
+      "resolved_at": "2026-12-15T12:00:00Z",
+      "resolved_by": "deterministic",
+      "evidence": {
+        "mechanism": "chain_state",
+        "result": "true",
+        "witness": "chain_height=920003 chain_hash=000000000000000000049a67c59c2c5b1f2db4d2e1c8e0a23c5e6e7c8f9a0b1c"
+      },
+      "dispute_window_ends_at": "2026-12-22T12:00:00Z"
+    },
+    "abandonment_envelope": null,
+    "now": "2027-01-01T00:00:00Z"
+  },
+  "expected": {
+    "state": "kept"
+  }
+}

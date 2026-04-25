@@ -1,0 +1,37 @@
+{
+  "description": "outcome envelope: kept, stamp_published, deterministic",
+  "kind": "pledge-outcome",
+  "inputs": {
+    "pledge_id": "e9a6f510b79793595e1e226df0aebe53218cd71c4ceb7aa21d4d701829e15f02",
+    "outcome": "kept",
+    "resolved_at": "2026-09-01T01:00:00Z",
+    "resolved_by": "deterministic",
+    "evidence": {
+      "mechanism": "stamp_published",
+      "result": "stamp_id=ad30c983dfc872a8c53cd70eb4d84e1869967a4b8433586beec7ba468b03c3de",
+      "witness": "nostr_event_id=ad30c983dfc872a8c53cd70eb4d84e1869967a4b8433586beec7ba468b03c3de"
+    },
+    "dispute_window_ends_at": "2026-09-08T01:00:00Z"
+  },
+  "expected": {
+    "canonical_message": "oc-pledge-outcome/v1\npledge_id: e9a6f510b79793595e1e226df0aebe53218cd71c4ceb7aa21d4d701829e15f02\noutcome: kept\nresolved_at: 2026-09-01T01:00:00Z\nresolved_by: deterministic\nevidence:\n  mechanism: stamp_published\n  result: stamp_id=ad30c983dfc872a8c53cd70eb4d84e1869967a4b8433586beec7ba468b03c3de\n  witness: nostr_event_id=ad30c983dfc872a8c53cd70eb4d84e1869967a4b8433586beec7ba468b03c3de\ndispute_window_ends_at: 2026-09-08T01:00:00Z",
+    "canonical_message_bytes_len": 430,
+    "outcome_id": "bed701020b2466a18770606d0459c3f41e4c1045b960c70c493bb53be6c69033",
+    "envelope": {
+      "v": 1,
+      "kind": "pledge-outcome",
+      "id": "bed701020b2466a18770606d0459c3f41e4c1045b960c70c493bb53be6c69033",
+      "pledge_id": "e9a6f510b79793595e1e226df0aebe53218cd71c4ceb7aa21d4d701829e15f02",
+      "outcome": "kept",
+      "resolved_at": "2026-09-01T01:00:00Z",
+      "resolved_by": "deterministic",
+      "evidence": {
+        "mechanism": "stamp_published",
+        "result": "stamp_id=ad30c983dfc872a8c53cd70eb4d84e1869967a4b8433586beec7ba468b03c3de",
+        "witness": "nostr_event_id=ad30c983dfc872a8c53cd70eb4d84e1869967a4b8433586beec7ba468b03c3de"
+      },
+      "dispute_window_ends_at": "2026-09-08T01:00:00Z",
+      "sig": null
+    }
+  }
+}

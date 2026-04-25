@@ -1,0 +1,70 @@
+{
+  "description": "minimal time-resolved pledge with deterministic chain_state mechanism, no counterparty, no dispute path",
+  "kind": "pledge",
+  "inputs": {
+    "swearer": "bc1qalice000000000000000000000000000000000",
+    "proposition": "I will not spend the bonded UTXO before block 920000.",
+    "resolution": {
+      "mechanism": "chain_state",
+      "query": "address(bc1qalice000000000000000000000000000000000).utxo_count >= 1 AND address(bc1qalice000000000000000000000000000000000).balance >= 500000"
+    },
+    "resolves_at": {
+      "block": 920000
+    },
+    "expires_at": "2026-12-31T00:00:00Z",
+    "bond": {
+      "attestation_id": "1111111111111111111111111111111111111111111111111111111111111111",
+      "min_sats": 500000,
+      "min_days": 180
+    },
+    "counterparty": null,
+    "dispute": {
+      "mechanism": null,
+      "params": null
+    },
+    "remediation": "breach_recorded",
+    "sworn_at": "2026-04-24T18:30:00Z",
+    "nonce": "0123456789abcdef0123456789abcdef"
+  },
+  "expected": {
+    "canonical_message": "oc-pledge/v1\nswearer: bc1qalice000000000000000000000000000000000\nproposition: I will not spend the bonded UTXO before block 920000.\nresolution:\n  mechanism: chain_state\n  query: address(bc1qalice000000000000000000000000000000000).utxo_count >= 1 AND address(bc1qalice000000000000000000000000000000000).balance >= 500000\nresolves_at:\n  block: 920000\nexpires_at: 2026-12-31T00:00:00Z\nbond:\n  attestation_id: 1111111111111111111111111111111111111111111111111111111111111111\n  min_sats: 500000\n  min_days: 180\ncounterparty: null\ndispute:\n  mechanism: null\n  params: null\nremediation: breach_recorded\nsworn_at: 2026-04-24T18:30:00Z\nnonce: 0123456789abcdef0123456789abcdef",
+    "canonical_message_bytes_len": 666,
+    "pledge_id": "c08d3ef9031a89b3274180c27bf4f8df5e72e65b14d2f537266f0742fa2dacc7",
+    "envelope": {
+      "v": 1,
+      "kind": "pledge",
+      "id": "c08d3ef9031a89b3274180c27bf4f8df5e72e65b14d2f537266f0742fa2dacc7",
+      "swearer": {
+        "address": "bc1qalice000000000000000000000000000000000",
+        "alg": "bip322"
+      },
+      "proposition": "I will not spend the bonded UTXO before block 920000.",
+      "resolution": {
+        "mechanism": "chain_state",
+        "query": "address(bc1qalice000000000000000000000000000000000).utxo_count >= 1 AND address(bc1qalice000000000000000000000000000000000).balance >= 500000"
+      },
+      "resolves_at": {
+        "block": 920000
+      },
+      "expires_at": "2026-12-31T00:00:00Z",
+      "bond": {
+        "attestation_id": "1111111111111111111111111111111111111111111111111111111111111111",
+        "min_sats": 500000,
+        "min_days": 180
+      },
+      "counterparty": null,
+      "dispute": {
+        "mechanism": null,
+        "params": null
+      },
+      "remediation": "breach_recorded",
+      "sworn_at": "2026-04-24T18:30:00Z",
+      "nonce": "0123456789abcdef0123456789abcdef",
+      "sig": {
+        "alg": "bip322",
+        "pubkey": "bc1qalice000000000000000000000000000000000",
+        "value": "AAAA"
+      }
+    }
+  }
+}
