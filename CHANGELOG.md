@@ -4,6 +4,12 @@ All notable changes to the OC Pledge protocol specification.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] — 2026-04
+
+### Added — specification
+
+- **`LIFECYCLE.md`** — normative companion document specifying that pledges are non-revocable, that `oc-pledge-abandonment/v1` is the only structured pre-deadline exit and counts as `broken` per `WHY.md` §H8, that bond withdrawal (UTXO spend) is permitted by Bitcoin and is therefore a *de facto* path to `broken` if it drops below `min_sats` / `min_days`, and that dashboard-local hide flags / NIP-09 deletion-request events have no protocol force. No protocol changes; clarification only.
+
 ## [0.1.0-alpha] — 2026-04
 
 Initial draft of the sixth and final OrangeCheck-family primitive: **OC Pledge — bond-backed forward commitments with machine-resolvable outcomes**. The family of six verbs (am, whisper, decide, declare, delegate, swear) is now complete.

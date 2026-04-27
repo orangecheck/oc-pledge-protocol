@@ -40,6 +40,7 @@ This repository is the **normative protocol specification**. No code lives here 
 | [`PROTOCOL.md`](./PROTOCOL.md) | Narrative walkthrough with five flows (preregistration, SLA, OSS delivery, agent-delegated pledges, edge cases). |
 | [`WHY.md`](./WHY.md) | Design rationale. Thirteen load-bearing hypotheses. The explicit refusals (slashing, aggregated reputation, revocation, free-text proofs, trust-ranked dispute, pledge chains). |
 | [`SECURITY.md`](./SECURITY.md) | Threat model, trust assumptions, 22 attack scenarios with status, compliance requirements, report channel. |
+| [`LIFECYCLE.md`](./LIFECYCLE.md) | Normative lifecycle stance — pledges are non-revocable; abandonment is the only structured exit and counts as `broken`. |
 | [`NIP_ORANGECHECK_PLEDGE.md`](./NIP_ORANGECHECK_PLEDGE.md) | The Nostr wire format. Three d-tag namespaces under kind 30078. |
 | [`REGISTRY.md`](./REGISTRY.md) | Authoritative registry of mechanism strings, dispute mechanisms, scope grammar extensions. Refuses `self_proof`, `slashing`, etc. |
 | [`CHANGELOG.md`](./CHANGELOG.md) | Version history. |
