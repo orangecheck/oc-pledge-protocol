@@ -6,6 +6,37 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ## [Unreleased] — 2026-05
 
+### Reference implementations — v0.2 cut-line cleared
+
+Two SECURITY-flagged consumer-side responsibilities have moved into the
+reference web surfaces. The protocol spec is unchanged; this entry just
+records the implementation milestones for downstream readers.
+
+- **`@orangecheck/pledge-core@0.2.0`** + **`orangecheck@0.3.0`** add a
+  `delegationLookup` / `delegation_lookup` hook on `verifyPledge` /
+  `verify_pledge`. When set, the SDK runs SPEC §7.3 steps 1–5 (resolve
+  delegation, principal/agent/scope/expiry checks). Closes the
+  implementation-note caveat on SECURITY scenarios 15 + 16.
+- The hosted `/verify` and `/p/<id>` surfaces on **pledge.ochk.io** now
+  perform live bond re-resolution against Bitcoin chain state via
+  `@orangecheck/sdk`'s `check()` (Nostr discovery + Esplora chain query,
+  browser-side; no OC server in the critical path). Closes the
+  implementation-note caveat on SECURITY scenario 5.
+- The same surfaces wire the §7.3 delegation chain via
+  `@orangecheck/agent-core`'s `verifyDelegation`. Agent-delegated pledges
+  with bad principal / agent / scope / expiry now fail with explicit
+  `E_DELEGATION_*` codes on the live pages.
+- Cross-impl conformance gate (oc-packages CI) extended to run both SDKs
+  against every test vector in `test-vectors/` on every PR. As of
+  pledge-core 0.2.0 / orangecheck 0.3.0, all 28 vectors pass on both.
+
+What's still consumer-side: deterministic-mechanism re-evaluation
+(SPEC §9.1 step 8) for the seven §3.4 mechanisms. The SDKs validate
+query shape; actual chain / Nostr / HTTP / DNS / Vote evaluation remains
+out of envelope-only scope. The hosted surfaces rely on published
+outcome envelopes being on Nostr (which the §4.4 state machine then
+incorporates) for the resolved verdict to surface.
+
 ### Added — operational
 
 - **`RUNBOOK.md`** — turn-key dogfood sequence the OC team executes before
