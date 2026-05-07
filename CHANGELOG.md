@@ -6,6 +6,40 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ## [Unreleased] — 2026-05
 
+### Added — operational
+
+- **`RUNBOOK.md`** — turn-key dogfood sequence the OC team executes before
+  the v1.0 cut. Three pledges across the deterministic /
+  counterparty-signs / dispute spread (research-preregistration via
+  `stamp_published`, bilateral SLA via `counterparty_signs` +
+  `vote_resolves` dispute, open-source delivery via `http_get_hash`).
+  Each shape has template inputs for the composer at
+  pledge.ochk.io/create, which now ships real signing + Nostr publish
+  end-to-end (oc-pledge-web commit `584de0d`). Until the runbook fires,
+  the protocol stays at `v0.1.0-alpha` and the homepage `preview` pill
+  stays in place — same honesty discipline applied to the family-vitals
+  reframing on ochk.io.
+
+- **`PROTOCOL.md` — Live case studies table.** Pre-allocated rows for
+  the three RUNBOOK shapes; filled in as each pledge publishes.
+
+### v1.0 cut checklist (gated on RUNBOOK)
+
+When the case-studies table in `PROTOCOL.md` has live URLs for all
+three shapes (and ideally at least one resolved outcome envelope):
+
+1. Bump `SPEC.md`:
+   - `# OC Pledge Protocol v0.1 — Specification` → `# OC Pledge Protocol v1.0 — Specification`
+   - `**Status:** Draft (v0.1.0-alpha)` → `**Status:** Stable`
+   - The line `The first stable release is v1.0; v0.1.0-alpha is the initial draft published in this repository.` → drop or rewrite past-tense.
+2. Bump `README.md`'s status block (`v0.1.0-alpha — initial draft published. Spec is implementer-ready; reference SDK and web client are forthcoming.` → match SPEC).
+3. Add a `## [1.0.0] — YYYY-MM` entry in this CHANGELOG referencing the live case studies and the cross-impl conformance gate that's been green continuously.
+4. Tag `v1.0.0` on this repo.
+5. Bump `@orangecheck/pledge-core` to `1.0.0`, push tag `pledge-core-v1.0.0` (release.yml publishes to npm). Bump `orangecheck` (Python) to `1.0.0` similarly via `sdk-py-v1.0.0`.
+6. Flip the homepage pill: `oc-www/src/pages/index.tsx` PROTOCOLS array, OC Pledge entry: `status: 'preview'` → `status: 'live'`. Drop the body addendum *"Spec is v0.1-alpha — protocol design is settled enough to read, not yet stable enough to depend on."*
+
+The cut is mechanical once the runbook fires. The reason this checklist exists in CHANGELOG and not as immediate-bump diff is that v1.0/Stable claimed without real production envelopes is the same family of dishonesty the homepage's family-vitals → relay-demo reframing was correcting.
+
 ### Updated — SECURITY.md walked against the working reference implementations
 
 The threat model in `SECURITY.md` was originally written against the spec
