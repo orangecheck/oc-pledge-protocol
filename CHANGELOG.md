@@ -4,7 +4,48 @@ All notable changes to the OC Pledge protocol specification.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] — 2026-04
+## [Unreleased] — 2026-05
+
+### Updated — SECURITY.md walked against the working reference implementations
+
+The threat model in `SECURITY.md` was originally written against the spec
+alone. With both reference implementations now in place
+(`@orangecheck/pledge-core` 0.1.0 + `orangecheck.pledge` 0.2.0, every test
+vector reproducing byte-identically across the two), the 22 scenarios
+were re-walked against running code. No protocol changes; documentation
+only.
+
+- **New "Reference implementation status (2026-05)" section.** Names the
+  v0.1 SDKs, what they cover (§9.1 steps 1–4 + 9), and what they don't
+  yet cover by design (steps 5 + 8: bond live re-resolution and
+  deterministic-mechanism re-evaluation; OC Agent §7.3 delegation lookup
+  + scope enforcement). Pins the v0.2 cut-line where consumer responsibilities
+  fold back into the SDKs.
+- **Scenario 5 (bond-draining)** now carries an implementation note
+  describing the SDK's pure-algorithm shape and the `/verify` /
+  `/p/<id>` surfaces' explicit "envelope-only verification today"
+  framing. Until the v0.2 chain accessor lands, consumers attaching
+  consequential weight MUST run their own bond lookup.
+- **Scenarios 15 + 16 (agent rogue / delegation forgery)** carry a
+  matching note: the v0.1 SDKs check the agent path's envelope shape
+  and BIP-322 signature against `agent_address` per §7.3 step 6, but
+  do not yet perform steps 1–5 (delegation resolution + scope
+  validation). Native agent-core integration is the headline v0.2
+  gate. Consumers must layer agent-core's `verifyDelegation` separately
+  in the meantime.
+- **New scenario 23 — "URL-id mismatch via relay manipulation."**
+  Surfaced during the `oc-pledge-web` `/p/<id>` resolver build. A
+  malicious relay can return an event whose embedded envelope has a
+  different id than the URL slug; the reference resolver hard-fails
+  this case. Documented here so downstream resolver-builders apply the
+  same defense.
+- **New scenario 24 — "Wrong-target BIP-322 sign-target bug."**
+  Surfaced during the same web-side migration: the pre-migration
+  composer signed the canonical-message bytes instead of `hex(pledge_id)`
+  (SPEC §3.5). The bug was caught and fixed in `oc-pledge-web` commit
+  `584de0d`; documented here as an implementation hazard so other
+  implementers verify their wallet adapter's sign target before
+  shipping.
 
 ### Added — specification
 
