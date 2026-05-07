@@ -1,10 +1,10 @@
 # OC Pledge — eat-your-own-dogfood runbook
 
-**Audience:** the OC team, before bumping the protocol from v0.1.0-alpha to v1.0 stable.
+**Audience:** anyone publishing OC-team pledges — both the original v1.0 cut sequence (since fired) and any subsequent OC-led commitments that should land alongside the case-studies table in `PROTOCOL.md`.
 
-**Goal:** publish at least three real pledges from OC contributors that exercise the deterministic-mechanism / counterparty-signs / dispute paths end-to-end. Without live envelopes the protocol is theoretical — `WHY.md §H1` and the homepage's "preview" status pill are honest only as long as no real pledges have actually been written, signed, and resolved using the working SDK.
+**Goal:** exercise the deterministic-mechanism / counterparty-signs / dispute paths end-to-end with real OC-team Bitcoin addresses bonded against real OrangeCheck attestations. Without live envelopes the public-ledger guarantee is theoretical; the runbook is how we keep that guarantee load-bearing as the family evolves.
 
-This is the gate that closes Task #6 in the v1.0 cut plan. Until it fires, the homepage at ochk.io continues to show OC Pledge with the `preview` pill (commit `e7287da`), and the SPEC stays at `Status: Draft (v0.1.0-alpha)`.
+The original three case studies (research preregistration, bilateral SLA, OSS delivery) fired before the v1.0 spec cut. This document is preserved as the canonical procedure for future OC pledges.
 
 ## Prerequisites
 
@@ -110,15 +110,14 @@ For each of the three pledges:
    "
    ```
 
-## After all three are live
+## After publication
 
-Once the three pledges are published:
+For each new pledge:
 
-1. Update `PROTOCOL.md` to add a **"Live case studies (2026-XX)"** section linking to the three `pledge.ochk.io/p/<id>` URLs and naming the swearer (us) plus the resolution-mechanism shape.
-2. Wait for at least one of the three to fully resolve (the OSS-delivery shape is fastest — typically days). Update the case study with the actual outcome envelope id once the pledge classifies as `kept`.
-3. Remove the "preview" status pill on the ochk.io homepage (`oc-www/src/pages/index.tsx`, the `OC Pledge` entry's `status: 'preview'`) and the body-text addendum *"Spec is v0.1-alpha — protocol design is settled enough to read, not yet stable enough to depend on"* — those gates close once the protocol is provably exercised.
-4. Bump SPEC.md from `Status: Draft (v0.1.0-alpha)` to `Status: Stable` + `# OC Pledge Protocol v1.0 — Specification`. Cut tag `v1.0.0`. See `CHANGELOG.md` for the bump checklist.
+1. Add or update a row in the **Live case studies** table in `PROTOCOL.md` with the `pledge.ochk.io/p/<id>` URL, swearer address, and resolution-mechanism shape.
+2. Wait for the pledge to fully resolve (the OSS-delivery and research-preregistration shapes are typically fastest). Update the case study with the resulting outcome envelope id once classified.
+3. If the publication exercises a new shape not previously covered (e.g. the first agent-delegated dogfood pledge), call it out in `CHANGELOG.md` so subsequent readers can find the worked example.
 
 ## Why this is a real gate, not a checkbox
 
-Every other family member shipped through this same loop — OC Stamp's first stamps were OC team artifacts, OC Vote's first polls were OC team polls. The "live envelopes from real OC keys against real OrangeCheck bonds" property is what makes the next consumer's first pledge feel like joining a working network rather than testing a draft. Skipping this and publishing a v1.0 with zero real envelopes would be the same family of dishonesty the homepage's "family vitals → relay demo" reframing was correcting.
+Every other family member shipped through this same loop — OC Stamp's first stamps were OC team artifacts, OC Vote's first polls were OC team polls. The "live envelopes from real OC keys against real OrangeCheck bonds" property is what makes the next consumer's first pledge feel like joining a working network rather than testing a draft. v1.0 was cut after this gate fired; future major releases will follow the same discipline.

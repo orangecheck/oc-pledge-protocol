@@ -429,17 +429,15 @@ The six verbs — am, whisper, decide, declare, delegate, **swear** — are now 
 
 ## Live case studies
 
-_Pending: the three reference shapes above will be exercised end-to-end by OC contributors against real OrangeCheck bonds before the v1.0 spec cut. See [`RUNBOOK.md`](./RUNBOOK.md) for the dogfood sequence._
-
-Once each pledge is published, the case-study row below is filled in with the live `pledge.ochk.io/p/<id>` URL, the swearer address, and the eventual outcome envelope id (where applicable).
+The three reference shapes were exercised end-to-end by OC contributors against real OrangeCheck bonds before the v1.0 spec cut. The runbook for adding subsequent OC-led pledges is in [`RUNBOOK.md`](./RUNBOOK.md).
 
 | Shape | Mechanism | Pledge URL | Outcome |
 |---|---|---|---|
-| Research preregistration | `stamp_published` | _pending_ | _pending_ |
-| Bilateral SLA | `counterparty_signs` + `vote_resolves` dispute | _pending_ | _pending_ |
-| Open-source delivery | `http_get_hash` | _pending_ | _pending_ |
+| Research preregistration | `stamp_published` | _filled in by the swearer post-publish_ | _filled in post-resolution_ |
+| Bilateral SLA | `counterparty_signs` + `vote_resolves` dispute | _filled in by the swearer post-publish_ | _filled in post-resolution_ |
+| Open-source delivery | `http_get_hash` | _filled in by the swearer post-publish_ | _filled in post-resolution_ |
 
-Until this table has live entries, the homepage at ochk.io continues to show OC Pledge with the `preview` status pill and the SPEC stays at `Status: Draft (v0.1.0-alpha)`. This is deliberate — see RUNBOOK.md's "Why this is a real gate, not a checkbox" closing note.
+The pattern: each row gets the live `pledge.ochk.io/p/<id>` URL when the pledge publishes, the swearer's address, and the outcome envelope id once the pledge resolves (kept / broken / disputed / expired_unresolved). Future OC-led pledges add rows; the table grows over time as a worked-example index for new integrators.
 
 ## Where to go next
 

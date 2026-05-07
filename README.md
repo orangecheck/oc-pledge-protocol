@@ -36,7 +36,7 @@ This repository is the **normative protocol specification**. No code lives here 
 
 | File | What it is |
 |---|---|
-| [`SPEC.md`](./SPEC.md) | The normative v0.1 specification — canonical messages for pledge / outcome / abandonment, seven resolution mechanisms, state machine, bond verification, error codes, compliance checklist. |
+| [`SPEC.md`](./SPEC.md) | The normative v1.0 specification — canonical messages for pledge / outcome / abandonment, seven resolution mechanisms, state machine, bond verification, error codes, compliance checklist. |
 | [`PROTOCOL.md`](./PROTOCOL.md) | Narrative walkthrough with five flows (preregistration, SLA, OSS delivery, agent-delegated pledges, edge cases). |
 | [`WHY.md`](./WHY.md) | Design rationale. Thirteen load-bearing hypotheses. The explicit refusals (slashing, aggregated reputation, revocation, free-text proofs, trust-ranked dispute, pledge chains). |
 | [`SECURITY.md`](./SECURITY.md) | Threat model, trust assumptions, 22 attack scenarios with status, compliance requirements, report channel. |
@@ -124,7 +124,9 @@ None of these are extensions of this protocol — they are usage patterns made t
 
 ## Status
 
-v0.1.0-alpha — initial draft published. Spec is implementer-ready; reference SDK and web client are forthcoming.
+**v1.0 — Stable.** Cross-impl conformance is gated in CI: every PR runs both [`@orangecheck/pledge-core`](https://www.npmjs.com/package/@orangecheck/pledge-core) (TypeScript) and [`orangecheck.pledge`](https://pypi.org/project/orangecheck/) (Python, sub-module of the `orangecheck` PyPI package) against the 28 vectors in `test-vectors/` and fails if either drifts. The hosted reference web client at [pledge.ochk.io](https://pledge.ochk.io) does full SPEC §9.1 verification end-to-end, including live bond re-resolution against Bitcoin chain state and the §7.3 agent-delegation chain.
+
+Cut from v0.1.0-alpha (initial drop, 2026-04) → 1.0 (2026-05) after both SDKs reproduced every test vector byte-identically and the live web surfaces wired the bond + delegation accessors.
 
 ## Positioning
 

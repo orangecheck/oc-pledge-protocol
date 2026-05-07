@@ -1,7 +1,7 @@
-# OC Pledge Protocol v0.1 — Specification
+# OC Pledge Protocol v1.0 — Specification
 
-**Status:** Draft (v0.1.0-alpha)
-**Date:** 2026-04
+**Status:** Stable
+**Date:** 2026-05
 **Related:** [OrangeCheck](https://docs.ochk.io/attest) (identity + stake), [OC Lock v2](https://github.com/orangecheck/oc-lock-protocol) (private envelopes), [OC Stamp v1](https://github.com/orangecheck/oc-stamp-protocol) (content attestation), [OC Vote v1](https://github.com/orangecheck/oc-vote-protocol) (offline-tallyable polls), [OC Agent v1](https://github.com/orangecheck/oc-agent-protocol) (delegated authority)
 
 ---
@@ -80,7 +80,7 @@ The `resolution.query` string is a single line in the deterministic grammar of t
 
 The `nonce` field is **non-optional**. It is exactly 32 lowercase hex characters (16 random bytes). Empty or missing nonces MUST be rejected at envelope-construction time with error `E_PLEDGE_MALFORMED`. The nonce prevents two identical pledges (same proposition, same swearer, same deadline) from producing the same `pledge_id`.
 
-The literal string `breach_recorded` on the `remediation` line is fixed in v0.1. There is no `slashing` value, no `payout` value, no `escrow_release` value. The remediation is, and only is, that the broken pledge is recorded against the swearer's address in the public ledger. Future versions MAY extend this field through the registry (see [REGISTRY.md](./REGISTRY.md)).
+The literal string `breach_recorded` on the `remediation` line is fixed in v1.0. There is no `slashing` value, no `payout` value, no `escrow_release` value. The remediation is, and only is, that the broken pledge is recorded against the swearer's address in the public ledger. Future versions MAY extend this field through the registry (see [REGISTRY.md](./REGISTRY.md)).
 
 ### 3.2 Pledge id
 
@@ -151,7 +151,7 @@ Any change to the canonical message — including whitespace, capitalization, li
 
 ### 3.4 The resolution grammar
 
-Fixed at v0.1. Implementations MUST refuse pledges with a mechanism string outside this set with error `E_RESOLUTION_UNKNOWN`. Extensions are governed by [REGISTRY.md](./REGISTRY.md); v0.1 explicitly refuses `self_proof`.
+Fixed at v1.0. Implementations MUST refuse pledges with a mechanism string outside this set with error `E_RESOLUTION_UNKNOWN`. Extensions are governed by [REGISTRY.md](./REGISTRY.md); v1.0 explicitly refuses `self_proof`.
 
 #### 3.4.1 `chain_state`
 
@@ -266,7 +266,7 @@ When `via_delegation` is present (agent-signed pledge — see §7.3), the signat
 | `counterparty` | Bitcoin address or null. Required non-null when `resolution.mechanism == counterparty_signs`. |
 | `dispute.mechanism` | `"null"`, `"vote_resolves"`, or `"named_oracle"`. |
 | `dispute.params` | Single-line canonical params string for the dispute mechanism, or null. |
-| `remediation` | MUST equal `"breach_recorded"` in v0.1. |
+| `remediation` | MUST equal `"breach_recorded"` in v1.0. |
 | `sworn_at` | ISO 8601 UTC. The swearer's claim of signing time. Not load-bearing for resolution; the resolution mechanism's witness is. |
 | `nonce` | 32 lowercase hex chars. MUST be non-empty. SHOULD be uniformly random. |
 | `via_delegation` | Optional 64-hex OC Agent delegation id. If present, `sig` is produced by `agent_address`, and the verifier follows the agent-delegation verification path (§7.3). |
@@ -449,7 +449,7 @@ Each line LF-terminated; no trailing LF after `reason`. The first line is the li
 | `pledge_id` | MUST be a known, swearer-signed pledge id. |
 | `abandoned_at` | ISO 8601 UTC. MUST satisfy `abandoned_at >= pledge.sworn_at` and SHOULD satisfy `abandoned_at < pledge.resolves_at_normalized` (an abandonment after `resolves_at` is still accepted but is informationally redundant — the outcome envelope path is the canonical way to record post-resolution outcomes). |
 | `reason` | Single-line UTF-8 string, ≤ 280 bytes. Informational only; does not change the ledger classification. |
-| `sig.pubkey` | MUST equal the original pledge's `swearer.address`. Agents MAY NOT publish abandonments under v0.1; abandonment is principal-only. |
+| `sig.pubkey` | MUST equal the original pledge's `swearer.address`. Agents MAY NOT publish abandonments under v1.0; abandonment is principal-only. |
 | `sig.value` | MUST verify under BIP-322 over the hex-encoded `abandonment_id`. |
 
 ### 5.4 Why no honorable exit
@@ -505,7 +505,7 @@ The pledge counts in the **principal's** public ledger, not the agent's. Verifie
 5. Confirm `delegation.expires_at > pledge.sworn_at`.
 6. Verify `sig.value` under `agent_address`.
 
-Agents MUST NOT publish abandonment envelopes in v0.1. Abandonment is principal-only.
+Agents MUST NOT publish abandonment envelopes in v1.0. Abandonment is principal-only.
 
 Scope grammar for `pledge:create` (extension to OC Agent's scope grammar, coordinated via REGISTRY.md):
 
@@ -623,7 +623,7 @@ A **minimal verification** skips bond re-resolution (step 5) and mechanism re-ev
 These restate cryptographic correctness conditions a conforming implementation MUST satisfy. SECURITY.md elaborates with attack scenarios.
 
 1. **Reconstruct the canonical message before trusting the declared `id`.** Implementations MUST compute `H(canonical_message)` from the canonical-message inputs and compare to `envelope.id`. Accepting a declared `id` without reconstruction allows attackers to swap signed content.
-2. **Verify `sig.value` before trusting envelope contents.** No exceptions in v0.1.
+2. **Verify `sig.value` before trusting envelope contents.** No exceptions in v1.0.
 3. **Re-resolve every bond.** Implementations MUST run §8 `verifyBond` against live chain state. Trusting a stale OrangeCheck snapshot allows bond-draining attacks.
 4. **Recompute deterministic outcome evidence on-demand.** A verifier presented with a deterministic outcome envelope SHOULD recompute the witness from public state and confirm byte-identity. Persisting only the envelope (without recomputation) is acceptable for archival; consequential decisions MUST recompute.
 5. **Reject envelopes with stale or mismatched `sworn_at`.** Verifiers MAY reject pledges whose `sworn_at` is outside their tolerance window relative to `now()`.
@@ -636,13 +636,13 @@ These restate cryptographic correctness conditions a conforming implementation M
 
 See [REGISTRY.md](./REGISTRY.md) for the authoritative registry of mechanism strings, dispute-mechanism strings, scope grammar extensions for OC Agent integration, and the formal refusal of `self_proof`.
 
-Brief summary of v0.1 registrations:
+Brief summary of v1.0 registrations:
 
 | Field | Current values | Reserved for |
 |---|---|---|
 | `resolution.mechanism` | `chain_state`, `counterparty_signs`, `nostr_event_exists`, `stamp_published`, `http_get_hash`, `dns_record`, `vote_resolves` | Future: extension via PR with working integrator code (REGISTRY §extension) |
 | `dispute.mechanism` | `null`, `vote_resolves`, `named_oracle` | Future extensions per REGISTRY |
-| `remediation` | `breach_recorded` | Reserved (no slashing in v0.1; see WHY §H7) |
+| `remediation` | `breach_recorded` | Reserved (no slashing in v1.0; see WHY §H7) |
 | `swearer.alg` | `bip322` | Future: `bip340-schnorr-direct`, `pq-hybrid` |
 | `sig.alg` | `bip322` | Same as `swearer.alg` |
 
@@ -650,11 +650,11 @@ Brief summary of v0.1 registrations:
 
 `envelope.v` is an integer. Future incompatible changes increment it. Clients MUST reject envelopes whose `v` they do not support. Minor additions (new optional registry values, new evidence witness shapes for new mechanisms) are handled by unknown-field tolerance (§3.7).
 
-The first stable release is v1.0; v0.1.0-alpha is the initial draft published in this repository.
+v1.0 is the first stable release of OC Pledge. The repository's initial commit drop was published as v0.1.0-alpha (2026-04) and incremented through implementation conformance + the cross-impl test-vector battery before reaching this stable cut.
 
 ## 14. Compliance checklist
 
-A client is OC Pledge v0.1 compliant if and only if:
+A client is OC Pledge v1.0 compliant if and only if:
 
 - [ ] Produces canonical messages byte-for-byte per §3.1, §4.1, §5.1 for identical inputs
 - [ ] Computes `pledge_id`, `outcome_id`, `abandonment_id` as `H(canonical_message)` and serializes as 64 lowercase hex chars
@@ -675,15 +675,15 @@ A client is OC Pledge v0.1 compliant if and only if:
 
 ## 15. Future work (non-normative)
 
-v0.1 explicitly does NOT solve:
+v1.0 explicitly does NOT solve:
 
 - **Aggregated reputation scores.** Public-ledger queries (`pledges_sworn`, `outcomes_for`, `bond_in_flight`) ship as raw metrics; no canonical scoring function. Platforms compose their own policies. See WHY §H6.
 - **Slashing-based remediation.** No HTLC, no covenant, no escrow. Bond enforcement is by public exposure only. See WHY §H7.
 - **Cross-chain or L2 anchors.** Bitcoin mainnet only.
-- **Pledge chains** (one pledge whose outcome is the predicate of another). Composable in principle; deferred from v0.1 to keep the state machine flat. See WHY §H10.
+- **Pledge chains** (one pledge whose outcome is the predicate of another). Composable in principle; deferred from v1.0 to keep the state machine flat. See WHY §H10.
 - **Revocation.** A sworn pledge cannot be unsworn. Abandonment (§5) is the only graceful-exit primitive. See WHY §H8.
 - **Receipt-freeness for vote_resolves disputes.** Inherits OC Vote v1's posture; secret-ballot dispute resolution is feasible but deferred.
-- **Extension mechanisms outside the §3.4 registry.** REGISTRY.md governs new mechanism strings; v0.1 explicitly refuses `self_proof` and any free-text "trust me" proofs.
+- **Extension mechanisms outside the §3.4 registry.** REGISTRY.md governs new mechanism strings; v1.0 explicitly refuses `self_proof` and any free-text "trust me" proofs.
 - **Post-quantum authenticity.** secp256k1 and SHA-256 both have finite lifetimes against sufficiently large quantum computers.
 
 ## 16. IANA / external identifiers

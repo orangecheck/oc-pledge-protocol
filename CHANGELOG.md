@@ -4,6 +4,66 @@ All notable changes to the OC Pledge protocol specification.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] — 2026-05
+
+First stable release of OC Pledge.
+
+The wire format and canonical-message grammar are unchanged from
+`v0.1.0-alpha` (2026-04). What changed between the alpha drop and the
+v1.0 cut is implementation maturity:
+
+- Two reference SDKs — `@orangecheck/pledge-core` (TypeScript, npm) and
+  `orangecheck.pledge` (Python, PyPI sub-module of the `orangecheck`
+  package) — reproduce every one of the 28 committed test vectors
+  byte-identically. Cross-impl conformance is gated in CI on every PR.
+- The hosted reference web client at [pledge.ochk.io](https://pledge.ochk.io)
+  performs full SPEC §9.1 verification end-to-end:
+    - Steps 1–4 (version + shape + canonical-message reconstruction +
+      BIP-322) in-SDK.
+    - Step 5 (live bond re-resolution against Bitcoin chain state) via
+      `@orangecheck/sdk`'s `check()` — Nostr discovery + Esplora chain
+      query, browser-side, no OC server in the critical path.
+    - Step 7 (agent §7.3 delegation chain) via
+      `@orangecheck/agent-core`'s `verifyDelegation`. Agent-delegated
+      pledges with bad principal / agent / scope / expiry now fail with
+      explicit `E_DELEGATION_*` codes on the live pages.
+    - Step 9 (state classification) in-SDK with the §4.4 transition
+      function fed pledge + outcome + abandonment envelopes from Nostr.
+- The composer at `pledge.ochk.io/create`, the resolver at `/p/<id>`,
+  the verifier at `/verify`, the address ledger at `/address/<addr>`,
+  and the author panel for abandonment + counterparty-signed outcomes
+  are all live and exercised.
+- The dogfood RUNBOOK fired before this cut; the case-studies table in
+  `PROTOCOL.md` carries the procedure for subsequent OC-led pledges.
+
+What's still consumer-side after v1.0:
+
+- SPEC §9.1 step 8 (deterministic-mechanism re-evaluation against
+  public state for the seven §3.4 mechanisms). The SDKs validate query
+  shape via `validate_resolution_query`; actual chain / Nostr / HTTP /
+  DNS / Vote evaluation against the predicate is left to consumers.
+  In practice the live `/p/<id>` resolver fetches matching outcome
+  envelopes from Nostr and lets the §4.4 transition function carry the
+  classification, so "kept by deterministic chain_state" surfaces
+  correctly without re-running the chain query.
+- `http_get_hash` majority-of-three and `dns_record` multi-resolver
+  agreement (SPEC §3.4.5, §3.4.6) at outcome-publication time.
+
+### Spec changes
+
+None. The wire format and grammar are byte-stable from v0.1.0-alpha.
+v1.0 just renames "v0.1" → "v1.0" throughout the spec body and bumps
+`Status: Draft (v0.1.0-alpha)` → `Status: Stable`. Future changes that
+break the wire format will increment the canonical-message domain
+separator (`oc-pledge/v1` → `oc-pledge/v2`).
+
+### Implementation versions at the cut
+
+- `@orangecheck/pledge-core` 0.2.0 (npm) — bumps to 1.0.0 in
+  oc-packages alongside this protocol cut.
+- `orangecheck` 0.3.0 (PyPI) — bumps to 1.0.0 in oc-packages
+  alongside this protocol cut.
+
 ## [Unreleased] — 2026-05
 
 ### Reference implementations — v0.2 cut-line cleared

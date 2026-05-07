@@ -13,7 +13,7 @@ We aim to acknowledge within 48 hours and publish a fix for high/critical issues
 
 ## Scope
 
-This document covers the **OC Pledge v0.1 protocol specification** in this repository. The reference implementation lives in [`orangecheck/oc-packages`](https://github.com/orangecheck/oc-packages) and has its own `SECURITY.md`. The hosted reference web client at [pledge.ochk.io](https://pledge.ochk.io) is closed-source; report web-client security issues via `security@ochk.io`.
+This document covers the **OC Pledge v1.0 protocol specification** in this repository. The reference implementation lives in [`orangecheck/oc-packages`](https://github.com/orangecheck/oc-packages) and has its own `SECURITY.md`. The hosted reference web client at [pledge.ochk.io](https://pledge.ochk.io) is closed-source; report web-client security issues via `security@ochk.io`.
 
 ## Reference implementation status (2026-05)
 
@@ -55,7 +55,7 @@ Cross-impl conformance is gated in CI (`oc-packages/.github/workflows/packages.y
 - **Recency of `sworn_at`.** The signer sets `sworn_at`; it is not forgery-proof. Verifiers MAY reject pledges whose `sworn_at` is far in the future of their wall clock.
 - **Counterparty cooperation.** A `counterparty_signs` pledge depends on the counterparty's willingness to sign. A non-signing counterparty drives the pledge to `expired_unresolved`.
 - **Bond seizure.** Bonds are commitments, not custody. The protocol cannot transfer or burn the bonded sats. Enforcement is by public-record exposure only.
-- **Post-quantum confidentiality / authenticity.** secp256k1 and SHA-256 both break under a sufficiently large quantum computer. There is no PQ layer in v0.1.
+- **Post-quantum confidentiality / authenticity.** secp256k1 and SHA-256 both break under a sufficiently large quantum computer. There is no PQ layer in v1.0.
 
 ### Assumptions the protocol makes
 
@@ -71,7 +71,7 @@ Cross-impl conformance is gated in CI (`oc-packages/.github/workflows/packages.y
 These are cryptographic correctness conditions that conforming implementations MUST satisfy:
 
 1. **Reconstruct the canonical message before trusting the declared `id`.** Implementations MUST compute `H(canonical_message)` from the canonical-message inputs and compare to `envelope.id`. Accepting the declared `id` without reconstruction allows attackers to swap signed content.
-2. **Verify `sig.value` before trusting envelope contents.** No exceptions in v0.1.
+2. **Verify `sig.value` before trusting envelope contents.** No exceptions in v1.0.
 3. **Re-resolve every bond against live chain state** (SPEC §8) before attaching consequential weight to a pledge. Trusting a stale snapshot allows bond-draining attacks.
 4. **Recompute deterministic outcome evidence on-demand.** A verifier presented with a deterministic outcome envelope SHOULD recompute the witness from public state.
 5. **Verify `counterparty_signs` outcome signatures under the named counterparty's address.** An outcome envelope signed by a stranger MUST be rejected with `E_OUTCOME_RESOLVER_UNAUTHORIZED`.

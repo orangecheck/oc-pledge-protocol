@@ -8,21 +8,21 @@ The registry is governed by PR to this file. New entries require working integra
 
 ## 1. `resolution.mechanism`
 
-The seven values in v0.1 are exhaustive. Adding an eighth is a spec change with a `v` bump (SPEC §13).
+The seven values in v1.0 are exhaustive. Adding an eighth is a spec change with a `v` bump (SPEC §13).
 
 | Value | Status | Determinism | First introduced |
 |---|---|---|---|
-| `chain_state` | accepted | deterministic | v0.1 |
-| `counterparty_signs` | accepted | non-deterministic (requires named signature) | v0.1 |
-| `nostr_event_exists` | accepted | deterministic (modulo relay availability) | v0.1 |
-| `stamp_published` | accepted | deterministic | v0.1 |
-| `http_get_hash` | accepted | deterministic (modulo network conditions; majority-of-3 rule) | v0.1 |
-| `dns_record` | accepted | deterministic (multi-resolver) | v0.1 |
-| `vote_resolves` | accepted | deterministic (OC Vote tally is pure) | v0.1 |
+| `chain_state` | accepted | deterministic | v1.0 |
+| `counterparty_signs` | accepted | non-deterministic (requires named signature) | v1.0 |
+| `nostr_event_exists` | accepted | deterministic (modulo relay availability) | v1.0 |
+| `stamp_published` | accepted | deterministic | v1.0 |
+| `http_get_hash` | accepted | deterministic (modulo network conditions; majority-of-3 rule) | v1.0 |
+| `dns_record` | accepted | deterministic (multi-resolver) | v1.0 |
+| `vote_resolves` | accepted | deterministic (OC Vote tally is pure) | v1.0 |
 
 ### Refused mechanisms
 
-These are **explicitly refused** in v0.1. Implementations that encounter them MUST reject the pledge with `E_RESOLUTION_UNKNOWN` or `E_RESOLUTION_NONDETERMINISTIC`.
+These are **explicitly refused** in v1.0. Implementations that encounter them MUST reject the pledge with `E_RESOLUTION_UNKNOWN` or `E_RESOLUTION_NONDETERMINISTIC`.
 
 | Value | Refusal reason |
 |---|---|
@@ -38,9 +38,9 @@ These are **explicitly refused** in v0.1. Implementations that encounter them MU
 
 | Value | Status | Resolver | First introduced |
 |---|---|---|---|
-| `null` | accepted | n/a — disputes time out to `expired_unresolved` | v0.1 |
-| `vote_resolves` | accepted | OC Vote poll named in `dispute.params` | v0.1 |
-| `named_oracle` | accepted | A specific Bitcoin address named in `dispute.params`. Their BIP-322 signature over a "dispute resolution" envelope is the dispute outcome. | v0.1 |
+| `null` | accepted | n/a — disputes time out to `expired_unresolved` | v1.0 |
+| `vote_resolves` | accepted | OC Vote poll named in `dispute.params` | v1.0 |
+| `named_oracle` | accepted | A specific Bitcoin address named in `dispute.params`. Their BIP-322 signature over a "dispute resolution" envelope is the dispute outcome. | v1.0 |
 
 ### `vote_resolves` dispute params grammar
 
@@ -70,7 +70,7 @@ The named oracle publishes a single outcome envelope with `outcome.resolved_by =
 
 | Value | Status | Meaning | First introduced |
 |---|---|---|---|
-| `breach_recorded` | accepted | A broken pledge attaches to the swearer's address in the public ledger. No further action by the protocol. | v0.1 |
+| `breach_recorded` | accepted | A broken pledge attaches to the swearer's address in the public ledger. No further action by the protocol. | v1.0 |
 
 ### Refused remediations
 
@@ -80,7 +80,7 @@ The named oracle publishes a single outcome envelope with `outcome.resolved_by =
 | `auto_payout` | Requires custody and routing. |
 | `escrow_release` | Requires custody. |
 | `revocation` | Pledges cannot be revoked (WHY §H8). |
-| `pledge_chain_continuation` | v0.1 explicitly defers pledge chains (WHY §H10). |
+| `pledge_chain_continuation` | v1.0 explicitly defers pledge chains (WHY §H10). |
 
 ---
 
@@ -109,8 +109,8 @@ The OC Agent v1 spec ([SPEC §7](https://github.com/orangecheck/oc-agent-protoco
 
 | Field | Value | First introduced |
 |---|---|---|
-| `swearer.alg` | `bip322` | v0.1 |
-| `sig.alg` | `bip322` | v0.1 |
+| `swearer.alg` | `bip322` | v1.0 |
+| `sig.alg` | `bip322` | v1.0 |
 
 Reserved future values: `bip340-schnorr-direct`, `pq-hybrid` (post-quantum hybrid signing). Adding either is a `v` bump.
 
@@ -150,7 +150,7 @@ Speculative proposals (without working integrator code) are refused. The registr
 
 ## 8. Refused-by-design summary
 
-This is the consolidated list of mechanisms, remediations, and dispute paths the protocol **refuses** in v0.1. Implementations MUST reject pledges that attempt them.
+This is the consolidated list of mechanisms, remediations, and dispute paths the protocol **refuses** in v1.0. Implementations MUST reject pledges that attempt them.
 
 | Refused | Where refused | Why |
 |---|---|---|
@@ -162,7 +162,7 @@ This is the consolidated list of mechanisms, remediations, and dispute paths the
 | `slashing` remediation | §3 | Requires custody (WHY §H7). |
 | `auto_payout` remediation | §3 | Requires custody. |
 | `revocation` remediation | §3 | Pledges cannot be revoked (WHY §H8). |
-| `pledge_chain_continuation` remediation | §3 | Deferred from v0.1 (WHY §H10). |
+| `pledge_chain_continuation` remediation | §3 | Deferred from v1.0 (WHY §H10). |
 | `trust_score` dispute | §2 | Embeds a reputation system (WHY §H6). |
 | `juror_lottery` dispute | §2 | Post-hoc trust-ranking (WHY §H9). |
 | `auction_resolution` dispute | §2 | Embeds a token economy. |
