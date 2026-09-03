@@ -12,7 +12,7 @@ The original three case studies (research preregistration, bilateral SLA, OSS de
   - Check / create at <https://attest.ochk.io/create>.
   - Note the resulting `attestation_id` (64-hex SHA-256 of the OrangeCheck canonical message).
 - A wallet that supports BIP-322 message signing for the bonded address (UniSat, Xverse, Leather, OKX, Sparrow, etc).
-- Network access to `wss://relay.nostr.band`, `wss://nos.lol`, `wss://relay.primal.net`, `wss://offchain.pub` (the default relay set the composer publishes to).
+- Network access to `wss://relay.ochk.io`, `wss://nos.lol`, `wss://relay.primal.net`, `wss://offchain.pub` (the default relay set the composer publishes to).
 
 The composer at <https://pledge.ochk.io/create> handles every step below — signing happens in your wallet, publishing happens to Nostr from your browser, and the resulting `/p/<id>` URL is sharable.
 

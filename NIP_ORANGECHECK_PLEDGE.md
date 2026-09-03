@@ -191,7 +191,7 @@ These are **raw** queries. The protocol explicitly does not ship aggregated repu
 Implementations SHOULD publish each pledge / outcome / abandonment to at least three relays from a diverse set. The reference clients use the OC family default set:
 
 - `wss://relay.damus.io`
-- `wss://relay.nostr.band`
+- `wss://relay.ochk.io`
 - `wss://nos.lol`
 - `wss://relay.snort.social`
 
