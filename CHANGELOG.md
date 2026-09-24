@@ -4,6 +4,27 @@ All notable changes to the OC Pledge protocol specification.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Clarified
+
+No wire-format change. §11 restates verifier obligations already implied by
+§4.3, §5.3 and §7.3:
+
+- §11.4: an unrecomputed deterministic outcome is a claim; its state MUST NOT be
+  presented as final.
+- §11.10 (new): outcomes and abandonments bind to the pledge they name —
+  recomputed `pledge_id`, matching `evidence.mechanism`, the §4.3 resolver,
+  deterministic `resolved_at` no earlier than `resolves_at`, and the full §5.3
+  swearer rule for abandonments.
+- §11.11 (new): among several events claiming the same envelope, use one that
+  verifies, not the newest.
+- §11.12 (new): an agent-signed pledge verifies only once its delegation,
+  including revocation, is resolved; an unqueryable revocation feed is not an
+  empty one.
+
+`@orangecheck/pledge-core` 3.0.0 enforces §11.10 and §11.12 in its verifiers.
+
 ## [1.0.0] — 2026-05
 
 First stable release of OC Pledge.
