@@ -109,13 +109,13 @@ On 2026-08-15, Alice's preprint is ready. Her client:
 
 1. Computes the SHA-256 of the published bytes — confirms it matches the pre-committed hash.
 2. Runs the OC Stamp signing flow ([oc-stamp-protocol](https://github.com/orangecheck/oc-stamp-protocol)) to produce a stamp envelope at `signed_at: 2026-08-15T10:00:00Z`.
-3. Publishes the stamp envelope to Nostr kind-30084 with d-tag `oc-stamp:<stamp_id>`.
+3. Publishes the stamp envelope to Nostr kind-30083 with d-tag `oc-stamp:<stamp_id>`.
 
 The pledge is now mechanically resolvable. **Any verifier** with a Bitcoin node and Nostr access can classify it without consulting Alice or any registrar:
 
 ```
 verifyOutcome(pledge):
-  matches = nostr.query(kind=30084, addr=bc1qalice…, hash=sha256:e3b0c4…)
+  matches = nostr.query(kind=30083, addr=bc1qalice…, hash=sha256:e3b0c4…)
   if any(m.signed_at < pledge.resolves_at and stamp.verify(m)):
     return outcome=kept, witness={ stamp_id: m.id, nostr_event_id: ... }
 ```
@@ -300,7 +300,7 @@ Per [OC Agent v1 SPEC](https://github.com/orangecheck/oc-agent-protocol), the pr
 oc-agent:delegation:v1
 principal: bc1qprincipal…
 agent: bc1qagent…
-scopes: pledge:create(max_bond_sats=2000000,mechanism=chain_state)
+scopes: pledge:create(max_bond_sats<=2000000,mechanism=chain_state)
 bond_sats: 0
 bond_attestation: none
 issued_at: 2026-04-22T12:00:00Z
@@ -351,7 +351,7 @@ The verifier:
 2. Verifies the BIP-322 signature under `bc1qagent…` (the agent address) over the hex pledge id.
 3. Resolves the named delegation per OC Agent SPEC §8.1.
 4. Confirms `delegation.principal == swearer` (`bc1qprincipal…`) and `delegation.agent == agent_address`.
-5. Confirms scope: `pledge:create(max_bond_sats=2000000,mechanism=chain_state)` — pledge bonds 1M sats (≤ 2M ceiling) with mechanism `chain_state`. Pass.
+5. Confirms scope: `pledge:create(max_bond_sats<=2000000,mechanism=chain_state)` — pledge bonds 1M sats (≤ 2M ceiling) with mechanism `chain_state`. Pass.
 6. Confirms `delegation.expires_at > sworn_at`. Pass.
 7. Verifies bond against live chain state.
 8. Classifies state per §4.4.

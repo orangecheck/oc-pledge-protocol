@@ -198,7 +198,7 @@ Queries the existence of a specific OC Stamp envelope. Grammar:
 stamp(content_hash=<sha256:hex>, signer=<addr>)
 ```
 
-The verifier looks up matching OC Stamp kind-30084 events (per [OC Stamp SPEC §7](https://github.com/orangecheck/oc-stamp-protocol/blob/main/SPEC.md#7-nostr-directory-optional)) and validates each. The pledge resolves `kept` if at least one matching stamp is authentic AND its signed_at predates `pledge.resolves_at`.
+The verifier looks up matching OC Stamp kind-30083 events (per [OC Stamp SPEC §7](https://github.com/orangecheck/oc-stamp-protocol/blob/main/SPEC.md#7-nostr-directory-optional)) and validates each. The pledge resolves `kept` if at least one matching stamp is authentic AND its signed_at predates `pledge.resolves_at`.
 
 #### 3.4.5 `http_get_hash`
 
@@ -485,7 +485,7 @@ The `bond` block in every pledge is an OrangeCheck attestation reference plus mi
 
 ### 7.2 Stamp_published as resolution
 
-Pledges of the form "I will publish X by time T" use `resolution.mechanism = stamp_published`. The verifier looks up the named OC Stamp envelope via Nostr kind-30084 (per [OC Stamp SPEC §7](https://github.com/orangecheck/oc-stamp-protocol/blob/main/SPEC.md#7-nostr-directory-optional)). This is the canonical composition for content-publication pledges.
+Pledges of the form "I will publish X by time T" use `resolution.mechanism = stamp_published`. The verifier looks up the named OC Stamp envelope via Nostr kind-30083 (per [OC Stamp SPEC §7](https://github.com/orangecheck/oc-stamp-protocol/blob/main/SPEC.md#7-nostr-directory-optional)). This is the canonical composition for content-publication pledges.
 
 ### 7.3 Agent-signed pledges via OC Agent delegation
 
@@ -511,13 +511,15 @@ Scope grammar for `pledge:create` (extension to OC Agent's scope grammar, coordi
 
 ```
 pledge:create
-pledge:create(max_bond_sats=<N>)
+pledge:create(max_bond_sats<=<N>)
 pledge:create(mechanism=<m>)
 pledge:create(counterparty=<addr>)
-pledge:create(max_bond_sats=<N>,mechanism=<m>)
+pledge:create(max_bond_sats<=<N>,mechanism=<m>)
 ```
 
-Multiple constraints comma-separated inside the parentheses. A pledge SHALL pass scope check iff every named constraint is satisfied.
+Multiple constraints comma-separated inside the parentheses, in OC Agent canonical form (sorted by key). A pledge SHALL pass scope check iff every named constraint is satisfied.
+
+`max_bond_sats` is a ceiling (`bond.min_sats <= N`) and uses OC Agent's range operator `<=`; in OC Agent `=` is an exact match for sub-scope checks. Delegations issued with the earlier `max_bond_sats=<N>` form SHOULD still be read as the same ceiling. `mechanism` and `counterparty` use `=`; `counterparty=null` means the pledge names no counterparty. A constraint key, operator, or value the verifier does not recognise MUST fail the scope check.
 
 ### 7.4 Vote_resolves dispute mechanism
 

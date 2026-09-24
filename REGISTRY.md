@@ -91,15 +91,15 @@ For agent-signed pledges (SPEC §7.3), the OC Agent delegation's scope grammar i
 | Scope form | Meaning |
 |---|---|
 | `pledge:create` | Unconstrained: agent may swear any pledge on the principal's behalf. |
-| `pledge:create(max_bond_sats=<N>)` | Bond ceiling: pledge `bond.min_sats <= N`. |
+| `pledge:create(max_bond_sats<=<N>)` | Bond ceiling: pledge `bond.min_sats <= N`. The earlier `max_bond_sats=<N>` form is read as the same ceiling. |
 | `pledge:create(mechanism=<m>)` | Restricts agent to the named resolution mechanism. |
 | `pledge:create(counterparty=<addr>)` | Restricts agent to pledges with the named counterparty (or, for `null`, no counterparty). |
-| `pledge:create(max_bond_sats=<N>,mechanism=<m>)` | Conjunction. |
-| `pledge:create(max_bond_sats=<N>,counterparty=<addr>)` | Conjunction. |
-| `pledge:create(mechanism=<m>,counterparty=<addr>)` | Conjunction. |
-| `pledge:create(max_bond_sats=<N>,mechanism=<m>,counterparty=<addr>)` | Three-way conjunction. |
+| `pledge:create(max_bond_sats<=<N>,mechanism=<m>)` | Conjunction. |
+| `pledge:create(counterparty=<addr>,max_bond_sats<=<N>)` | Conjunction. |
+| `pledge:create(counterparty=<addr>,mechanism=<m>)` | Conjunction. |
+| `pledge:create(counterparty=<addr>,max_bond_sats<=<N>,mechanism=<m>)` | Three-way conjunction. |
 
-Constraints inside parentheses are comma-separated (no spaces). A pledge passes scope check iff every named constraint is satisfied. Unknown constraint keys MUST cause the verifier to reject the pledge with `E_DELEGATION_SCOPE_VIOLATED` (fail-closed for unknown constraint vocabulary).
+Constraints inside parentheses are comma-separated (no spaces) and sorted by key, OC Agent's canonical form. A pledge passes scope check iff every named constraint is satisfied. Unknown constraint keys MUST cause the verifier to reject the pledge with `E_DELEGATION_SCOPE_VIOLATED` (fail-closed for unknown constraint vocabulary).
 
 The OC Agent v1 spec ([SPEC §7](https://github.com/orangecheck/oc-agent-protocol/blob/main/SPEC.md)) governs the broader scope grammar; this section adds only the `pledge:create` forms.
 

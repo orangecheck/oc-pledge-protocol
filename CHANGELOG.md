@@ -25,6 +25,27 @@ No wire-format change. §11 restates verifier obligations already implied by
 
 `@orangecheck/pledge-core` 3.0.0 enforces §11.10 and §11.12 in its verifiers.
 
+### Corrected
+
+- **OC Stamp kind.** §3.4.4, §7.2, PROTOCOL.md and the NIP named kind 30084
+  for stamp envelopes. Stamps are kind 30083 (co-claimed with OC Agent
+  delegations under the `oc-stamp:` prefix); 30084 is OC Agent actions.
+- **`pledge:create` ceiling operator (§7.3, REGISTRY.md).** The bond ceiling is
+  written `max_bond_sats<=<N>`, OC Agent's range operator; in OC Agent `=` is an
+  exact match. The earlier `max_bond_sats=<N>` form SHOULD still be read as the
+  same ceiling. Examples are in OC Agent canonical form (constraints sorted by
+  key). Unrecognised keys, operators or values fail the scope check.
+- **Nostr discovery tags (NIP_ORANGECHECK_PLEDGE.md).** The document listed
+  multi-letter tags (`addr`, `mechanism`, `pledge`, …) that relays do not index,
+  so its discovery filters returned nothing or closed the subscription. It now
+  specifies the single-letter `t` tags the reference client has always
+  published: the swearer (and counterparty) address on pledges, the pledge id
+  on outcomes and abandonments, the resolver or swearer address, and an
+  `oc-pledge*` marker. Multi-letter tags remain optional and informational.
+  Events already published carry these `t` tags and need no change; pledges
+  published before 2026-09-24 lack the counterparty `t` tag, so counterparty
+  discovery finds only newer ones.
+
 ## [1.0.0] — 2026-05
 
 First stable release of OC Pledge.
