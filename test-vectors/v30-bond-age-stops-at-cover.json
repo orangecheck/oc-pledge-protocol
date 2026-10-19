@@ -1,0 +1,48 @@
+{
+  "description": "bond verification — days_unspent stops at the coins that cover min_sats: 300,000 sats at 400 days and 250,000 at 200 days cover 500,000, so days_unspent is 200, and a 600,000-sat output 1 day old does not lower it",
+  "kind": "bond-verification",
+  "inputs": {
+    "pledge_id": "c08d3ef9031a89b3274180c27bf4f8df5e72e65b14d2f537266f0742fa2dacc7",
+    "bond": {
+      "attestation_id": "1111111111111111111111111111111111111111111111111111111111111111",
+      "min_sats": 500000,
+      "min_days": 180
+    },
+    "resolves_at_block": 980000,
+    "now": "2026-10-19T00:00:00Z",
+    "utxos": [
+      {
+        "txid": "2222222222222222222222222222222222222222222222222222222222222222",
+        "vout": 0,
+        "value": 600000,
+        "block_height": 972000,
+        "block_time": 1792281600
+      },
+      {
+        "txid": "4444444444444444444444444444444444444444444444444444444444444444",
+        "vout": 1,
+        "value": 250000,
+        "block_height": 943400,
+        "block_time": 1775088000
+      },
+      {
+        "txid": "3333333333333333333333333333333333333333333333333333333333333333",
+        "vout": 0,
+        "value": 300000,
+        "block_height": 914500,
+        "block_time": 1757808000
+      }
+    ],
+    "attestation_resolved": {
+      "sats_bonded": 1150000,
+      "days_unspent": 200,
+      "address": "bc1qalice000000000000000000000000000000000",
+      "valid_at_block": 972000
+    }
+  },
+  "expected": {
+    "ok": true,
+    "code": null,
+    "days_unspent": 200
+  }
+}

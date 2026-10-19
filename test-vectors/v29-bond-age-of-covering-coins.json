@@ -1,0 +1,41 @@
+{
+  "description": "bond verification — days_unspent is the age of the coins covering min_sats (§8, OC Attest SPEC §7 step 5.d): a 546-sat output 400 days old and a 600,000-sat output 1 day old give days_unspent 1",
+  "kind": "bond-verification",
+  "inputs": {
+    "pledge_id": "c08d3ef9031a89b3274180c27bf4f8df5e72e65b14d2f537266f0742fa2dacc7",
+    "bond": {
+      "attestation_id": "1111111111111111111111111111111111111111111111111111111111111111",
+      "min_sats": 500000,
+      "min_days": 180
+    },
+    "resolves_at_block": 980000,
+    "now": "2026-10-19T00:00:00Z",
+    "utxos": [
+      {
+        "txid": "2222222222222222222222222222222222222222222222222222222222222222",
+        "vout": 0,
+        "value": 600000,
+        "block_height": 972000,
+        "block_time": 1792281600
+      },
+      {
+        "txid": "3333333333333333333333333333333333333333333333333333333333333333",
+        "vout": 0,
+        "value": 546,
+        "block_height": 914500,
+        "block_time": 1757808000
+      }
+    ],
+    "attestation_resolved": {
+      "sats_bonded": 600546,
+      "days_unspent": 1,
+      "address": "bc1qalice000000000000000000000000000000000",
+      "valid_at_block": 972000
+    }
+  },
+  "expected": {
+    "ok": false,
+    "code": "E_BOND_INSUFFICIENT_DAYS",
+    "days_unspent": 1
+  }
+}

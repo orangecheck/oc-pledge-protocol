@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ## [Unreleased]
 
+### Changed
+
+- **§8 bond age.** `days_unspent` is now the age of the coins covering
+  `min_sats`, as in OC Attest SPEC §7 step 5.d: the attested address's
+  outputs, oldest first, until they reach `min_sats`, aged by the youngest of
+  them. It was the age of the oldest output at the address. §7.1 says the same
+  for the `@orangecheck/sdk` path (`coverSats`). Vectors `v29` and `v30`.
+  `@orangecheck/pledge-core` 3.1.2 passes `min_sats` to the attestation lookup.
+
 ### Clarified
 
 No wire-format change. §11 restates verifier obligations already implied by

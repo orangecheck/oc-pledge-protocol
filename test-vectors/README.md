@@ -46,7 +46,7 @@ Given the `inputs` of an envelope vector, a compliant implementation MUST:
 3. Serialize the envelope with RFC 8785 JSON canonicalization, matching `expected.envelope` when re-parsed.
 4. Return the id as lowercase hex.
 
-For Shape B vectors, a compliant implementation MUST produce the `expected.state` (for state-transition vectors) or the `expected.code` (for bond-verification vectors), given the inputs and any relevant public-state fixtures.
+For Shape B vectors, a compliant implementation MUST produce the `expected.state` (for state-transition vectors) or the `expected.code` (for bond-verification vectors), given the inputs and any relevant public-state fixtures. Bond vectors that carry `now` and `utxos` (the attested address's confirmed unspent outputs, `block_time` in Unix seconds) also give `expected.days_unspent`; an implementation that ages coins itself MUST derive it from them per SPEC §8.
 
 For Shape C malformed-input vectors, a compliant implementation MUST raise the named `expected.error` code at envelope construction (or as early as possible during verification).
 
@@ -112,6 +112,8 @@ New implementations should add a similar test.
 | `v26-state-broken-via-abandonment.json` | B | State machine: abandonment envelope before resolves_at → broken (no honorable exit). |
 | `v27-state-expired-unresolved.json` | B | State machine: past expires_at with no consistent outcome → expired_unresolved. |
 | `v28-empty-nonce-rejected.json` | C | Pledge with empty `nonce` MUST be rejected at envelope construction. |
+| `v29-bond-age-of-covering-coins.json` | B | Bond verification: `days_unspent` is the age of the coins covering `min_sats`, not of the oldest output. |
+| `v30-bond-age-stops-at-cover.json` | B | Bond verification: the covering coins stop at `min_sats`; a newer output beyond them does not lower the age. |
 
 ## Round-trip verification
 

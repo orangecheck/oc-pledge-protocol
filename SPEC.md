@@ -481,7 +481,7 @@ OC Pledge composes with every other family primitive by design. None of the comp
 
 ### 7.1 Stake bond via OrangeCheck
 
-The `bond` block in every pledge is an OrangeCheck attestation reference plus minimum thresholds (§2). Verifiers MUST re-resolve via [`@orangecheck/sdk#verify`](https://github.com/orangecheck/oc-attest-protocol) and confirm `sats_bonded >= min_sats AND days_unspent >= min_days` at verification time. Failure → `E_BOND_INSUFFICIENT_SATS`, `E_BOND_INSUFFICIENT_DAYS`, or `E_BOND_SPENT`.
+The `bond` block in every pledge is an OrangeCheck attestation reference plus minimum thresholds (§2). Verifiers MUST re-resolve via [`@orangecheck/sdk#verify`](https://github.com/orangecheck/oc-attest-protocol) and confirm `sats_bonded >= min_sats AND days_unspent >= min_days` at verification time, with `days_unspent` the age of the coins covering `min_sats` (§8; `verify(…, { coverSats: min_sats })`). Failure → `E_BOND_INSUFFICIENT_SATS`, `E_BOND_INSUFFICIENT_DAYS`, or `E_BOND_SPENT`.
 
 ### 7.2 Stamp_published as resolution
 
@@ -545,7 +545,7 @@ verifyBond(pledge, now, chain) ->
   if attestation.utxo_spent_at_or_before(now):  return E_BOND_SPENT
   if attestation.sats_bonded < pledge.bond.min_sats:
                                                 return E_BOND_INSUFFICIENT_SATS
-  if attestation.days_unspent(now) < pledge.bond.min_days:
+  if attestation.days_unspent(now, pledge.bond.min_sats) < pledge.bond.min_days:
                                                 return E_BOND_INSUFFICIENT_DAYS
   return OK
 ```
@@ -555,7 +555,9 @@ The bond is verified at:
 1. **`sworn_at`** — confirms the bond existed when the pledge was sworn.
 2. **`now`** — confirms the bond still exists at the verifier's clock (the live signal).
 
-Test vectors `v18-bond-valid.json`, `v19-bond-insufficient-sats.json`, `v20-bond-spent.json` pin the canonical decision tree.
+`days_unspent(now, cover)` is the age of the coins that cover `cover`, the rule of [OC Attest SPEC §7](https://github.com/orangecheck/oc-attest-protocol/blob/main/SPEC.md) step 5.d. Sort the attested address's confirmed unspent outputs oldest first by `(block_height, txid, vout)`, take them until their sum reaches `cover`, and count whole days since the youngest one taken was confirmed. With `cover = 0` that is the oldest output's age. An attestation with a `bond:` line already ages its bonded set this way (OC Attest §7 step 5.e). `sats_bonded` is unchanged: the whole confirmed balance, or the `bond:` amount.
+
+Test vectors `v18-bond-valid.json`, `v19-bond-insufficient-sats.json`, `v20-bond-spent.json` pin the canonical decision tree; `v29-bond-age-of-covering-coins.json` and `v30-bond-age-stops-at-cover.json` pin `days_unspent(now, cover)`.
 
 A swearer who spends the bonded UTXO mid-pledge has degraded their bond signal; verifiers see `E_BOND_SPENT` and treat the pledge as bond-invalid in policies that require an active bond at verification time. This is structurally equivalent to breaking the pledge from the verifier's perspective, but the state-machine classification (§4.4) remains driven by outcome / abandonment envelopes — the protocol does not seize sats and does not auto-classify spent-bond as `broken`. See SECURITY.md §"bond-draining attack" for the threat-model rationale.
 
