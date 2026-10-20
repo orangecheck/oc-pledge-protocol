@@ -125,4 +125,4 @@ A one-shot Node.js script under `/tmp` at authoring time computed every canonica
 
 ## License
 
-Test vectors are CC BY 4.0 (per the repository LICENSE).
+Test vectors are MIT (per the repository LICENSE).

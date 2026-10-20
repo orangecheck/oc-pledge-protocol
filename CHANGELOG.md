@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ### Changed
 
+- **License.** Relicensed from CC BY 4.0 to MIT, the license of the other
+  OrangeCheck specifications. The root `LICENSE` now covers the specification,
+  prose, examples and test vectors, so `examples/LICENSE-EXAMPLES` is removed.
+  Copies obtained earlier remain under CC BY 4.0.
 - **§8 bond age.** `days_unspent` is now the age of the coins covering
   `min_sats`, as in OC Attest SPEC §7 step 5.d: the attested address's
   outputs, oldest first, until they reach `min_sats`, aged by the youngest of

@@ -1,31 +1,21 @@
-Creative Commons Attribution 4.0 International (CC BY 4.0)
+MIT License
 
 Copyright (c) 2026 OrangeCheck
 
-The OC Pledge protocol specification — including SPEC.md, PROTOCOL.md, WHY.md,
-SECURITY.md, NIP_ORANGECHECK_PLEDGE.md, REGISTRY.md, README.md, CHANGELOG.md,
-and the JSON test-vectors under test-vectors/ — is licensed under the Creative
-Commons Attribution 4.0 International License.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-You are free to:
-  - Share — copy and redistribute the material in any medium or format
-  - Adapt — remix, transform, and build upon the material for any purpose,
-            even commercially
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-Under the following terms:
-  - Attribution — You must give appropriate credit, provide a link to the
-                  license, and indicate if changes were made. You may do so in
-                  any reasonable manner, but not in any way that suggests the
-                  licensor endorses you or your use.
-
-The full legal text is at:
-  https://creativecommons.org/licenses/by/4.0/legalcode
-
-The example code in examples/ is dual-licensed and is additionally available
-under the MIT License (see examples/LICENSE-EXAMPLES). Implementers SHOULD use
-the examples directly without attribution friction; the spec text retains the
-attribution requirement.
-
-No warranties are given. The license may not give you all the permissions
-necessary for your intended use. Other rights such as publicity, privacy, or
-moral rights may limit how you use the material.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

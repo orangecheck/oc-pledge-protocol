@@ -143,4 +143,4 @@ See [`WHY.md`](./WHY.md) for the full design rationale and the explicit refusals
 
 ## License
 
-The specification and prose are CC BY 4.0; see [LICENSE](./LICENSE). Example code in [`examples/`](./examples/) is dual-licensed and additionally available under MIT; see [`examples/LICENSE-EXAMPLES`](./examples/LICENSE-EXAMPLES). The reference implementation in `oc-packages` will be MIT.
+The specification, prose, examples and test vectors are MIT; see [LICENSE](./LICENSE). The reference implementation in `oc-packages` is also MIT. Copies obtained before the change on 2026-10-20 remain under CC BY 4.0; see [CHANGELOG](./CHANGELOG.md).
