@@ -142,10 +142,10 @@ No signature needed — anyone with the same public state computes the same enve
 A grant committee in 2029 wants to know: how many forward commitments has Alice made, and how many did she keep? Bob queries:
 
 ```
-nostr.query(kind=30078, "#d-prefix": "oc-pledge:") AND envelope.swearer.address == bc1qalice…
+REQ { "kinds": [30078], "#t": ["bc1qalice…"] }
 ```
 
-He gets every pledge Alice has sworn. He cross-references with `oc-pledge-outcome:*` events for each. He computes his own statistic — kept-rate, average bond, longest-deadline — using whatever policy his committee has agreed on. **The protocol shipped no canonical score**; Bob's committee owns the policy.
+and keeps the events whose `d` starts with `oc-pledge:` and whose verified envelope has `swearer.address == bc1qalice…`. Relays match tag values whole, so there is no `d`-prefix query; the prefix is checked after fetching ([NIP_ORANGECHECK_PLEDGE.md](./NIP_ORANGECHECK_PLEDGE.md)). He gets every pledge Alice has sworn. He cross-references with `oc-pledge-outcome:*` events for each. He computes his own statistic — kept-rate, average bond, longest-deadline — using whatever policy his committee has agreed on. **The protocol shipped no canonical score**; Bob's committee owns the policy.
 
 ## Flow 2 — A SLA pledge between two service providers (counterparty_signs)
 
