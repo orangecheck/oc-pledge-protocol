@@ -7,7 +7,7 @@ OC Pledge is the **swear** verb in the OrangeCheck family — a commitment primi
 A pledge proves four things at once:
 
 1. **Authorship** — a specific Bitcoin address signed this exact proposition (BIP-322).
-2. **Bond** — the swearer committed sats × days unspent via an [OrangeCheck](https://docs.ochk.io/attest) attestation. Funds never move; the bond is a public commitment, not custody.
+2. **Bond** — the swearer committed sats × days unspent via an [OrangeCheck](https://ochk.io/docs/attest) attestation. Funds never move; the bond is a public commitment, not custody.
 3. **Resolution mechanism** — one of seven deterministic mechanisms over public state (Bitcoin chain, Nostr events, OC Stamp envelopes, HTTP hashes, DNS records, OC Vote tallies, or counterparty BIP-322 signatures).
 4. **Public ledger** — the kept-or-broken outcome attaches to the swearer's address forever, queryable by any verifier.
 

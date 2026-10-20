@@ -211,4 +211,4 @@ The family is now complete.
 
 ## Acknowledgements
 
-OC Pledge owes its design to the discipline of the five primitives that came before it, and to **Bram Kanstein** for the "Bitcoin as sovereignty substrate" framing that grounds the entire family. The family lineage is documented at [docs.ochk.io](https://docs.ochk.io).
+OC Pledge owes its design to the discipline of the five primitives that came before it, and to **Bram Kanstein** for the "Bitcoin as sovereignty substrate" framing that grounds the entire family. The family lineage is documented at [ochk.io/docs](https://ochk.io/docs).

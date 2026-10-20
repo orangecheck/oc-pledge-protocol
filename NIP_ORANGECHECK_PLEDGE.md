@@ -8,7 +8,7 @@
 
 ## Abstract
 
-This NIP defines how to publish and discover **OC Pledge envelopes** over Nostr. A pledge is a cryptographically signed forward commitment to a future-verifiable proposition, bonded by a Bitcoin stake (referenced via an [OrangeCheck](https://docs.ochk.io/attest) attestation), and resolved by one of seven deterministic mechanisms over public state. Three envelope kinds — pledge, outcome, abandonment — share a single Nostr event kind (30078) with disjoint d-tag namespaces.
+This NIP defines how to publish and discover **OC Pledge envelopes** over Nostr. A pledge is a cryptographically signed forward commitment to a future-verifiable proposition, bonded by a Bitcoin stake (referenced via an [OrangeCheck](https://ochk.io/docs/attest) attestation), and resolved by one of seven deterministic mechanisms over public state. Three envelope kinds — pledge, outcome, abandonment — share a single Nostr event kind (30078) with disjoint d-tag namespaces.
 
 Full protocol details live in **[SPEC.md](./SPEC.md)**. This NIP covers only the Nostr wire format.
 
@@ -238,4 +238,4 @@ OC Pledge v0.1 reuses Nostr kind 30078, the OrangeCheck family transport. A rela
 - SPEC: https://github.com/orangecheck/oc-pledge-protocol/blob/main/SPEC.md
 - WHY: https://github.com/orangecheck/oc-pledge-protocol/blob/main/WHY.md
 - SECURITY: https://github.com/orangecheck/oc-pledge-protocol/blob/main/SECURITY.md
-- Family: https://docs.ochk.io
+- Family: https://ochk.io/docs

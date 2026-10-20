@@ -2,7 +2,7 @@
 
 **Status:** Stable
 **Date:** 2026-05
-**Related:** [OrangeCheck](https://docs.ochk.io/attest) (identity + stake), [OC Lock v2](https://github.com/orangecheck/oc-lock-protocol) (private envelopes), [OC Stamp v1](https://github.com/orangecheck/oc-stamp-protocol) (content attestation), [OC Vote v1](https://github.com/orangecheck/oc-vote-protocol) (offline-tallyable polls), [OC Agent v1](https://github.com/orangecheck/oc-agent-protocol) (delegated authority)
+**Related:** [OrangeCheck](https://ochk.io/docs/attest) (identity + stake), [OC Lock v2](https://github.com/orangecheck/oc-lock-protocol) (private envelopes), [OC Stamp v1](https://github.com/orangecheck/oc-stamp-protocol) (content attestation), [OC Vote v1](https://github.com/orangecheck/oc-vote-protocol) (offline-tallyable polls), [OC Agent v1](https://github.com/orangecheck/oc-agent-protocol) (delegated authority)
 
 ---
 
