@@ -184,10 +184,11 @@ These are **raw** queries. The protocol explicitly does not ship aggregated repu
 
 Implementations SHOULD publish each pledge / outcome / abandonment to at least three relays from a diverse set. The reference clients use the OC family default set:
 
-- `wss://relay.damus.io`
 - `wss://relay.ochk.io`
 - `wss://nos.lol`
-- `wss://relay.snort.social`
+- `wss://relay.primal.net`
+- `wss://relay.damus.io`
+- `wss://nostr.oxtr.dev`
 
 Verifiers MUST query at least two relays from the default set when resolving `nostr_event_exists` or `stamp_published` mechanisms (SPEC §3.4.3, §3.4.4).
 

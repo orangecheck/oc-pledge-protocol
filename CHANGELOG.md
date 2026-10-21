@@ -40,6 +40,11 @@ No wire-format change. §11 restates verifier obligations already implied by
 
 ### Corrected
 
+- **Reference relay set** (`NIP_ORANGECHECK_PLEDGE.md` §Relay selection,
+  `RUNBOOK.md`): names the five relays the reference clients now publish to,
+  `@orangecheck/nostr-core`'s default set. `relay.snort.social` and
+  `offchain.pub` left it on 2026-10-21: snort kept none of the family events it
+  accepted, and offchain refused events signed by fresh keys. Non-normative.
 - **OC Stamp kind.** §3.4.4, §7.2, PROTOCOL.md and the NIP named kind 30084
   for stamp envelopes. Stamps are kind 30083 (co-claimed with OC Agent
   delegations under the `oc-stamp:` prefix); 30084 is OC Agent actions.
