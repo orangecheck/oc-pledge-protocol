@@ -97,6 +97,8 @@ pledge_id := H(canonical_message_bytes)
 
 Any change to the canonical message — including whitespace, capitalization, line endings, or the choice between `time:` and `block:` — produces a different id. Compliant clients MUST produce byte-identical canonical messages for identical inputs.
 
+The id covers the canonical message and nothing else. `via_delegation`, `agent_address` and `sig` are outside it, so anyone can publish a copy of a pledge under its id with those fields changed. Only the signature check (§3.5) and the delegation chain (§7.3) bind them; §11.11 says how a reader chooses among copies.
+
 ### 3.3 Envelope schema
 
 ```json
@@ -270,7 +272,7 @@ When `via_delegation` is present (agent-signed pledge — see §7.3), the signat
 | `sworn_at` | ISO 8601 UTC. The swearer's claim of signing time. Not load-bearing for resolution; the resolution mechanism's witness is. |
 | `nonce` | 32 lowercase hex chars. MUST be non-empty. SHOULD be uniformly random. |
 | `via_delegation` | Optional 64-hex OC Agent delegation id. If present, `sig` is produced by `agent_address`, and the verifier follows the agent-delegation verification path (§7.3). |
-| `agent_address` | Optional Bitcoin address; required iff `via_delegation` is present. |
+| `agent_address` | Optional Bitcoin address; required iff `via_delegation` is present. MUST differ from `swearer.address` (§7.3). |
 | `sig.alg` | MUST equal `"bip322"` in v1. |
 | `sig.pubkey` | MUST equal `swearer.address` when `via_delegation` is absent; MUST equal `agent_address` when present. |
 | `sig.value` | MUST verify under BIP-322 by `sig.pubkey` over the lowercase-hex `pledge_id`. |
@@ -500,6 +502,8 @@ A principal MAY delegate `pledge:create` scope to an agent under an [OC Agent v1
 - `sig.pubkey`: equals `agent_address`
 - `sig.value`: BIP-322 by agent over the pledge id
 
+`agent_address` MUST differ from `swearer.address`. A verifier MUST reject an envelope where they are equal with `E_PLEDGE_MALFORMED`, before it resolves any delegation (vector `v33`). A pledge the swearer signs directly carries neither `via_delegation` nor `agent_address`.
+
 The pledge counts in the **principal's** public ledger, not the agent's. Verifier algorithm:
 
 1. Resolve the named delegation per OC Agent SPEC §8.1.
@@ -642,7 +646,7 @@ These restate cryptographic correctness conditions a conforming implementation M
 8. **Produce byte-identical canonical messages** for identical inputs across implementations. Test-vector conformance (§14) is not optional.
 9. **Sign the hex form of every id** (64 ASCII bytes) with BIP-322, not the raw 32 bytes. This applies to pledge, outcome, and abandonment envelopes alike.
 10. **Bind every outcome and abandonment to the pledge it names.** Before an outcome or abandonment enters §4.4, the verifier MUST recompute the referenced pledge's id and compare it to `pledge_id`. For an outcome it MUST confirm `evidence.mechanism == pledge.resolution.mechanism` and the resolver named in §4.3; a deterministic outcome MUST satisfy `resolved_at >= resolves_at_normalized` (and `resolved_at >= expires_at` when `outcome == expired_unresolved`). A signed outcome MUST satisfy `resolved_at < expires_at`. For an abandonment it MUST apply §5.3 in full: `sig.pubkey == pledge.swearer.address`, `abandoned_at >= pledge.sworn_at`, and a BIP-322 signature that verifies under that address. An envelope failing any of these is ignored for classification.
-11. **Select by verification, not by recency.** Anyone can publish under an envelope's Nostr `d` tag. When several events claim the same pledge, outcome, abandonment, or delegation, a verifier MUST consider each and use one that verifies, never simply the newest.
+11. **Select by verification, not by recency.** Anyone can publish under an envelope's Nostr `d` tag. When several events claim the same pledge, outcome, abandonment, or delegation, a verifier MUST consider each and use one that verifies, never simply the newest. For a pledge, "verifies" means §9.1 steps 1–4 with the §7.3 chain as of `now`: copies of one id can differ in `via_delegation`, `agent_address` and `sig` (§3.2), so a check that skips the delegation does not choose a copy. Every copy that passes is the same pledge, and any one of them will do. If none passes, a history MAY use a copy that passes §7.3 as of its own `sworn_at`, labelled as §7.3 requires. Otherwise the pledge does not verify.
 12. **Resolve the delegation of every agent-signed pledge.** A pledge carrying `via_delegation` MUST NOT verify unless the §7.3 chain was resolved as of the time of verification, including the OC Agent revocation check. A revocation feed that could not be queried is not an empty feed; the verifier MUST treat the delegation as unresolved.
 
 ## 12. Registry for extensions

@@ -22,6 +22,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
   `expired_unresolved`; deterministic outcomes are exempt. `resolved_at` is the
   resolver's claim, so a late outcome dated inside the window needs an anchored
   time to catch. §11.10 says the same. Vector `v32`.
+- **§3.2, §7.3, §11.11 copies of one pledge.** The pledge id does not cover
+  `via_delegation`, `agent_address` or `sig`, so copies of one id can differ in
+  them. `agent_address` MUST differ from `swearer.address`, and a verifier
+  rejects an envelope where they are equal before resolving any delegation. A
+  reader chooses among copies by full verification, delegation included, as of
+  `now`; a history may fall back to a copy that passes as of its `sworn_at`.
+  Vector `v33`.
 - **License.** Relicensed from CC BY 4.0 to MIT, the license of the other
   OrangeCheck specifications. The root `LICENSE` now covers the specification,
   prose, examples and test vectors, so `examples/LICENSE-EXAMPLES` is removed.

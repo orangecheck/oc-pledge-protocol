@@ -44,7 +44,7 @@ This repository is the **normative protocol specification**. No code lives here 
 | [`NIP_ORANGECHECK_PLEDGE.md`](./NIP_ORANGECHECK_PLEDGE.md) | The Nostr wire format. Three d-tag namespaces under kind 30078. |
 | [`REGISTRY.md`](./REGISTRY.md) | Authoritative registry of mechanism strings, dispute mechanisms, scope grammar extensions. Refuses `self_proof`, `slashing`, etc. |
 | [`CHANGELOG.md`](./CHANGELOG.md) | Version history. |
-| [`test-vectors/`](./test-vectors/) | 28 cross-implementation conformance fixtures. Real SHA-256 ids; round-trip verified at authoring time. |
+| [`test-vectors/`](./test-vectors/) | 33 cross-implementation conformance fixtures. Real SHA-256 ids; round-trip verified at authoring time. |
 | [`examples/`](./examples/) | Three minimal envelope examples: research preregistration, SLA, OSS delivery. |
 
 ## Reference implementation
@@ -53,14 +53,14 @@ The TypeScript reference implementation will be published to **npm** from the [`
 
 ## Test vectors
 
-The [`test-vectors/`](./test-vectors/) directory holds 28 cross-implementation conformance fixtures grouped as:
+The [`test-vectors/`](./test-vectors/) directory holds 33 cross-implementation conformance fixtures grouped as:
 
 - **Pledge envelopes (v01–v10):** all seven resolution mechanisms, agent-delegated, edge cases (resolves_at == expires_at, block-height resolution).
 - **Outcome envelopes (v11–v16):** kept / broken / disputed / expired_unresolved across deterministic and signed mechanisms.
 - **Abandonment envelope (v17):** the canonical-message + id baseline.
-- **Bond verification (v18–v20):** valid, insufficient sats, spent UTXO.
-- **State transitions (v21–v27):** bilateral consistency, contradictory outcomes, pending/resolvable/kept/broken/expired-unresolved transitions.
-- **Malformed input (v28):** empty-nonce rejection.
+- **Bond verification (v18–v20, v29–v30):** valid, insufficient sats, spent UTXO, and the age of the covering coins.
+- **State transitions (v21–v27, v31–v32):** bilateral consistency, contradictory outcomes, pending/resolvable/kept/broken/expired-unresolved transitions, and outcomes dated after `now` or after `expires_at`.
+- **Malformed input (v28, v33):** empty-nonce rejection, and an agent address equal to the swearer.
 
 Each vector has fixed `inputs` and `expected` fields. A conforming implementation produces byte-identical canonical messages and matching SHA-256 ids for every vector. See [`test-vectors/README.md`](./test-vectors/README.md).
 
@@ -124,7 +124,7 @@ None of these are extensions of this protocol — they are usage patterns made t
 
 ## Status
 
-**v1.0 — Stable.** Cross-impl conformance is gated in CI: every PR runs both [`@orangecheck/pledge-core`](https://www.npmjs.com/package/@orangecheck/pledge-core) (TypeScript) and [`orangecheck.pledge`](https://pypi.org/project/orangecheck/) (Python, sub-module of the `orangecheck` PyPI package) against the 28 vectors in `test-vectors/` and fails if either drifts. The hosted reference web client at [pledge.ochk.io](https://pledge.ochk.io) does full SPEC §9.1 verification end-to-end, including live bond re-resolution against Bitcoin chain state and the §7.3 agent-delegation chain.
+**v1.0 — Stable.** Cross-impl conformance is gated in CI: every PR runs both [`@orangecheck/pledge-core`](https://www.npmjs.com/package/@orangecheck/pledge-core) (TypeScript) and [`orangecheck.pledge`](https://pypi.org/project/orangecheck/) (Python, sub-module of the `orangecheck` PyPI package) against the 33 vectors in `test-vectors/` and fails if either drifts. The hosted reference web client at [pledge.ochk.io](https://pledge.ochk.io) does full SPEC §9.1 verification end-to-end, including live bond re-resolution against Bitcoin chain state and the §7.3 agent-delegation chain.
 
 Cut from v0.1.0-alpha (initial drop, 2026-04) → 1.0 (2026-05) after both SDKs reproduced every test vector byte-identically and the live web surfaces wired the bond + delegation accessors.
 

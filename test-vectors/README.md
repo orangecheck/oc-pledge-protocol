@@ -116,6 +116,7 @@ New implementations should add a similar test.
 | `v30-bond-age-stops-at-cover.json` | B | Bond verification: the covering coins stop at `min_sats`; a newer output beyond them does not lower the age. |
 | `v31-state-outcome-dated-after-now.json` | B | State machine: an outcome whose `resolved_at` is later than `now` does not classify the pledge yet → pending (SPEC §4.4). |
 | `v32-state-signed-outcome-after-expiry.json` | B | State machine: a signed counterparty outcome dated after `expires_at` comes too late → expired_unresolved (SPEC §3.4.2, §4.4). |
+| `v33-pledge-agent-is-swearer-rejected.json` | C | The v01 pledge with `via_delegation` added and `agent_address` set to the swearer MUST be rejected by verification (SPEC §7.3). |
 
 ## Round-trip verification
 

@@ -144,6 +144,8 @@ Each scenario is labeled **Mitigated**, **Partially mitigated**, **Accepted**, o
 
 26. **Outcome published before its date.** Anyone can publish a deterministic outcome envelope, and a resolver chooses `resolved_at`. An outcome dated after `now` would let a pledge read `broken` before it could have been resolved. *Mitigated*: SPEC §4.4 leaves such an outcome out of classification until `now` reaches its `resolved_at` (vector `v31`). A signed outcome dated at or after `expires_at` is likewise left out (§3.4.2, vector `v32`). *Residual*: a `resolved_at` backdated inside the window cannot be told from a true one without an anchored time.
 
+27. **Copies under one pledge id.** `via_delegation`, `agent_address` and `sig` are outside the pledge id, so anyone can republish a pledge under its id with them changed. *Mitigated*: a reader chooses among copies by full verification, delegation included (SPEC §11.11), and every verifier refuses an `agent_address` equal to `swearer.address` (§7.3, vector `v33`).
+
 ## Counterparty-specific risks
 
 A `counterparty_signs` pledge depends on the counterparty's good faith for liveness:
