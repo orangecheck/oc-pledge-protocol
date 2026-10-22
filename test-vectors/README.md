@@ -114,6 +114,7 @@ New implementations should add a similar test.
 | `v28-empty-nonce-rejected.json` | C | Pledge with empty `nonce` MUST be rejected at envelope construction. |
 | `v29-bond-age-of-covering-coins.json` | B | Bond verification: `days_unspent` is the age of the coins covering `min_sats`, not of the oldest output. |
 | `v30-bond-age-stops-at-cover.json` | B | Bond verification: the covering coins stop at `min_sats`; a newer output beyond them does not lower the age. |
+| `v31-state-outcome-dated-after-now.json` | B | State machine: an outcome whose `resolved_at` is later than `now` does not classify the pledge yet → pending (SPEC §4.4). |
 
 ## Round-trip verification
 

@@ -352,7 +352,9 @@ The verifier:
 3. Resolves the named delegation per OC Agent SPEC §8.1.
 4. Confirms `delegation.principal == swearer` (`bc1qprincipal…`) and `delegation.agent == agent_address`.
 5. Confirms scope: `pledge:create(max_bond_sats<=2000000,mechanism=chain_state)` — pledge bonds 1M sats (≤ 2M ceiling) with mechanism `chain_state`. Pass.
-6. Confirms `delegation.expires_at > sworn_at`. Pass.
+6. Confirms the delegation is in force now: `expires_at` is later than both
+   the time of verification and `sworn_at`, and no revocation of it is in
+   effect. Pass.
 7. Verifies bond against live chain state.
 8. Classifies state per §4.4.
 

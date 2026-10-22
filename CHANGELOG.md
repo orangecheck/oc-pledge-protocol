@@ -8,6 +8,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ### Changed
 
+- **§7.3 delegation time.** An agent-signed pledge's delegation is resolved
+  and checked as of the time of verification: unexpired then, and not revoked
+  at or before then. Step 5, `expires_at > sworn_at`, still holds. A verifier
+  may still audit a past pledge as of its `sworn_at`, saying the time is the
+  signer's claim. §11.12 and `E_DELEGATION_EXPIRED` in §10 say the same.
+- **§4.4 outcomes dated after `now`.** An outcome whose `resolved_at` is later
+  than `now` does not classify the pledge, or dispute another outcome, until
+  then. Vector `v31`.
+- **§11.5.** States that nothing else bounds `sworn_at`.
 - **License.** Relicensed from CC BY 4.0 to MIT, the license of the other
   OrangeCheck specifications. The root `LICENSE` now covers the specification,
   prose, examples and test vectors, so `examples/LICENSE-EXAMPLES` is removed.

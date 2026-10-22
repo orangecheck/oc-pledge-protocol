@@ -391,6 +391,8 @@ state(pledge, outcome, abandonment, now, chain) :=
   return pending
 ```
 
+An outcome envelope whose `resolved_at` is later than `now` describes a resolution that has not happened yet: it does not enter the algorithm, as the outcome or as a contradicting one, until `now` reaches it.
+
 Two verifiers with the same inputs MUST produce the same state classification.
 
 ### 4.5 Bilateral consistency
@@ -504,6 +506,8 @@ The pledge counts in the **principal's** public ledger, not the agent's. Verifie
 4. Confirm `delegation.scopes[]` contains a scope of the form `pledge:create(...)` with bond ceiling, mechanism, or address constraints satisfied by the pledge.
 5. Confirm `delegation.expires_at > pledge.sworn_at`.
 6. Verify `sig.value` under `agent_address`.
+
+Run steps 1–5 as of the time of verification, `now`, not as of `sworn_at`. The delegation MUST be in force at `now`: `delegation.expires_at > now`, and no valid OC Agent revocation of it in effect at or before `now`. The agent chooses `sworn_at`, so a delegation that has since expired or been revoked MUST NOT let it date a pledge back into its window. A verifier MAY audit a past pledge as of its own `sworn_at`, to show it in a history. It MUST then say that the time is the signer's claim: a v1 pledge carries nothing that anchors `sworn_at`.
 
 Agents MUST NOT publish abandonment envelopes in v1.0. Abandonment is principal-only.
 
@@ -620,7 +624,7 @@ A **minimal verification** skips bond re-resolution (step 5) and mechanism re-ev
 | `E_ABANDONMENT_BAD_SIG` | Abandonment signature did not verify under the original swearer. |
 | `E_DELEGATION_NOT_FOUND` | `via_delegation` references a delegation that cannot be resolved. |
 | `E_DELEGATION_SCOPE_VIOLATED` | Pledge violates the delegation's `pledge:create` scope constraints. |
-| `E_DELEGATION_EXPIRED` | Delegation `expires_at < pledge.sworn_at`. |
+| `E_DELEGATION_EXPIRED` | Delegation `expires_at <= pledge.sworn_at`, or `expires_at <= now` at verification (§7.3). |
 
 ## 11. Security-relevant requirements
 
@@ -630,14 +634,14 @@ These restate cryptographic correctness conditions a conforming implementation M
 2. **Verify `sig.value` before trusting envelope contents.** No exceptions in v1.0.
 3. **Re-resolve every bond.** Implementations MUST run §8 `verifyBond` against live chain state. Trusting a stale OrangeCheck snapshot allows bond-draining attacks.
 4. **Recompute deterministic outcome evidence on-demand.** A verifier presented with a deterministic outcome envelope SHOULD recompute the witness from public state and confirm byte-identity. Persisting only the envelope (without recomputation) is acceptable for archival; consequential decisions MUST recompute. A deterministic outcome carries no signature, so anyone can publish one: until it is recomputed it is a claim, and a verifier that has not recomputed it MUST NOT present the §4.4 state it produces as final.
-5. **Reject envelopes with stale or mismatched `sworn_at`.** Verifiers MAY reject pledges whose `sworn_at` is outside their tolerance window relative to `now()`.
+5. **Reject envelopes with stale or mismatched `sworn_at`.** Verifiers MAY reject pledges whose `sworn_at` is outside their tolerance window relative to `now()`. Nothing else bounds it: `sworn_at` is the signer's claim, so it orders a ledger but decides no authority (§7.3).
 6. **Reject empty nonces.** A pledge with `nonce: ""` MUST fail at envelope construction with `E_PLEDGE_MALFORMED`.
 7. **Reject unknown `v` values.** Preserve unknown optional fields when relaying; ignore them when verifying.
 8. **Produce byte-identical canonical messages** for identical inputs across implementations. Test-vector conformance (§14) is not optional.
 9. **Sign the hex form of every id** (64 ASCII bytes) with BIP-322, not the raw 32 bytes. This applies to pledge, outcome, and abandonment envelopes alike.
 10. **Bind every outcome and abandonment to the pledge it names.** Before an outcome or abandonment enters §4.4, the verifier MUST recompute the referenced pledge's id and compare it to `pledge_id`. For an outcome it MUST confirm `evidence.mechanism == pledge.resolution.mechanism` and the resolver named in §4.3; a deterministic outcome MUST satisfy `resolved_at >= resolves_at_normalized` (and `resolved_at >= expires_at` when `outcome == expired_unresolved`). For an abandonment it MUST apply §5.3 in full: `sig.pubkey == pledge.swearer.address`, `abandoned_at >= pledge.sworn_at`, and a BIP-322 signature that verifies under that address. An envelope failing any of these is ignored for classification.
 11. **Select by verification, not by recency.** Anyone can publish under an envelope's Nostr `d` tag. When several events claim the same pledge, outcome, abandonment, or delegation, a verifier MUST consider each and use one that verifies, never simply the newest.
-12. **Resolve the delegation of every agent-signed pledge.** A pledge carrying `via_delegation` MUST NOT verify unless the §7.3 chain was resolved, including the OC Agent revocation check. A revocation feed that could not be queried is not an empty feed; the verifier MUST treat the delegation as unresolved.
+12. **Resolve the delegation of every agent-signed pledge.** A pledge carrying `via_delegation` MUST NOT verify unless the §7.3 chain was resolved as of the time of verification, including the OC Agent revocation check. A revocation feed that could not be queried is not an empty feed; the verifier MUST treat the delegation as unresolved.
 
 ## 12. Registry for extensions
 
