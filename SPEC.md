@@ -393,6 +393,8 @@ state(pledge, outcome, abandonment, now, chain) :=
 
 An outcome envelope whose `resolved_at` is later than `now` describes a resolution that has not happened yet: it does not enter the algorithm, as the outcome or as a contradicting one, until `now` reaches it.
 
+A signed outcome (§4.3) whose `resolved_at` is at or after `pledge.expires_at` comes too late (§3.4.2): it does not enter the algorithm, and the pledge stays `expired_unresolved`. Deterministic outcomes are exempt, because anyone can compute one after `expires_at` from the public state it names. `resolved_at` is the resolver's own claim: an outcome signed after `expires_at` but dated inside the window cannot be told from a timely one without an anchored time.
+
 Two verifiers with the same inputs MUST produce the same state classification.
 
 ### 4.5 Bilateral consistency
@@ -639,7 +641,7 @@ These restate cryptographic correctness conditions a conforming implementation M
 7. **Reject unknown `v` values.** Preserve unknown optional fields when relaying; ignore them when verifying.
 8. **Produce byte-identical canonical messages** for identical inputs across implementations. Test-vector conformance (§14) is not optional.
 9. **Sign the hex form of every id** (64 ASCII bytes) with BIP-322, not the raw 32 bytes. This applies to pledge, outcome, and abandonment envelopes alike.
-10. **Bind every outcome and abandonment to the pledge it names.** Before an outcome or abandonment enters §4.4, the verifier MUST recompute the referenced pledge's id and compare it to `pledge_id`. For an outcome it MUST confirm `evidence.mechanism == pledge.resolution.mechanism` and the resolver named in §4.3; a deterministic outcome MUST satisfy `resolved_at >= resolves_at_normalized` (and `resolved_at >= expires_at` when `outcome == expired_unresolved`). For an abandonment it MUST apply §5.3 in full: `sig.pubkey == pledge.swearer.address`, `abandoned_at >= pledge.sworn_at`, and a BIP-322 signature that verifies under that address. An envelope failing any of these is ignored for classification.
+10. **Bind every outcome and abandonment to the pledge it names.** Before an outcome or abandonment enters §4.4, the verifier MUST recompute the referenced pledge's id and compare it to `pledge_id`. For an outcome it MUST confirm `evidence.mechanism == pledge.resolution.mechanism` and the resolver named in §4.3; a deterministic outcome MUST satisfy `resolved_at >= resolves_at_normalized` (and `resolved_at >= expires_at` when `outcome == expired_unresolved`). A signed outcome MUST satisfy `resolved_at < expires_at`. For an abandonment it MUST apply §5.3 in full: `sig.pubkey == pledge.swearer.address`, `abandoned_at >= pledge.sworn_at`, and a BIP-322 signature that verifies under that address. An envelope failing any of these is ignored for classification.
 11. **Select by verification, not by recency.** Anyone can publish under an envelope's Nostr `d` tag. When several events claim the same pledge, outcome, abandonment, or delegation, a verifier MUST consider each and use one that verifies, never simply the newest.
 12. **Resolve the delegation of every agent-signed pledge.** A pledge carrying `via_delegation` MUST NOT verify unless the §7.3 chain was resolved as of the time of verification, including the OC Agent revocation check. A revocation feed that could not be queried is not an empty feed; the verifier MUST treat the delegation as unresolved.
 

@@ -17,6 +17,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
   than `now` does not classify the pledge, or dispute another outcome, until
   then. Vector `v31`.
 - **§11.5.** States that nothing else bounds `sworn_at`.
+- **§4.4 signed outcomes after `expires_at`.** A signed outcome dated at or
+  after `expires_at` comes too late (§3.4.2) and leaves the pledge
+  `expired_unresolved`; deterministic outcomes are exempt. `resolved_at` is the
+  resolver's claim, so a late outcome dated inside the window needs an anchored
+  time to catch. §11.10 says the same. Vector `v32`.
 - **License.** Relicensed from CC BY 4.0 to MIT, the license of the other
   OrangeCheck specifications. The root `LICENSE` now covers the specification,
   prose, examples and test vectors, so `examples/LICENSE-EXAMPLES` is removed.

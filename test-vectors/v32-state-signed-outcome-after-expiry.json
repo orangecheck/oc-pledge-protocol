@@ -1,0 +1,49 @@
+{
+  "description": "state machine — a signed counterparty outcome dated after expires_at comes too late (§3.4.2) → expired_unresolved",
+  "kind": "state-transition",
+  "inputs": {
+    "pledge_id": "982bbab9147993026406d84240704b12932b5515a20bc8669ec069c7b091b3d9",
+    "pledge": {
+      "swearer": "bc1qalice000000000000000000000000000000000",
+      "proposition": "I will deliver the audit report to the counterparty by 2026-11-30.",
+      "resolution": {
+        "mechanism": "counterparty_signs",
+        "query": "counterparty(bc1qcounter0000000000000000000000000000000) signs outcome over pledge_id"
+      },
+      "resolves_at": {
+        "time": "2026-11-30T00:00:00Z"
+      },
+      "expires_at": "2026-12-31T00:00:00Z",
+      "bond": {
+        "attestation_id": "1111111111111111111111111111111111111111111111111111111111111111",
+        "min_sats": 500000,
+        "min_days": 180
+      },
+      "counterparty": "bc1qcounter0000000000000000000000000000000",
+      "dispute": {
+        "mechanism": null,
+        "params": null
+      },
+      "remediation": "breach_recorded",
+      "sworn_at": "2026-04-24T18:30:00Z",
+      "nonce": "0123456789abcdef0123456789abcdef"
+    },
+    "outcome_envelope": {
+      "pledge_id": "982bbab9147993026406d84240704b12932b5515a20bc8669ec069c7b091b3d9",
+      "outcome": "broken",
+      "resolved_at": "2027-01-05T00:00:00Z",
+      "resolved_by": "bc1qcounter0000000000000000000000000000000",
+      "evidence": {
+        "mechanism": "counterparty_signs",
+        "result": "broken",
+        "witness": "counterparty_sig=H1+placeholderBIP322signaturebase64=="
+      },
+      "dispute_window_ends_at": "2027-01-12T00:00:00Z"
+    },
+    "abandonment_envelope": null,
+    "now": "2027-02-01T00:00:00Z"
+  },
+  "expected": {
+    "state": "expired_unresolved"
+  }
+}
