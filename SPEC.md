@@ -535,7 +535,7 @@ pledge:create(max_bond_sats<=<N>,mechanism=<m>)
 
 Multiple constraints comma-separated inside the parentheses, in OC Agent canonical form (sorted by key). A pledge SHALL pass scope check iff every named constraint is satisfied.
 
-`max_bond_sats` is a ceiling (`bond.min_sats <= N`) and uses OC Agent's range operator `<=`; in OC Agent `=` is an exact match for sub-scope checks. Delegations issued with the earlier `max_bond_sats=<N>` form SHOULD still be read as the same ceiling. `mechanism` and `counterparty` use `=`; `counterparty=null` means the pledge names no counterparty. A constraint key, operator, or value the verifier does not recognise MUST fail the scope check.
+`max_bond_sats` is a ceiling (`bond.min_sats <= N`) and uses OC Agent's range operator `<=`; in OC Agent `=` is an exact match for sub-scope checks. Delegations issued with the earlier `max_bond_sats=<N>` form SHOULD still be read as the same ceiling. `mechanism` and `counterparty` use `=`; `counterparty=null` means the pledge names no counterparty. A value may be written in double quotes, which are not part of it. `N` is a decimal integer of ASCII digits, at most 2^53 - 1. A constraint key, operator, or value the verifier does not recognise MUST fail the scope check, and so does a scope that names one key twice (vector `v46`).
 
 ### 7.4 Vote_resolves dispute mechanism
 

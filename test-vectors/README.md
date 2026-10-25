@@ -27,7 +27,7 @@ Each `.json` file in this directory is an independent vector. Three vector shape
 ```json
 {
   "description": "what this vector exercises",
-  "kind": "bond-verification" | "state-transition" | "malformed-input",
+  "kind": "bond-verification" | "state-transition" | "scope-check" | "malformed-input",
   "inputs": { ...inputs to the function under test... },
   "expected": { ...expected output or error code... }
 }
@@ -46,7 +46,7 @@ Given the `inputs` of an envelope vector, a compliant implementation MUST:
 3. Serialize the envelope with RFC 8785 JSON canonicalization, matching `expected.envelope` when re-parsed.
 4. Return the id as lowercase hex.
 
-For Shape B vectors, a compliant implementation MUST produce the `expected.state` (for state-transition vectors) or the `expected.code` (for bond-verification vectors), given the inputs and any relevant public-state fixtures. Bond vectors that carry `now` and `utxos` (the attested address's confirmed unspent outputs, `block_time` in Unix seconds) also give `expected.days_unspent`; an implementation that ages coins itself MUST derive it from them per SPEC §8.
+For Shape B vectors, a compliant implementation MUST produce the `expected.state` (for state-transition vectors), the `expected.code` (for bond-verification vectors) or, for each of a scope-check vector's `inputs.cases`, the result at the same place in `expected.cases` (`ok` and the first `matched_scope`, or `E_DELEGATION_SCOPE_VIOLATED`), given the inputs and any relevant public-state fixtures. Bond vectors that carry `now` and `utxos` (the attested address's confirmed unspent outputs, `block_time` in Unix seconds) also give `expected.days_unspent`; an implementation that ages coins itself MUST derive it from them per SPEC §8.
 
 For Shape C malformed-input vectors, a compliant implementation MUST raise the named `expected.error` code at envelope construction (or as early as possible during verification). A Shape C vector that gives an `envelope` or an `outcome_envelope` names the error verification MUST return for it; when it also gives a `twin`, the twin has the same id and MUST verify.
 
@@ -67,6 +67,7 @@ If any of these diverge, the implementation is non-conformant. Typical bugs:
 - Hashing a lone surrogate as anything but U+FFFD (v37).
 - Accepting the string `"null"` as a counterparty, dispute params or dispute mechanism (v42, v43, v45).
 - Matching digits with a Unicode-aware `\d` (v44).
+- Letting a scope constraint the verifier does not recognise pass the scope check (v46).
 
 ## A note on signatures
 
@@ -136,6 +137,7 @@ New implementations should add a similar test.
 | `v43-pledge-dispute-params-null-string-rejected.json` | C | The v01 pledge with `dispute.params` the string `"null"`: same id as v01, MUST be rejected; `twin` (v01) verifies (SPEC §3.6). |
 | `v44-pledge-time-non-ascii-digits-rejected.json` | C | A pledge whose `sworn_at` year is in Arabic-Indic digits, its id the hash of its own canonical message: MUST be rejected (SPEC §0). |
 | `v45-pledge-dispute-mechanism-null-string-rejected.json` | C | The v01 pledge with `dispute.mechanism` the string `"null"`: same id as v01, MUST be rejected; `twin` (v01) verifies (SPEC §3.6). |
+| `v46-delegation-scope-check.json` | B | 31 delegation scope cases: whether the pledge satisfies a `pledge:create` scope, and which one (SPEC §7.3, REGISTRY.md §4). |
 
 ## Round-trip verification
 

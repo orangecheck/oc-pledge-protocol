@@ -1,0 +1,603 @@
+{
+  "description": "delegation scope check (SPEC §7.3, REGISTRY.md §4): for each case, whether the pledge satisfies a pledge:create scope in the delegation, and the first scope that does. A key, operator or value the verifier does not recognise fails the check; max_bond_sats is a ceiling on bond.min_sats, read from <= or the earlier =, as a decimal integer of at most 2^53 - 1; counterparty=null means no counterparty. A failed check is E_DELEGATION_SCOPE_VIOLATED.",
+  "kind": "scope-check",
+  "inputs": {
+    "cases": [
+      {
+        "note": "bare scope",
+        "pledge": {
+          "bond": {
+            "min_sats": 1000
+          },
+          "resolution": {
+            "mechanism": "chain_state"
+          },
+          "counterparty": null
+        },
+        "scopes": [
+          "pledge:create"
+        ]
+      },
+      {
+        "note": "empty parentheses",
+        "pledge": {
+          "bond": {
+            "min_sats": 1000
+          },
+          "resolution": {
+            "mechanism": "chain_state"
+          },
+          "counterparty": null
+        },
+        "scopes": [
+          "pledge:create()"
+        ]
+      },
+      {
+        "note": "ceiling equal to min_sats",
+        "pledge": {
+          "bond": {
+            "min_sats": 1000
+          },
+          "resolution": {
+            "mechanism": "chain_state"
+          },
+          "counterparty": null
+        },
+        "scopes": [
+          "pledge:create(max_bond_sats<=1000)"
+        ]
+      },
+      {
+        "note": "ceiling below min_sats",
+        "pledge": {
+          "bond": {
+            "min_sats": 1000
+          },
+          "resolution": {
+            "mechanism": "chain_state"
+          },
+          "counterparty": null
+        },
+        "scopes": [
+          "pledge:create(max_bond_sats<=999)"
+        ]
+      },
+      {
+        "note": "earlier = form read as the ceiling",
+        "pledge": {
+          "bond": {
+            "min_sats": 1000
+          },
+          "resolution": {
+            "mechanism": "chain_state"
+          },
+          "counterparty": null
+        },
+        "scopes": [
+          "pledge:create(max_bond_sats=1000)"
+        ]
+      },
+      {
+        "note": "earlier = form below min_sats",
+        "pledge": {
+          "bond": {
+            "min_sats": 1000
+          },
+          "resolution": {
+            "mechanism": "chain_state"
+          },
+          "counterparty": null
+        },
+        "scopes": [
+          "pledge:create(max_bond_sats=999)"
+        ]
+      },
+      {
+        "note": "spaces around the operator and inside the parentheses",
+        "pledge": {
+          "bond": {
+            "min_sats": 1000
+          },
+          "resolution": {
+            "mechanism": "chain_state"
+          },
+          "counterparty": null
+        },
+        "scopes": [
+          "pledge:create( max_bond_sats <= 1000 )"
+        ]
+      },
+      {
+        "note": "space around the scope",
+        "pledge": {
+          "bond": {
+            "min_sats": 1000
+          },
+          "resolution": {
+            "mechanism": "chain_state"
+          },
+          "counterparty": null
+        },
+        "scopes": [
+          " pledge:create(max_bond_sats<=1000) "
+        ]
+      },
+      {
+        "note": "largest safe integer ceiling",
+        "pledge": {
+          "bond": {
+            "min_sats": 1000
+          },
+          "resolution": {
+            "mechanism": "chain_state"
+          },
+          "counterparty": null
+        },
+        "scopes": [
+          "pledge:create(max_bond_sats<=9007199254740991)"
+        ]
+      },
+      {
+        "note": "ceiling past the largest safe integer",
+        "pledge": {
+          "bond": {
+            "min_sats": 1000
+          },
+          "resolution": {
+            "mechanism": "chain_state"
+          },
+          "counterparty": null
+        },
+        "scopes": [
+          "pledge:create(max_bond_sats<=9007199254740992)"
+        ]
+      },
+      {
+        "note": "negative ceiling",
+        "pledge": {
+          "bond": {
+            "min_sats": 1000
+          },
+          "resolution": {
+            "mechanism": "chain_state"
+          },
+          "counterparty": null
+        },
+        "scopes": [
+          "pledge:create(max_bond_sats<=-5)"
+        ]
+      },
+      {
+        "note": "ceiling in exponent form",
+        "pledge": {
+          "bond": {
+            "min_sats": 1000
+          },
+          "resolution": {
+            "mechanism": "chain_state"
+          },
+          "counterparty": null
+        },
+        "scopes": [
+          "pledge:create(max_bond_sats<=1e6)"
+        ]
+      },
+      {
+        "note": "empty ceiling",
+        "pledge": {
+          "bond": {
+            "min_sats": 1000
+          },
+          "resolution": {
+            "mechanism": "chain_state"
+          },
+          "counterparty": null
+        },
+        "scopes": [
+          "pledge:create(max_bond_sats<=)"
+        ]
+      },
+      {
+        "note": "== is not an operator",
+        "pledge": {
+          "bond": {
+            "min_sats": 1000
+          },
+          "resolution": {
+            "mechanism": "chain_state"
+          },
+          "counterparty": null
+        },
+        "scopes": [
+          "pledge:create(max_bond_sats==1000)"
+        ]
+      },
+      {
+        "note": "duplicate key",
+        "pledge": {
+          "bond": {
+            "min_sats": 1000
+          },
+          "resolution": {
+            "mechanism": "chain_state"
+          },
+          "counterparty": null
+        },
+        "scopes": [
+          "pledge:create(max_bond_sats<=5000,max_bond_sats<=1000)"
+        ]
+      },
+      {
+        "note": "empty constraint after a comma",
+        "pledge": {
+          "bond": {
+            "min_sats": 1000
+          },
+          "resolution": {
+            "mechanism": "chain_state"
+          },
+          "counterparty": null
+        },
+        "scopes": [
+          "pledge:create(max_bond_sats<=1000,)"
+        ]
+      },
+      {
+        "note": "unknown key",
+        "pledge": {
+          "bond": {
+            "min_sats": 1000
+          },
+          "resolution": {
+            "mechanism": "chain_state"
+          },
+          "counterparty": null
+        },
+        "scopes": [
+          "pledge:create(max_sats=5000)"
+        ]
+      },
+      {
+        "note": "<= on a key that takes =",
+        "pledge": {
+          "bond": {
+            "min_sats": 1000
+          },
+          "resolution": {
+            "mechanism": "chain_state"
+          },
+          "counterparty": null
+        },
+        "scopes": [
+          "pledge:create(mechanism<=chain_state)"
+        ]
+      },
+      {
+        "note": "key in capitals",
+        "pledge": {
+          "bond": {
+            "min_sats": 1000
+          },
+          "resolution": {
+            "mechanism": "chain_state"
+          },
+          "counterparty": null
+        },
+        "scopes": [
+          "pledge:create(Mechanism=chain_state)"
+        ]
+      },
+      {
+        "note": "space before the parenthesis",
+        "pledge": {
+          "bond": {
+            "min_sats": 1000
+          },
+          "resolution": {
+            "mechanism": "chain_state"
+          },
+          "counterparty": null
+        },
+        "scopes": [
+          "pledge:create (max_bond_sats<=1000)"
+        ]
+      },
+      {
+        "note": "mechanism matches",
+        "pledge": {
+          "bond": {
+            "min_sats": 1000
+          },
+          "resolution": {
+            "mechanism": "chain_state"
+          },
+          "counterparty": null
+        },
+        "scopes": [
+          "pledge:create(mechanism=chain_state)"
+        ]
+      },
+      {
+        "note": "mechanism differs",
+        "pledge": {
+          "bond": {
+            "min_sats": 1000
+          },
+          "resolution": {
+            "mechanism": "chain_state"
+          },
+          "counterparty": null
+        },
+        "scopes": [
+          "pledge:create(mechanism=dns_record)"
+        ]
+      },
+      {
+        "note": "counterparty=null and no counterparty",
+        "pledge": {
+          "bond": {
+            "min_sats": 1000
+          },
+          "resolution": {
+            "mechanism": "chain_state"
+          },
+          "counterparty": null
+        },
+        "scopes": [
+          "pledge:create(counterparty=null)"
+        ]
+      },
+      {
+        "note": "counterparty=null and a counterparty",
+        "pledge": {
+          "bond": {
+            "min_sats": 1000
+          },
+          "resolution": {
+            "mechanism": "chain_state"
+          },
+          "counterparty": "bc1qcounter0000000000000000000000000000000"
+        },
+        "scopes": [
+          "pledge:create(counterparty=null)"
+        ]
+      },
+      {
+        "note": "quoted counterparty matches",
+        "pledge": {
+          "bond": {
+            "min_sats": 1000
+          },
+          "resolution": {
+            "mechanism": "chain_state"
+          },
+          "counterparty": "bc1qcounter0000000000000000000000000000000"
+        },
+        "scopes": [
+          "pledge:create(counterparty=\"bc1qcounter0000000000000000000000000000000\")"
+        ]
+      },
+      {
+        "note": "named counterparty and none",
+        "pledge": {
+          "bond": {
+            "min_sats": 1000
+          },
+          "resolution": {
+            "mechanism": "chain_state"
+          },
+          "counterparty": null
+        },
+        "scopes": [
+          "pledge:create(counterparty=bc1qcounter0000000000000000000000000000000)"
+        ]
+      },
+      {
+        "note": "two constraints both hold",
+        "pledge": {
+          "bond": {
+            "min_sats": 1000
+          },
+          "resolution": {
+            "mechanism": "chain_state"
+          },
+          "counterparty": null
+        },
+        "scopes": [
+          "pledge:create(max_bond_sats<=1000,mechanism=chain_state)"
+        ]
+      },
+      {
+        "note": "two constraints, one fails",
+        "pledge": {
+          "bond": {
+            "min_sats": 1000
+          },
+          "resolution": {
+            "mechanism": "chain_state"
+          },
+          "counterparty": null
+        },
+        "scopes": [
+          "pledge:create(max_bond_sats<=1000,mechanism=dns_record)"
+        ]
+      },
+      {
+        "note": "other scopes are skipped",
+        "pledge": {
+          "bond": {
+            "min_sats": 1000
+          },
+          "resolution": {
+            "mechanism": "chain_state"
+          },
+          "counterparty": null
+        },
+        "scopes": [
+          "stamp:sign(mime=*)",
+          "pledge:create(max_bond_sats<=1000)"
+        ]
+      },
+      {
+        "note": "a later scope that holds",
+        "pledge": {
+          "bond": {
+            "min_sats": 1000
+          },
+          "resolution": {
+            "mechanism": "chain_state"
+          },
+          "counterparty": null
+        },
+        "scopes": [
+          "pledge:create(max_bond_sats<=10)",
+          "pledge:create(mechanism=chain_state)"
+        ]
+      },
+      {
+        "note": "no pledge:create scope",
+        "pledge": {
+          "bond": {
+            "min_sats": 1000
+          },
+          "resolution": {
+            "mechanism": "chain_state"
+          },
+          "counterparty": null
+        },
+        "scopes": [
+          "stamp:sign(mime=*)"
+        ]
+      }
+    ]
+  },
+  "expected": {
+    "cases": [
+      {
+        "ok": true,
+        "matched_scope": "pledge:create"
+      },
+      {
+        "ok": true,
+        "matched_scope": "pledge:create()"
+      },
+      {
+        "ok": true,
+        "matched_scope": "pledge:create(max_bond_sats<=1000)"
+      },
+      {
+        "ok": false,
+        "code": "E_DELEGATION_SCOPE_VIOLATED"
+      },
+      {
+        "ok": true,
+        "matched_scope": "pledge:create(max_bond_sats=1000)"
+      },
+      {
+        "ok": false,
+        "code": "E_DELEGATION_SCOPE_VIOLATED"
+      },
+      {
+        "ok": true,
+        "matched_scope": "pledge:create( max_bond_sats <= 1000 )"
+      },
+      {
+        "ok": true,
+        "matched_scope": " pledge:create(max_bond_sats<=1000) "
+      },
+      {
+        "ok": true,
+        "matched_scope": "pledge:create(max_bond_sats<=9007199254740991)"
+      },
+      {
+        "ok": false,
+        "code": "E_DELEGATION_SCOPE_VIOLATED"
+      },
+      {
+        "ok": false,
+        "code": "E_DELEGATION_SCOPE_VIOLATED"
+      },
+      {
+        "ok": false,
+        "code": "E_DELEGATION_SCOPE_VIOLATED"
+      },
+      {
+        "ok": false,
+        "code": "E_DELEGATION_SCOPE_VIOLATED"
+      },
+      {
+        "ok": false,
+        "code": "E_DELEGATION_SCOPE_VIOLATED"
+      },
+      {
+        "ok": false,
+        "code": "E_DELEGATION_SCOPE_VIOLATED"
+      },
+      {
+        "ok": false,
+        "code": "E_DELEGATION_SCOPE_VIOLATED"
+      },
+      {
+        "ok": false,
+        "code": "E_DELEGATION_SCOPE_VIOLATED"
+      },
+      {
+        "ok": false,
+        "code": "E_DELEGATION_SCOPE_VIOLATED"
+      },
+      {
+        "ok": false,
+        "code": "E_DELEGATION_SCOPE_VIOLATED"
+      },
+      {
+        "ok": false,
+        "code": "E_DELEGATION_SCOPE_VIOLATED"
+      },
+      {
+        "ok": true,
+        "matched_scope": "pledge:create(mechanism=chain_state)"
+      },
+      {
+        "ok": false,
+        "code": "E_DELEGATION_SCOPE_VIOLATED"
+      },
+      {
+        "ok": true,
+        "matched_scope": "pledge:create(counterparty=null)"
+      },
+      {
+        "ok": false,
+        "code": "E_DELEGATION_SCOPE_VIOLATED"
+      },
+      {
+        "ok": true,
+        "matched_scope": "pledge:create(counterparty=\"bc1qcounter0000000000000000000000000000000\")"
+      },
+      {
+        "ok": false,
+        "code": "E_DELEGATION_SCOPE_VIOLATED"
+      },
+      {
+        "ok": true,
+        "matched_scope": "pledge:create(max_bond_sats<=1000,mechanism=chain_state)"
+      },
+      {
+        "ok": false,
+        "code": "E_DELEGATION_SCOPE_VIOLATED"
+      },
+      {
+        "ok": true,
+        "matched_scope": "pledge:create(max_bond_sats<=1000)"
+      },
+      {
+        "ok": true,
+        "matched_scope": "pledge:create(mechanism=chain_state)"
+      },
+      {
+        "ok": false,
+        "code": "E_DELEGATION_SCOPE_VIOLATED"
+      }
+    ]
+  }
+}

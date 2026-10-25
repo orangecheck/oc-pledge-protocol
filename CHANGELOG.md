@@ -14,6 +14,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
   `E_PLEDGE_MALFORMED`. The `dispute.mechanism` row now says null where it
   wrote the string `"null"`, which is refused for the same reason. Vectors
   `v42`, `v43`, `v45`.
+- **§7.3 scope check.** A constraint value may be quoted, `N` is ASCII digits
+  up to 2^53 - 1, and a scope that names a key twice fails the check. Vector
+  `v46` holds 31 scope cases.
 - **§0 digits.** Digits are ASCII `0`–`9` wherever the spec writes a number, a
   time, a block height or a hex string. Vector `v44`.
 - **§4.1, §5.1, §5.3, §9.1, §11.13 free text in outcomes and abandonments.** A
