@@ -8,6 +8,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ### Changed
 
+- **§3.6 the string "null".** `counterparty` and `dispute.params` MUST NOT be
+  the string `"null"`: the canonical message writes null as `null`, so that
+  string signs the same bytes as null. Signers and verifiers refuse it with
+  `E_PLEDGE_MALFORMED`. The `dispute.mechanism` row now says null where it
+  wrote the string `"null"`, which is refused for the same reason. Vectors
+  `v42`, `v43`, `v45`.
+- **§0 digits.** Digits are ASCII `0`–`9` wherever the spec writes a number, a
+  time, a block height or a hex string. Vector `v44`.
 - **§4.1, §5.1, §5.3, §9.1, §11.13 free text in outcomes and abandonments.** A
   swearer MUST write `reason` as one non-empty line of at most 280 UTF-8
   bytes, and a resolver `evidence.result` and `evidence.witness` as one

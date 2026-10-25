@@ -1,0 +1,46 @@
+{
+  "description": "pledge whose sworn_at writes its year in Arabic-Indic digits (U+0660–U+0669). ISO 8601 UTC is ASCII digits, so a verifier MUST reject it with E_PLEDGE_MALFORMED although its id is the hash of its own canonical message (SPEC §0)",
+  "kind": "malformed-input",
+  "inputs": {
+    "envelope": {
+      "v": 1,
+      "kind": "pledge",
+      "id": "63051f697854dfcddecc48df39bf8076acd0b03d497d00ef472b8721120dcf8f",
+      "swearer": {
+        "address": "bc1qalice000000000000000000000000000000000",
+        "alg": "bip322"
+      },
+      "proposition": "I will not spend the bonded UTXO before block 920000.",
+      "resolution": {
+        "mechanism": "chain_state",
+        "query": "address(bc1qalice000000000000000000000000000000000).utxo_count >= 1 AND address(bc1qalice000000000000000000000000000000000).balance >= 500000"
+      },
+      "resolves_at": {
+        "block": 920000
+      },
+      "expires_at": "2026-12-31T00:00:00Z",
+      "bond": {
+        "attestation_id": "1111111111111111111111111111111111111111111111111111111111111111",
+        "min_sats": 500000,
+        "min_days": 180
+      },
+      "counterparty": null,
+      "dispute": {
+        "mechanism": null,
+        "params": null
+      },
+      "remediation": "breach_recorded",
+      "sworn_at": "٢٠٢٦-04-24T18:30:00Z",
+      "nonce": "0123456789abcdef0123456789abcdef",
+      "sig": {
+        "alg": "bip322",
+        "pubkey": "bc1qalice000000000000000000000000000000000",
+        "value": "AAAA"
+      }
+    },
+    "canonical_message": "oc-pledge/v1\nswearer: bc1qalice000000000000000000000000000000000\nproposition: I will not spend the bonded UTXO before block 920000.\nresolution:\n  mechanism: chain_state\n  query: address(bc1qalice000000000000000000000000000000000).utxo_count >= 1 AND address(bc1qalice000000000000000000000000000000000).balance >= 500000\nresolves_at:\n  block: 920000\nexpires_at: 2026-12-31T00:00:00Z\nbond:\n  attestation_id: 1111111111111111111111111111111111111111111111111111111111111111\n  min_sats: 500000\n  min_days: 180\ncounterparty: null\ndispute:\n  mechanism: null\n  params: null\nremediation: breach_recorded\nsworn_at: ٢٠٢٦-04-24T18:30:00Z\nnonce: 0123456789abcdef0123456789abcdef"
+  },
+  "expected": {
+    "error": "E_PLEDGE_MALFORMED"
+  }
+}

@@ -48,7 +48,7 @@ Given the `inputs` of an envelope vector, a compliant implementation MUST:
 
 For Shape B vectors, a compliant implementation MUST produce the `expected.state` (for state-transition vectors) or the `expected.code` (for bond-verification vectors), given the inputs and any relevant public-state fixtures. Bond vectors that carry `now` and `utxos` (the attested address's confirmed unspent outputs, `block_time` in Unix seconds) also give `expected.days_unspent`; an implementation that ages coins itself MUST derive it from them per SPEC §8.
 
-For Shape C malformed-input vectors, a compliant implementation MUST raise the named `expected.error` code at envelope construction (or as early as possible during verification). A Shape C vector that gives an `outcome_envelope` names the error verification MUST return for it; its `twin` has the same id and MUST verify.
+For Shape C malformed-input vectors, a compliant implementation MUST raise the named `expected.error` code at envelope construction (or as early as possible during verification). A Shape C vector that gives an `envelope` or an `outcome_envelope` names the error verification MUST return for it; when it also gives a `twin`, the twin has the same id and MUST verify.
 
 A state-transition vector's `abandonment_envelope` enters the state machine only when it verifies against the vector's pledge (SPEC §11.10), the signature aside.
 
@@ -65,6 +65,8 @@ If any of these diverge, the implementation is non-conformant. Typical bugs:
 - Refusing an outcome or abandonment for the length or emptiness of its free text, or for a line break in `reason` or `evidence.witness` (v34–v36, v38–v40).
 - Accepting a line feed in `evidence.result`, whose bytes are another envelope's (v41).
 - Hashing a lone surrogate as anything but U+FFFD (v37).
+- Accepting the string `"null"` as a counterparty, dispute params or dispute mechanism (v42, v43, v45).
+- Matching digits with a Unicode-aware `\d` (v44).
 
 ## A note on signatures
 
@@ -130,6 +132,10 @@ New implementations should add a similar test.
 | `v39-state-broken-via-abandonment-line-break.json` | B | State machine: the v26 pledge with that abandonment, which verifies → broken (SPEC §5.1, §11.10). |
 | `v40-outcome-witness-line-break.json` | A | Signed broken outcome whose witness spans lines: every field after it is strict, so a verifier MUST NOT refuse it (SPEC §4.1). |
 | `v41-outcome-result-line-feed-rejected.json` | C | Outcome whose `evidence.result` holds a line feed MUST be rejected with `E_OUTCOME_MALFORMED`: its bytes and id are those of `twin`, whose result is one line, and `twin` verifies (SPEC §4.1). |
+| `v42-pledge-counterparty-null-string-rejected.json` | C | The v01 pledge with `counterparty` the string `"null"`: same id as v01, MUST be rejected; `twin` (v01) verifies (SPEC §3.6). |
+| `v43-pledge-dispute-params-null-string-rejected.json` | C | The v01 pledge with `dispute.params` the string `"null"`: same id as v01, MUST be rejected; `twin` (v01) verifies (SPEC §3.6). |
+| `v44-pledge-time-non-ascii-digits-rejected.json` | C | A pledge whose `sworn_at` year is in Arabic-Indic digits, its id the hash of its own canonical message: MUST be rejected (SPEC §0). |
+| `v45-pledge-dispute-mechanism-null-string-rejected.json` | C | The v01 pledge with `dispute.mechanism` the string `"null"`: same id as v01, MUST be rejected; `twin` (v01) verifies (SPEC §3.6). |
 
 ## Round-trip verification
 

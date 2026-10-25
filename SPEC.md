@@ -15,6 +15,7 @@
 - Canonical JSON = UTF-8 encoded JSON with lexicographically sorted object keys, no insignificant whitespace, LF-terminated. See §6.
 - Canonical messages are hashed as UTF-8. JSON can carry a lone surrogate (an unpaired code unit in U+D800–U+DFFF), which UTF-8 cannot encode. A signer MUST NOT write one. An implementation building canonical bytes encodes each lone surrogate as U+FFFD (`EF BF BD`), as the WHATWG Encoding Standard's UTF-8 encoder does, so every implementation hashes the same bytes (vector `v37`).
 - ISO 8601 UTC means `YYYY-MM-DDTHH:MM:SSZ` (no fractional seconds, no offsets other than `Z`). Implementations MUST reject `+00:00`, `+00`, lowercased `z`, fractional-second forms, and any offset other than the literal capital-`Z` suffix in canonical-message contexts.
+- Digits are ASCII `0`–`9` wherever this spec writes a number, a time, a block height or a hex string. A verifier refuses any other digit, such as U+0660–U+0669, with the envelope's `E_*_MALFORMED` (vector `v44`).
 - `sats` is an integer count of satoshis (100,000,000 sats = 1 BTC).
 - `block(N)` denotes the Bitcoin mainnet block at height `N`.
 - "Public state" = (Bitcoin chain headers + Bitcoin chain transactions + named Nostr relays + reachable HTTPS endpoints + DNS-over-HTTPS responses) at the moment of verification.
@@ -266,9 +267,9 @@ When `via_delegation` is present (agent-signed pledge — see §7.3), the signat
 | `bond.attestation_id` | 64-hex. SHOULD be the SHA-256 of an OrangeCheck attestation canonical message signed by `swearer.address`. |
 | `bond.min_sats` | Non-negative integer. |
 | `bond.min_days` | Non-negative integer. |
-| `counterparty` | Bitcoin address or null. Required non-null when `resolution.mechanism == counterparty_signs`. |
-| `dispute.mechanism` | `"null"`, `"vote_resolves"`, or `"named_oracle"`. |
-| `dispute.params` | Single-line canonical params string for the dispute mechanism, or null. |
+| `counterparty` | Bitcoin address or null. Required non-null when `resolution.mechanism == counterparty_signs`. MUST NOT be the string `"null"`: the canonical message writes null as `null`, so that string would sign the same bytes as no counterparty, and a copy could swap one for the other under the same id. Signers and verifiers refuse it with `E_PLEDGE_MALFORMED` (vector `v42`). |
+| `dispute.mechanism` | null, `"vote_resolves"`, or `"named_oracle"`. Not the string `"null"`, for the same reason as `counterparty` (vector `v45`). |
+| `dispute.params` | Single-line canonical params string for the dispute mechanism, or null. MUST NOT be the string `"null"`, for the same reason as `counterparty` (vector `v43`). |
 | `remediation` | MUST equal `"breach_recorded"` in v1.0. |
 | `sworn_at` | ISO 8601 UTC. The swearer's claim of signing time. Not load-bearing for resolution; the resolution mechanism's witness is. |
 | `nonce` | 32 lowercase hex chars. MUST be non-empty. SHOULD be uniformly random. |
