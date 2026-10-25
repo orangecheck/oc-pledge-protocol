@@ -1,0 +1,27 @@
+{
+  "description": "abandonment envelope whose reason holds a lone surrogate (U+D800), which a signer MUST NOT write; canonical bytes encode it as U+FFFD (SPEC §0), so the id is over EF BF BD and a verifier MUST NOT refuse it",
+  "kind": "pledge-abandonment",
+  "inputs": {
+    "pledge_id": "c08d3ef9031a89b3274180c27bf4f8df5e72e65b14d2f537266f0742fa2dacc7",
+    "abandoned_at": "2026-08-01T12:00:00Z",
+    "reason": "key lost \ud800 device wiped"
+  },
+  "expected": {
+    "canonical_message": "oc-pledge-abandonment/v1\npledge_id: c08d3ef9031a89b3274180c27bf4f8df5e72e65b14d2f537266f0742fa2dacc7\nabandoned_at: 2026-08-01T12:00:00Z\nreason: key lost \ud800 device wiped",
+    "canonical_message_bytes_len": 169,
+    "abandonment_id": "1d717719dcb9ff43f21c742c7bb9e19c23f15a53444315e377be2f0317b5d4c8",
+    "envelope": {
+      "v": 1,
+      "kind": "pledge-abandonment",
+      "id": "1d717719dcb9ff43f21c742c7bb9e19c23f15a53444315e377be2f0317b5d4c8",
+      "pledge_id": "c08d3ef9031a89b3274180c27bf4f8df5e72e65b14d2f537266f0742fa2dacc7",
+      "abandoned_at": "2026-08-01T12:00:00Z",
+      "reason": "key lost \ud800 device wiped",
+      "sig": {
+        "alg": "bip322",
+        "pubkey": "bc1qalice000000000000000000000000000000000",
+        "value": "AAAA"
+      }
+    }
+  }
+}

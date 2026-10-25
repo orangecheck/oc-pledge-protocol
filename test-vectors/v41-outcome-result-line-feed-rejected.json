@@ -1,0 +1,50 @@
+{
+  "description": "outcome envelope whose evidence result holds a line feed: its bytes are the bytes of the twin, whose result is one line and whose witness holds the rest, so a verifier MUST refuse it with E_OUTCOME_MALFORMED and the twin verifies (SPEC §4.1)",
+  "kind": "malformed-input",
+  "inputs": {
+    "outcome_envelope": {
+      "v": 1,
+      "kind": "pledge-outcome",
+      "id": "61e01565acf0144bafdddd01c00bb3a83e55e9f2914193af8901fe6b98a56b36",
+      "pledge_id": "38a096c336069cab04dc8beb78b875c42de6dd6a27f06f7ea22bfa58e8da81e7",
+      "outcome": "broken",
+      "resolved_at": "2026-06-02T10:00:00Z",
+      "resolved_by": "bc1qcounter0000000000000000000000000000000",
+      "evidence": {
+        "mechanism": "counterparty_signs",
+        "result": "broken\n  witness: a",
+        "witness": "b"
+      },
+      "dispute_window_ends_at": "2026-06-09T10:00:00Z",
+      "sig": {
+        "alg": "bip322",
+        "pubkey": "bc1qcounter0000000000000000000000000000000",
+        "value": "AAAA"
+      }
+    },
+    "twin": {
+      "v": 1,
+      "kind": "pledge-outcome",
+      "id": "61e01565acf0144bafdddd01c00bb3a83e55e9f2914193af8901fe6b98a56b36",
+      "pledge_id": "38a096c336069cab04dc8beb78b875c42de6dd6a27f06f7ea22bfa58e8da81e7",
+      "outcome": "broken",
+      "resolved_at": "2026-06-02T10:00:00Z",
+      "resolved_by": "bc1qcounter0000000000000000000000000000000",
+      "evidence": {
+        "mechanism": "counterparty_signs",
+        "result": "broken",
+        "witness": "a\n  witness: b"
+      },
+      "dispute_window_ends_at": "2026-06-09T10:00:00Z",
+      "sig": {
+        "alg": "bip322",
+        "pubkey": "bc1qcounter0000000000000000000000000000000",
+        "value": "AAAA"
+      }
+    }
+  },
+  "expected": {
+    "error": "E_OUTCOME_MALFORMED",
+    "twin_verifies": true
+  }
+}

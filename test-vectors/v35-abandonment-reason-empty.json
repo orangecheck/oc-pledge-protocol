@@ -1,0 +1,27 @@
+{
+  "description": "abandonment envelope with an empty reason, which a signer MUST NOT write; a verifier MUST NOT refuse it (SPEC §5.1) and it counts as broken",
+  "kind": "pledge-abandonment",
+  "inputs": {
+    "pledge_id": "c08d3ef9031a89b3274180c27bf4f8df5e72e65b14d2f537266f0742fa2dacc7",
+    "abandoned_at": "2026-08-01T12:00:00Z",
+    "reason": ""
+  },
+  "expected": {
+    "canonical_message": "oc-pledge-abandonment/v1\npledge_id: c08d3ef9031a89b3274180c27bf4f8df5e72e65b14d2f537266f0742fa2dacc7\nabandoned_at: 2026-08-01T12:00:00Z\nreason: ",
+    "canonical_message_bytes_len": 144,
+    "abandonment_id": "3419bbc2e0498b2786624bcf1e375f3a5e15731e3dacd24dc8137be1b9a0b05b",
+    "envelope": {
+      "v": 1,
+      "kind": "pledge-abandonment",
+      "id": "3419bbc2e0498b2786624bcf1e375f3a5e15731e3dacd24dc8137be1b9a0b05b",
+      "pledge_id": "c08d3ef9031a89b3274180c27bf4f8df5e72e65b14d2f537266f0742fa2dacc7",
+      "abandoned_at": "2026-08-01T12:00:00Z",
+      "reason": "",
+      "sig": {
+        "alg": "bip322",
+        "pubkey": "bc1qalice000000000000000000000000000000000",
+        "value": "AAAA"
+      }
+    }
+  }
+}

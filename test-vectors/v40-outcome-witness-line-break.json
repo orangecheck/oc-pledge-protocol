@@ -1,0 +1,41 @@
+{
+  "description": "outcome envelope: counterparty_signs broken whose evidence witness spans lines, which a resolver MUST NOT write; every field after the witness is strict, so a verifier MUST NOT refuse it (SPEC §4.1)",
+  "kind": "pledge-outcome",
+  "inputs": {
+    "pledge_id": "38a096c336069cab04dc8beb78b875c42de6dd6a27f06f7ea22bfa58e8da81e7",
+    "outcome": "broken",
+    "resolved_at": "2026-06-02T10:00:00Z",
+    "resolved_by": "bc1qcounter0000000000000000000000000000000",
+    "evidence": {
+      "mechanism": "counterparty_signs",
+      "result": "broken",
+      "witness": "counterparty_sig=AAAA\nnote: delivered late"
+    },
+    "dispute_window_ends_at": "2026-06-09T10:00:00Z"
+  },
+  "expected": {
+    "canonical_message": "oc-pledge-outcome/v1\npledge_id: 38a096c336069cab04dc8beb78b875c42de6dd6a27f06f7ea22bfa58e8da81e7\noutcome: broken\nresolved_at: 2026-06-02T10:00:00Z\nresolved_by: bc1qcounter0000000000000000000000000000000\nevidence:\n  mechanism: counterparty_signs\n  result: broken\n  witness: counterparty_sig=AAAA\nnote: delivered late\ndispute_window_ends_at: 2026-06-09T10:00:00Z",
+    "canonical_message_bytes_len": 360,
+    "outcome_id": "1551e2fa4feb8ccb79e2ed187d859cd57d6ca18f69e736041d7c4ac718ae4036",
+    "envelope": {
+      "v": 1,
+      "kind": "pledge-outcome",
+      "id": "1551e2fa4feb8ccb79e2ed187d859cd57d6ca18f69e736041d7c4ac718ae4036",
+      "pledge_id": "38a096c336069cab04dc8beb78b875c42de6dd6a27f06f7ea22bfa58e8da81e7",
+      "outcome": "broken",
+      "resolved_at": "2026-06-02T10:00:00Z",
+      "resolved_by": "bc1qcounter0000000000000000000000000000000",
+      "evidence": {
+        "mechanism": "counterparty_signs",
+        "result": "broken",
+        "witness": "counterparty_sig=AAAA\nnote: delivered late"
+      },
+      "dispute_window_ends_at": "2026-06-09T10:00:00Z",
+      "sig": {
+        "alg": "bip322",
+        "pubkey": "bc1qcounter0000000000000000000000000000000",
+        "value": "AAAA"
+      }
+    }
+  }
+}

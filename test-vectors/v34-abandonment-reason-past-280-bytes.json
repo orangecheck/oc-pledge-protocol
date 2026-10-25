@@ -1,0 +1,27 @@
+{
+  "description": "abandonment envelope whose reason is 311 bytes, past the 280 a signer may write; a verifier MUST NOT refuse it (SPEC §5.1) and it counts as broken",
+  "kind": "pledge-abandonment",
+  "inputs": {
+    "pledge_id": "c08d3ef9031a89b3274180c27bf4f8df5e72e65b14d2f537266f0742fa2dacc7",
+    "abandoned_at": "2026-08-01T12:00:00Z",
+    "reason": "I took a full-time role that leaves no time for this work, and the bonded coins are now needed for a family emergency, so I am admitting the break now rather than letting the deadline pass in silence. Everything finished so far is in the public repository, and I will answer questions from anyone picking it up."
+  },
+  "expected": {
+    "canonical_message": "oc-pledge-abandonment/v1\npledge_id: c08d3ef9031a89b3274180c27bf4f8df5e72e65b14d2f537266f0742fa2dacc7\nabandoned_at: 2026-08-01T12:00:00Z\nreason: I took a full-time role that leaves no time for this work, and the bonded coins are now needed for a family emergency, so I am admitting the break now rather than letting the deadline pass in silence. Everything finished so far is in the public repository, and I will answer questions from anyone picking it up.",
+    "canonical_message_bytes_len": 455,
+    "abandonment_id": "e39717af8b85d70249a06dafa23c87a868331da959703714f162ac73eb8080b4",
+    "envelope": {
+      "v": 1,
+      "kind": "pledge-abandonment",
+      "id": "e39717af8b85d70249a06dafa23c87a868331da959703714f162ac73eb8080b4",
+      "pledge_id": "c08d3ef9031a89b3274180c27bf4f8df5e72e65b14d2f537266f0742fa2dacc7",
+      "abandoned_at": "2026-08-01T12:00:00Z",
+      "reason": "I took a full-time role that leaves no time for this work, and the bonded coins are now needed for a family emergency, so I am admitting the break now rather than letting the deadline pass in silence. Everything finished so far is in the public repository, and I will answer questions from anyone picking it up.",
+      "sig": {
+        "alg": "bip322",
+        "pubkey": "bc1qalice000000000000000000000000000000000",
+        "value": "AAAA"
+      }
+    }
+  }
+}

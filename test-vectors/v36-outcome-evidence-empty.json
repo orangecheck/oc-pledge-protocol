@@ -1,0 +1,41 @@
+{
+  "description": "outcome envelope: counterparty_signs broken whose evidence result and witness are empty, which a resolver MUST NOT write; a verifier MUST NOT refuse it (SPEC §4.1)",
+  "kind": "pledge-outcome",
+  "inputs": {
+    "pledge_id": "38a096c336069cab04dc8beb78b875c42de6dd6a27f06f7ea22bfa58e8da81e7",
+    "outcome": "broken",
+    "resolved_at": "2026-06-02T10:00:00Z",
+    "resolved_by": "bc1qcounter0000000000000000000000000000000",
+    "evidence": {
+      "mechanism": "counterparty_signs",
+      "result": "",
+      "witness": ""
+    },
+    "dispute_window_ends_at": "2026-06-09T10:00:00Z"
+  },
+  "expected": {
+    "canonical_message": "oc-pledge-outcome/v1\npledge_id: 38a096c336069cab04dc8beb78b875c42de6dd6a27f06f7ea22bfa58e8da81e7\noutcome: broken\nresolved_at: 2026-06-02T10:00:00Z\nresolved_by: bc1qcounter0000000000000000000000000000000\nevidence:\n  mechanism: counterparty_signs\n  result: \n  witness: \ndispute_window_ends_at: 2026-06-09T10:00:00Z",
+    "canonical_message_bytes_len": 312,
+    "outcome_id": "0a4f57507e747481c314286ff4d0b1c292856289d82de2b98e9d884b1aa261c0",
+    "envelope": {
+      "v": 1,
+      "kind": "pledge-outcome",
+      "id": "0a4f57507e747481c314286ff4d0b1c292856289d82de2b98e9d884b1aa261c0",
+      "pledge_id": "38a096c336069cab04dc8beb78b875c42de6dd6a27f06f7ea22bfa58e8da81e7",
+      "outcome": "broken",
+      "resolved_at": "2026-06-02T10:00:00Z",
+      "resolved_by": "bc1qcounter0000000000000000000000000000000",
+      "evidence": {
+        "mechanism": "counterparty_signs",
+        "result": "",
+        "witness": ""
+      },
+      "dispute_window_ends_at": "2026-06-09T10:00:00Z",
+      "sig": {
+        "alg": "bip322",
+        "pubkey": "bc1qcounter0000000000000000000000000000000",
+        "value": "AAAA"
+      }
+    }
+  }
+}

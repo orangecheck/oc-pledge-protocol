@@ -8,6 +8,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ### Changed
 
+- **§4.1, §5.1, §5.3, §9.1, §11.13 free text in outcomes and abandonments.** A
+  swearer MUST write `reason` as one non-empty line of at most 280 UTF-8
+  bytes, and a resolver `evidence.result` and `evidence.witness` as one
+  non-empty line each. A verifier MUST NOT refuse an outcome or abandonment
+  for the length or emptiness of those fields, for a line break in `reason` or
+  `evidence.witness`, or for a field the spec does not name: refusing a signed
+  one leaves the pledge in its earlier state. It refuses a value that is not a
+  string, and a line feed in `evidence.result`, the one place a line break
+  lets another envelope produce the same bytes. Vectors `v34`–`v36`,
+  `v38`–`v41`.
+- **§0 lone surrogates.** JSON can carry an unpaired surrogate, which UTF-8
+  cannot encode. A signer MUST NOT write one. Canonical bytes encode one as
+  U+FFFD, as the WHATWG UTF-8 encoder does, so every implementation hashes the
+  same bytes. Vector `v37`.
 - **§7.3 delegation time.** An agent-signed pledge's delegation is resolved
   and checked as of the time of verification: unexpired then, and not revoked
   at or before then. Step 5, `expires_at > sworn_at`, still holds. A verifier

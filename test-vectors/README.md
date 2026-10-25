@@ -48,7 +48,9 @@ Given the `inputs` of an envelope vector, a compliant implementation MUST:
 
 For Shape B vectors, a compliant implementation MUST produce the `expected.state` (for state-transition vectors) or the `expected.code` (for bond-verification vectors), given the inputs and any relevant public-state fixtures. Bond vectors that carry `now` and `utxos` (the attested address's confirmed unspent outputs, `block_time` in Unix seconds) also give `expected.days_unspent`; an implementation that ages coins itself MUST derive it from them per SPEC §8.
 
-For Shape C malformed-input vectors, a compliant implementation MUST raise the named `expected.error` code at envelope construction (or as early as possible during verification).
+For Shape C malformed-input vectors, a compliant implementation MUST raise the named `expected.error` code at envelope construction (or as early as possible during verification). A Shape C vector that gives an `outcome_envelope` names the error verification MUST return for it; its `twin` has the same id and MUST verify.
+
+A state-transition vector's `abandonment_envelope` enters the state machine only when it verifies against the vector's pledge (SPEC §11.10), the signature aside.
 
 If any of these diverge, the implementation is non-conformant. Typical bugs:
 
@@ -60,6 +62,9 @@ If any of these diverge, the implementation is non-conformant. Typical bugs:
 - Including both `time:` and `block:` lines in `resolves_at:` (must be exactly one).
 - Accepting an empty `nonce`.
 - Treating an abandonment envelope as anything other than `broken` in the public ledger.
+- Refusing an outcome or abandonment for the length or emptiness of its free text, or for a line break in `reason` or `evidence.witness` (v34–v36, v38–v40).
+- Accepting a line feed in `evidence.result`, whose bytes are another envelope's (v41).
+- Hashing a lone surrogate as anything but U+FFFD (v37).
 
 ## A note on signatures
 
@@ -117,6 +122,14 @@ New implementations should add a similar test.
 | `v31-state-outcome-dated-after-now.json` | B | State machine: an outcome whose `resolved_at` is later than `now` does not classify the pledge yet → pending (SPEC §4.4). |
 | `v32-state-signed-outcome-after-expiry.json` | B | State machine: a signed counterparty outcome dated after `expires_at` comes too late → expired_unresolved (SPEC §3.4.2, §4.4). |
 | `v33-pledge-agent-is-swearer-rejected.json` | C | The v01 pledge with `via_delegation` added and `agent_address` set to the swearer MUST be rejected by verification (SPEC §7.3). |
+| `v34-abandonment-reason-past-280-bytes.json` | A | Abandonment whose reason is 311 bytes, past what a signer may write: a verifier MUST NOT refuse it (SPEC §5.1). |
+| `v35-abandonment-reason-empty.json` | A | Abandonment with an empty reason: a verifier MUST NOT refuse it (SPEC §5.1). |
+| `v36-outcome-evidence-empty.json` | A | Signed broken outcome whose evidence result and witness are empty: a verifier MUST NOT refuse it (SPEC §4.1). |
+| `v37-abandonment-reason-lone-surrogate.json` | A | Abandonment whose reason holds a lone surrogate: canonical bytes encode it as U+FFFD (`EF BF BD`), and the id is over those bytes (SPEC §0). |
+| `v38-abandonment-reason-line-break.json` | A | Abandonment whose reason holds a CR LF: the reason is the last line after strict fields, so a verifier MUST NOT refuse it (SPEC §5.1). |
+| `v39-state-broken-via-abandonment-line-break.json` | B | State machine: the v26 pledge with that abandonment, which verifies → broken (SPEC §5.1, §11.10). |
+| `v40-outcome-witness-line-break.json` | A | Signed broken outcome whose witness spans lines: every field after it is strict, so a verifier MUST NOT refuse it (SPEC §4.1). |
+| `v41-outcome-result-line-feed-rejected.json` | C | Outcome whose `evidence.result` holds a line feed MUST be rejected with `E_OUTCOME_MALFORMED`: its bytes and id are those of `twin`, whose result is one line, and `twin` verifies (SPEC §4.1). |
 
 ## Round-trip verification
 

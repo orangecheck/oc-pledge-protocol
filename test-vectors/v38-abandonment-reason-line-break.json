@@ -1,0 +1,27 @@
+{
+  "description": "abandonment envelope whose reason holds a line break (CR LF), which a signer MUST NOT write; the reason is the last line and every field before it is strict, so a verifier MUST NOT refuse it (SPEC §5.1)",
+  "kind": "pledge-abandonment",
+  "inputs": {
+    "pledge_id": "c08d3ef9031a89b3274180c27bf4f8df5e72e65b14d2f537266f0742fa2dacc7",
+    "abandoned_at": "2026-08-01T12:00:00Z",
+    "reason": "lost the device.\r\nIt held the bonded key; admitting the break now."
+  },
+  "expected": {
+    "canonical_message": "oc-pledge-abandonment/v1\npledge_id: c08d3ef9031a89b3274180c27bf4f8df5e72e65b14d2f537266f0742fa2dacc7\nabandoned_at: 2026-08-01T12:00:00Z\nreason: lost the device.\r\nIt held the bonded key; admitting the break now.",
+    "canonical_message_bytes_len": 210,
+    "abandonment_id": "e2a4de0a3b7fb6ab39e597e78304677b3f621b55fd16d3c6bc85048195d4c61d",
+    "envelope": {
+      "v": 1,
+      "kind": "pledge-abandonment",
+      "id": "e2a4de0a3b7fb6ab39e597e78304677b3f621b55fd16d3c6bc85048195d4c61d",
+      "pledge_id": "c08d3ef9031a89b3274180c27bf4f8df5e72e65b14d2f537266f0742fa2dacc7",
+      "abandoned_at": "2026-08-01T12:00:00Z",
+      "reason": "lost the device.\r\nIt held the bonded key; admitting the break now.",
+      "sig": {
+        "alg": "bip322",
+        "pubkey": "bc1qalice000000000000000000000000000000000",
+        "value": "AAAA"
+      }
+    }
+  }
+}

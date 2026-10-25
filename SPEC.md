@@ -13,6 +13,7 @@
 - `H()` = SHA-256 (RFC 6234).
 - `BIP322(addr, msg)` = BIP-322 signature of `msg` by `addr`, encoded as base64.
 - Canonical JSON = UTF-8 encoded JSON with lexicographically sorted object keys, no insignificant whitespace, LF-terminated. See §6.
+- Canonical messages are hashed as UTF-8. JSON can carry a lone surrogate (an unpaired code unit in U+D800–U+DFFF), which UTF-8 cannot encode. A signer MUST NOT write one. An implementation building canonical bytes encodes each lone surrogate as U+FFFD (`EF BF BD`), as the WHATWG Encoding Standard's UTF-8 encoder does, so every implementation hashes the same bytes (vector `v37`).
 - ISO 8601 UTC means `YYYY-MM-DDTHH:MM:SSZ` (no fractional seconds, no offsets other than `Z`). Implementations MUST reject `+00:00`, `+00`, lowercased `z`, fractional-second forms, and any offset other than the literal capital-`Z` suffix in canonical-message contexts.
 - `sats` is an integer count of satoshis (100,000,000 sats = 1 BTC).
 - `block(N)` denotes the Bitcoin mainnet block at height `N`.
@@ -316,6 +317,8 @@ The `evidence.witness` line is mechanism-specific. Recommended canonical forms:
 | `counterparty_signs` | `counterparty_sig=<base64 BIP-322>` |
 | `vote_resolves` | `vote_poll_id=<64-hex>` |
 
+A resolver MUST write `evidence.result` and `evidence.witness` each as one non-empty line. A verifier MUST NOT refuse an outcome because either is empty or long, or because `evidence.witness` holds a line break: neither grants anything, and refusing a signed outcome leaves the pledge in its earlier state (vectors `v36`, `v40`). A verifier refuses either when it is not a string, and refuses a line feed (`0x0a`) in `evidence.result`, with `E_OUTCOME_MALFORMED`. A line feed there would let another envelope produce the same bytes: `result` `"r\n  witness: a"` with `witness` `"b"` hashes exactly as `result` `"r"` with `witness` `"a\n  witness: b"` (vector `v41`). Every field after `evidence.witness` is strictly formatted, so a line break in the witness cannot move a boundary, and with `evidence.result` held to one line the bytes have one reading.
+
 ### 4.2 Envelope schema
 
 ```json
@@ -418,10 +421,12 @@ A swearer may admit an upcoming break by publishing an **abandonment envelope** 
 oc-pledge-abandonment/v1
 pledge_id: <64-hex>
 abandoned_at: <ISO 8601 UTC>
-reason: <single-line string, ≤ 280 UTF-8 bytes>
+reason: <single-line string>
 ```
 
 Each line LF-terminated; no trailing LF after `reason`. The first line is the literal 24-byte string `oc-pledge-abandonment/v1`.
+
+The swearer MUST write a `reason` that is one non-empty line of at most 280 UTF-8 bytes, for wallet legibility. A verifier refuses a `reason` only when it is not a string, with `E_ABANDONMENT_MALFORMED`. It MUST NOT refuse one because it is empty, longer, or holds a line break: the reason grants nothing, and refusing a signed abandonment leaves a pledge its swearer gave up looking open (vectors `v34`, `v35`, `v38`, `v39`). A line break creates no second reading: the reason is the last line, and every field before it is strictly formatted (`pledge_id` 64-hex, `abandoned_at` ISO 8601 UTC), so no other abandonment produces the same bytes and `abandonment_id` names one statement.
 
 `abandonment_id := H(canonical_message_bytes)`.
 
@@ -454,7 +459,7 @@ Each line LF-terminated; no trailing LF after `reason`. The first line is the li
 | `id` | MUST equal `H(canonical_message)` as hex. |
 | `pledge_id` | MUST be a known, swearer-signed pledge id. |
 | `abandoned_at` | ISO 8601 UTC. MUST satisfy `abandoned_at >= pledge.sworn_at` and SHOULD satisfy `abandoned_at < pledge.resolves_at_normalized` (an abandonment after `resolves_at` is still accepted but is informationally redundant — the outcome envelope path is the canonical way to record post-resolution outcomes). |
-| `reason` | Single-line UTF-8 string, ≤ 280 bytes. Informational only; does not change the ledger classification. |
+| `reason` | String. Informational only; does not change the ledger classification. A signer MUST write one non-empty line of at most 280 UTF-8 bytes; a verifier refuses only a `reason` that is not a string (§5.1). |
 | `sig.pubkey` | MUST equal the original pledge's `swearer.address`. Agents MAY NOT publish abandonments under v1.0; abandonment is principal-only. |
 | `sig.value` | MUST verify under BIP-322 over the hex-encoded `abandonment_id`. |
 
@@ -583,7 +588,7 @@ A **full verification** of (pledge, outcome | abandonment | none) produces one o
 Given pledge envelope `P`, optional outcome envelope `O`, optional abandonment envelope `A`, current time `now`, and current chain state `chain`:
 
 1. **Version check.** `P.v == 1` else `E_UNSUPPORTED_VERSION`. Same for `O` and `A`.
-2. **Shape check.** Required fields present and typed (§3.6, §4.2, §5.3); else `E_PLEDGE_MALFORMED`, `E_OUTCOME_MALFORMED`, or `E_ABANDONMENT_MALFORMED`.
+2. **Shape check.** Required fields present and typed (§3.6, §4.2, §5.3); else `E_PLEDGE_MALFORMED`, `E_OUTCOME_MALFORMED`, or `E_ABANDONMENT_MALFORMED`. Length limits apply to a pledge's `proposition` and `resolution.query` (§3.1); an outcome's evidence and an abandonment's reason are not refused for their length, for being empty, or for a line break, except a line feed in `evidence.result` (§4.1, §5.1).
 3. **Pledge canonical consistency.** Reconstruct canonical message from `P`'s fields. `H(canonical) == P.id`? Else `E_PLEDGE_BAD_ID`.
 4. **Pledge signature.** Verify `P.sig.value` per §3.5. Account for the agent path (§7.3) when `via_delegation` is present. Else `E_PLEDGE_BAD_SIG`.
 5. **Bond.** Run §8 `verifyBond(P, now, chain)`.
@@ -648,6 +653,7 @@ These restate cryptographic correctness conditions a conforming implementation M
 10. **Bind every outcome and abandonment to the pledge it names.** Before an outcome or abandonment enters §4.4, the verifier MUST recompute the referenced pledge's id and compare it to `pledge_id`. For an outcome it MUST confirm `evidence.mechanism == pledge.resolution.mechanism` and the resolver named in §4.3; a deterministic outcome MUST satisfy `resolved_at >= resolves_at_normalized` (and `resolved_at >= expires_at` when `outcome == expired_unresolved`). A signed outcome MUST satisfy `resolved_at < expires_at`. For an abandonment it MUST apply §5.3 in full: `sig.pubkey == pledge.swearer.address`, `abandoned_at >= pledge.sworn_at`, and a BIP-322 signature that verifies under that address. An envelope failing any of these is ignored for classification.
 11. **Select by verification, not by recency.** Anyone can publish under an envelope's Nostr `d` tag. When several events claim the same pledge, outcome, abandonment, or delegation, a verifier MUST consider each and use one that verifies, never simply the newest. For a pledge, "verifies" means §9.1 steps 1–4 with the §7.3 chain as of `now`: copies of one id can differ in `via_delegation`, `agent_address` and `sig` (§3.2), so a check that skips the delegation does not choose a copy. Every copy that passes is the same pledge, and any one of them will do. If none passes, a history MAY use a copy that passes §7.3 as of its own `sworn_at`, labelled as §7.3 requires. Otherwise the pledge does not verify.
 12. **Resolve the delegation of every agent-signed pledge.** A pledge carrying `via_delegation` MUST NOT verify unless the §7.3 chain was resolved as of the time of verification, including the OC Agent revocation check. A revocation feed that could not be queried is not an empty feed; the verifier MUST treat the delegation as unresolved.
+13. **Refuse an outcome or abandonment only for what binds it.** Refusing a signed outcome or abandonment leaves the pledge in its earlier state, so a verifier MUST NOT refuse one for a field that grants nothing: the length or emptiness of `evidence.result`, `evidence.witness` or `reason`, a line break in `evidence.witness` or `reason`, or a field the spec does not name (§3.7). It refuses a line break only where one would let another envelope produce the same bytes, which is a line feed in `evidence.result` (§4.1). Limits a signer keeps (§4.1, §5.1) are not limits a reader adds. A verifier MAY flag such a field; it still counts the envelope.
 
 ## 12. Registry for extensions
 
@@ -685,6 +691,7 @@ A client is OC Pledge v1.0 compliant if and only if:
 - [ ] Recomputes deterministic outcome evidence on-demand for §3.4.1, §3.4.3, §3.4.4, §3.4.5, §3.4.6 mechanisms
 - [ ] Verifies signature on `counterparty_signs` outcome envelopes against the named counterparty
 - [ ] Treats abandonment envelopes as `broken` in the public ledger, full stop (no honorable exit)
+- [ ] Never refuses an outcome or abandonment for a field that grants nothing (§11.13)
 - [ ] Resolves agent-delegated pledges (§7.3) under OC Agent v1 verification rules
 - [ ] Produces error codes per §10
 - [ ] Rejects unknown `v` values; preserves unknown fields on relay
