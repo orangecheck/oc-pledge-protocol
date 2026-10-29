@@ -44,7 +44,7 @@ This repository is the **normative protocol specification**. No code lives here 
 | [`NIP_ORANGECHECK_PLEDGE.md`](./NIP_ORANGECHECK_PLEDGE.md) | The Nostr wire format. Three d-tag namespaces under kind 30078. |
 | [`REGISTRY.md`](./REGISTRY.md) | Authoritative registry of mechanism strings, dispute mechanisms, scope grammar extensions. Refuses `self_proof`, `slashing`, etc. |
 | [`CHANGELOG.md`](./CHANGELOG.md) | Version history. |
-| [`test-vectors/`](./test-vectors/) | 46 cross-implementation conformance fixtures. Real SHA-256 ids; round-trip verified at authoring time. |
+| [`test-vectors/`](./test-vectors/) | 54 cross-implementation conformance fixtures. Real SHA-256 ids; round-trip verified at authoring time. |
 | [`examples/`](./examples/) | Three minimal envelope examples: research preregistration, SLA, OSS delivery. |
 
 ## Reference implementation
