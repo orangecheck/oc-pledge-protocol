@@ -52,6 +52,8 @@ For Shape C malformed-input vectors, a compliant implementation MUST raise the n
 
 A state-transition vector's `abandonment_envelope` enters the state machine only when it verifies against the vector's pledge (SPEC §11.10), the signature aside.
 
+A state-transition vector may give `outcome_envelopes`, several outcome envelopes for its pledge, in place of one `outcome_envelope`. They enter the state machine together, and the state MUST NOT depend on their order (SPEC §4.4).
+
 If any of these diverge, the implementation is non-conformant. Typical bugs:
 
 - Trailing LF after the final line (the spec says no trailing LF).
@@ -68,6 +70,7 @@ If any of these diverge, the implementation is non-conformant. Typical bugs:
 - Accepting the string `"null"` as a counterparty, dispute params or dispute mechanism (v42, v43, v45).
 - Matching digits with a Unicode-aware `\d` (v44).
 - Letting a scope constraint the verifier does not recognise pass the scope check (v46).
+- Counting a contradicting outcome dated after the earliest outcome's dispute window (v47), or keeping a pledge with no dispute mechanism `disputed` after `expires_at` (v49).
 
 ## A note on signatures
 

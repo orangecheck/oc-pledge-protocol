@@ -8,6 +8,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ### Changed
 
+- **§4.4, §4.5 disputes.** A contradiction counts only when dated before the
+  earliest outcome's `dispute_window_ends_at`; after it, the earliest outcome
+  is final, whatever order the envelopes arrive in. A dispute on a pledge with
+  no dispute mechanism stays `disputed` until `expires_at` and then times out
+  to `expired_unresolved`, as §4.5 already said; the §4.4 algorithm now says
+  so too. One that names a dispute mechanism stays `disputed`, referred to it.
+  Vectors `v47`–`v50`.
 - **§3.6 the string "null".** `counterparty` and `dispute.params` MUST NOT be
   the string `"null"`: the canonical message writes null as `null`, so that
   string signs the same bytes as null. Signers and verifiers refuse it with

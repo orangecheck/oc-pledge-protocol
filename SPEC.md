@@ -371,8 +371,8 @@ A pledge is in exactly one of these states at any moment:
 - `resolvable` — `resolves_at_normalized <= now < expires_at`, no consistent outcome envelope, no abandonment.
 - `kept` — outcome envelope present with `outcome == kept`, dispute window passed, no contradictory outcome envelope from a party authorized to dispute.
 - `broken` — outcome envelope present with `outcome == broken` AND dispute window passed, OR an abandonment envelope was published before `resolves_at`.
-- `disputed` — two or more outcome envelopes from authorized parties with contradictory outcomes, within dispute window OR awaiting dispute mechanism resolution.
-- `expired_unresolved` — `now >= expires_at` AND no consistent outcome envelope AND no abandonment AND not disputed-and-resolved.
+- `disputed` — two or more outcome envelopes from authorized resolvers (§4.3) with contradictory outcomes, the later dated before the earliest one's `dispute_window_ends_at`; while `now < expires_at`, or after it when the pledge names a dispute mechanism (§4.5).
+- `expired_unresolved` — `now >= expires_at` AND no consistent outcome envelope AND no abandonment AND not disputed-and-resolved; or a dispute on a pledge with no dispute mechanism, once `now >= expires_at` (§4.5).
 
 `resolves_at_normalized` is `resolves_at.time` if `time:` was used, else the wall-clock timestamp of the Bitcoin block at `resolves_at.block` (or, if not yet mined, `+infinity`).
 
@@ -385,17 +385,23 @@ state(pledge, outcome, abandonment, now, chain) :=
   if outcome is not null:
     if outcome.signature_required and not outcome.signature_valid:
       raise E_OUTCOME_BAD_SIG
-    if exists contradictory outcome from authorized resolver within dispute window:
+    first := the outcome with the earliest resolved_at
+    if exists outcome o from an authorized resolver with o.outcome != first.outcome
+         and o.resolved_at < first.dispute_window_ends_at:
+      if pledge.dispute.mechanism is null and now >= pledge.expires_at:
+        return expired_unresolved
       return disputed
-    if now < outcome.dispute_window_ends_at:
-      return outcome.outcome  # provisional; verifiers may flag as "in window"
-    return outcome.outcome   # final
+    if now < first.dispute_window_ends_at:
+      return first.outcome  # provisional; verifiers may flag as "in window"
+    return first.outcome   # final
   if now >= pledge.expires_at:
     return expired_unresolved
   if now >= resolves_at_normalized(pledge, chain):
     return resolvable
   return pending
 ```
+
+`outcome` here is every outcome envelope in force for the pledge; the order they arrive in does not change the state. A contradicting outcome dated at or after the earliest outcome's `dispute_window_ends_at` comes after the window: it does not dispute the pledge, and the earliest outcome stands (vector `v47`; within the window, `v48`).
 
 An outcome envelope whose `resolved_at` is later than `now` describes a resolution that has not happened yet: it does not enter the algorithm, as the outcome or as a contradicting one, until `now` reaches it.
 
@@ -408,7 +414,7 @@ Two verifiers with the same inputs MUST produce the same state classification.
 When `resolution.mechanism == counterparty_signs`, both swearer and counterparty MAY publish outcome envelopes:
 
 - **Consistent**: both publish `kept` (or both `broken`). The state resolves to that outcome after the dispute window passes (§4.4).
-- **Contradictory**: swearer publishes `kept`, counterparty publishes `broken` (or vice versa). The state is `disputed`. If the pledge has `dispute.mechanism != null`, the dispute is referred to that mechanism; otherwise the pledge times out to `expired_unresolved`.
+- **Contradictory**: swearer publishes `kept`, counterparty publishes `broken` (or vice versa). The state is `disputed`. If the pledge has `dispute.mechanism != null`, the dispute is referred to that mechanism and the pledge stays `disputed` (vector `v50`); otherwise it stays `disputed` until `expires_at` and then times out to `expired_unresolved` (vector `v49`).
 
 Test vectors `v21-bilateral-consistent.json` and `v22-bilateral-contradictory.json` pin these transitions.
 
