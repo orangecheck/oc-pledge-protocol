@@ -8,6 +8,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ### Changed
 
+- **§4.3, §4.5 the swearer's counter-claim.** §4.3 said only the counterparty
+  resolves a `counterparty_signs` pledge; §4.5 let either party publish an
+  outcome. Now only the counterparty settles it, and the swearer MAY publish a
+  counter-claim, signed by the swearer, as recourse against a counterparty
+  outcome they hold to be false. A counter-claim can make the pledge
+  `disputed`; it never settles the pledge by itself. Vectors `v21` and `v22`
+  are rebuilt on `v03`'s pledge with full outcome envelopes, and `v51` pins a
+  counter-claim alone.
 - **§4.4, §4.5 disputes.** A contradiction counts only when dated before the
   earliest outcome's `dispute_window_ends_at`; after it, the earliest outcome
   is final, whatever order the envelopes arrive in. A dispute on a pledge with

@@ -361,6 +361,8 @@ A resolver MUST write `evidence.result` and `evidence.witness` each as one non-e
 | `counterparty_signs` | `<counterparty.address>` | BIP-322 by counterparty over `outcome_id` (hex). |
 | `vote_resolves` | `"deterministic"` | `null`. The OC Vote tally is itself a pure function. |
 
+Under `counterparty_signs` the swearer MAY also publish an outcome envelope, `resolved_by` the swearer's address and signed by the swearer over `outcome_id`: a **counter-claim** (§4.5). It can contradict the counterparty's outcome; it never settles the pledge by itself. An outcome envelope from anyone else is not an outcome for this pledge.
+
 For deterministic outcomes, **any verifier with access to the same public state computes a byte-identical envelope**. Two verifiers producing different outcome envelopes for the same pledge means at least one is operating on different public state. The protocol resolves this by majority across at least three independent computations for deterministic mechanisms; see §10.
 
 ### 4.4 The state machine
@@ -371,7 +373,7 @@ A pledge is in exactly one of these states at any moment:
 - `resolvable` — `resolves_at_normalized <= now < expires_at`, no consistent outcome envelope, no abandonment.
 - `kept` — outcome envelope present with `outcome == kept`, dispute window passed, no contradictory outcome envelope from a party authorized to dispute.
 - `broken` — outcome envelope present with `outcome == broken` AND dispute window passed, OR an abandonment envelope was published before `resolves_at`.
-- `disputed` — two or more outcome envelopes from authorized resolvers (§4.3) with contradictory outcomes, the later dated before the earliest one's `dispute_window_ends_at`; while `now < expires_at`, or after it when the pledge names a dispute mechanism (§4.5).
+- `disputed` — a settling outcome (§4.3) and a contradicting one, from the resolver or a swearer counter-claim, dated before the earliest settling outcome's `dispute_window_ends_at`; while `now < expires_at`, or after it when the pledge names a dispute mechanism (§4.5).
 - `expired_unresolved` — `now >= expires_at` AND no consistent outcome envelope AND no abandonment AND not disputed-and-resolved; or a dispute on a pledge with no dispute mechanism, once `now >= expires_at` (§4.5).
 
 `resolves_at_normalized` is `resolves_at.time` if `time:` was used, else the wall-clock timestamp of the Bitcoin block at `resolves_at.block` (or, if not yet mined, `+infinity`).
@@ -385,8 +387,10 @@ state(pledge, outcome, abandonment, now, chain) :=
   if outcome is not null:
     if outcome.signature_required and not outcome.signature_valid:
       raise E_OUTCOME_BAD_SIG
-    first := the outcome with the earliest resolved_at
-    if exists outcome o from an authorized resolver with o.outcome != first.outcome
+  first := the settling outcome (from the resolver, §4.3) with the earliest resolved_at,
+           or null; a swearer counter-claim alone settles nothing
+  if first is not null:
+    if exists outcome o (settling, or a swearer counter-claim) with o.outcome != first.outcome
          and o.resolved_at < first.dispute_window_ends_at:
       if pledge.dispute.mechanism is null and now >= pledge.expires_at:
         return expired_unresolved
@@ -401,7 +405,7 @@ state(pledge, outcome, abandonment, now, chain) :=
   return pending
 ```
 
-`outcome` here is every outcome envelope in force for the pledge; the order they arrive in does not change the state. A contradicting outcome dated at or after the earliest outcome's `dispute_window_ends_at` comes after the window: it does not dispute the pledge, and the earliest outcome stands (vector `v47`; within the window, `v48`).
+`outcome` here is every outcome envelope in force for the pledge; the order they arrive in does not change the state. A contradicting outcome dated at or after the earliest settling outcome's `dispute_window_ends_at` comes after the window: it does not dispute the pledge, and the earliest settling outcome stands (vector `v47`; within the window, `v48`).
 
 An outcome envelope whose `resolved_at` is later than `now` describes a resolution that has not happened yet: it does not enter the algorithm, as the outcome or as a contradicting one, until `now` reaches it.
 
@@ -411,12 +415,12 @@ Two verifiers with the same inputs MUST produce the same state classification.
 
 ### 4.5 Bilateral consistency
 
-When `resolution.mechanism == counterparty_signs`, both swearer and counterparty MAY publish outcome envelopes:
+When `resolution.mechanism == counterparty_signs`, only the counterparty settles the pledge (§4.3). The swearer MAY publish a counter-claim, an outcome envelope signed by the swearer (§4.3), as recourse against a counterparty outcome they hold to be false. A counter-claim never settles the pledge by itself: with no counterparty outcome, the pledge stays `resolvable` and then `expired_unresolved` (vector `v51`).
 
-- **Consistent**: both publish `kept` (or both `broken`). The state resolves to that outcome after the dispute window passes (§4.4).
-- **Contradictory**: swearer publishes `kept`, counterparty publishes `broken` (or vice versa). The state is `disputed`. If the pledge has `dispute.mechanism != null`, the dispute is referred to that mechanism and the pledge stays `disputed` (vector `v50`); otherwise it stays `disputed` until `expires_at` and then times out to `expired_unresolved` (vector `v49`).
+- **Consistent**: the counter-claim agrees with the counterparty's outcome (both `kept`, or both `broken`). The state resolves to that outcome after the dispute window passes (§4.4).
+- **Contradictory**: the swearer counter-claims `kept` and the counterparty publishes `broken` (or vice versa), the counter-claim dated before the counterparty outcome's `dispute_window_ends_at`. The state is `disputed`. If the pledge has `dispute.mechanism != null`, the dispute is referred to that mechanism and the pledge stays `disputed` (vector `v50`); otherwise it stays `disputed` until `expires_at` and then times out to `expired_unresolved` (vector `v49`).
 
-Test vectors `v21-bilateral-consistent.json` and `v22-bilateral-contradictory.json` pin these transitions.
+Test vectors `v21-bilateral-consistent.json`, `v22-bilateral-contradictory.json` and `v51-state-swearer-counter-claim-alone.json` pin these transitions.
 
 ## 5. The abandonment envelope
 

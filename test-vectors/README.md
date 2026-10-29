@@ -71,6 +71,7 @@ If any of these diverge, the implementation is non-conformant. Typical bugs:
 - Matching digits with a Unicode-aware `\d` (v44).
 - Letting a scope constraint the verifier does not recognise pass the scope check (v46).
 - Counting a contradicting outcome dated after the earliest outcome's dispute window (v47), or keeping a pledge with no dispute mechanism `disputed` after `expires_at` (v49).
+- Letting a swearer's counter-claim settle a `counterparty_signs` pledge by itself (v51).
 
 ## A note on signatures
 
