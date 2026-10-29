@@ -1,5 +1,5 @@
 {
-  "description": "state machine: a broken outcome dated 06-05, inside the kept outcome's dispute window (to 06-09), contradicts it, so the pledge is disputed",
+  "description": "state machine: the resolver's own contradiction inside its window. The counterparty resolves kept with a dispute window to 06-09, then broken on 06-05, so the pledge is disputed",
   "kind": "state-transition",
   "inputs": {
     "pledge_id": "38a096c336069cab04dc8beb78b875c42de6dd6a27f06f7ea22bfa58e8da81e7",

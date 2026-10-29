@@ -208,7 +208,7 @@ outcome: broken
 witness: counterparty_sig=H2+...different signature==
 ```
 
-If only the counterparty publishes, the pledge resolves `broken` (since they are the named resolver). If Carol counter-publishes a kept outcome, both signatures from authorized parties contradict — the state is `disputed`. The pre-named `vote_resolves` dispute mechanism kicks in: the maintainers council poll resolves the question, and its tally function determines the final ledger state.
+If only the counterparty publishes, the pledge resolves `broken` (since they are the named resolver). If Carol counter-publishes a kept outcome at any time before `expires_at`, it contradicts the counterparty's, whatever dispute window the counterparty set: the state is `disputed`. Carol's counter-claim can dispute the counterparty's outcome but never settle the pledge. The pre-named `vote_resolves` dispute mechanism kicks in: the maintainers council poll resolves the question, and its tally function determines the final ledger state.
 
 If `dispute.mechanism` had been `null`, the contradiction would time out to `expired_unresolved` at `expires_at`.
 

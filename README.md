@@ -53,14 +53,14 @@ The TypeScript reference implementation will be published to **npm** from the [`
 
 ## Test vectors
 
-The [`test-vectors/`](./test-vectors/) directory holds 51 cross-implementation conformance fixtures grouped as:
+The [`test-vectors/`](./test-vectors/) directory holds 54 cross-implementation conformance fixtures grouped as:
 
 - **Pledge envelopes (v01–v10):** all seven resolution mechanisms, agent-delegated, edge cases (resolves_at == expires_at, block-height resolution).
 - **Outcome envelopes (v11–v16):** kept / broken / disputed / expired_unresolved across deterministic and signed mechanisms.
 - **Abandonment envelope (v17):** the canonical-message + id baseline.
 - **Free text a verifier never refuses (v34–v41):** an abandonment reason past 280 bytes, an empty one, one with a line break and the broken state it gives, an outcome with empty evidence and one whose witness spans lines, a lone surrogate encoded as U+FFFD, and the one line break that is refused: a line feed in `evidence.result`.
 - **Bond verification (v18–v20, v29–v30):** valid, insufficient sats, spent UTXO, and the age of the covering coins.
-- **State transitions (v21–v27, v31–v32, v47–v51):** a swearer's counter-claim agreeing with, contradicting or standing without a counterparty outcome, pending/resolvable/kept/broken/expired-unresolved transitions, outcomes dated after `now` or after `expires_at`, a contradiction after the dispute window, and a dispute timing out at `expires_at` with no dispute mechanism.
+- **State transitions (v21–v27, v31–v32, v47–v54):** a swearer's counter-claim agreeing with, contradicting or standing without a counterparty outcome, pending/resolvable/kept/broken/expired-unresolved transitions, outcomes dated after `now` or after `expires_at`, the resolver's own contradiction after its dispute window, a counter-claim after a zero-length window or at `expires_at`, and a dispute timing out at `expires_at` with no dispute mechanism.
 - **Delegation scope check (v46):** which `pledge:create` scopes a pledge satisfies: the ceiling in both its forms, `mechanism`, `counterparty` and `null`, and the scopes a verifier refuses.
 - **Malformed input (v28, v33, v42–v45):** empty-nonce rejection, an agent address equal to the swearer, the string `"null"` where null is meant, and digits outside ASCII.
 
@@ -126,7 +126,7 @@ None of these are extensions of this protocol — they are usage patterns made t
 
 ## Status
 
-**v1.0 — Stable.** Cross-impl conformance is gated in CI: every PR runs both [`@orangecheck/pledge-core`](https://www.npmjs.com/package/@orangecheck/pledge-core) (TypeScript) and [`orangecheck.pledge`](https://pypi.org/project/orangecheck/) (Python, sub-module of the `orangecheck` PyPI package) against the 33 vectors in `test-vectors/` and fails if either drifts. The hosted reference web client at [pledge.ochk.io](https://pledge.ochk.io) does full SPEC §9.1 verification end-to-end, including live bond re-resolution against Bitcoin chain state and the §7.3 agent-delegation chain.
+**v1.0 — Draft again.** The dispute rules (SPEC §4.3–§4.5) changed on 2026-10-29 ([CHANGELOG](./CHANGELOG.md)); the spec returns to Stable once implementations conform. Cross-impl conformance is gated in CI: every PR runs both [`@orangecheck/pledge-core`](https://www.npmjs.com/package/@orangecheck/pledge-core) (TypeScript) and [`orangecheck.pledge`](https://pypi.org/project/orangecheck/) (Python, sub-module of the `orangecheck` PyPI package) against the vectors in `test-vectors/` and fails if either drifts. The hosted reference web client at [pledge.ochk.io](https://pledge.ochk.io) does full SPEC §9.1 verification end-to-end, including live bond re-resolution against Bitcoin chain state and the §7.3 agent-delegation chain.
 
 Cut from v0.1.0-alpha (initial drop, 2026-04) → 1.0 (2026-05) after both SDKs reproduced every test vector byte-identically and the live web surfaces wired the bond + delegation accessors.
 

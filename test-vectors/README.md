@@ -70,7 +70,8 @@ If any of these diverge, the implementation is non-conformant. Typical bugs:
 - Accepting the string `"null"` as a counterparty, dispute params or dispute mechanism (v42, v43, v45).
 - Matching digits with a Unicode-aware `\d` (v44).
 - Letting a scope constraint the verifier does not recognise pass the scope check (v46).
-- Counting a contradicting outcome dated after the earliest outcome's dispute window (v47), or keeping a pledge with no dispute mechanism `disputed` after `expires_at` (v49).
+- Counting the resolver's own contradiction dated after the earliest settling outcome's dispute window (v47), or keeping a pledge with no dispute mechanism `disputed` after `expires_at` (v49).
+- Letting the counterparty's `dispute_window_ends_at` shut out a swearer counter-claim (v52, v53).
 - Letting a swearer's counter-claim settle a `counterparty_signs` pledge by itself (v51).
 
 ## A note on signatures

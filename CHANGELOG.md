@@ -8,17 +8,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ### Changed
 
+- **Status: Draft.** The spec is marked Draft while the dispute rules below
+  change, and returns to Stable once implementations conform to them.
 - **§4.3, §4.5 the swearer's counter-claim.** §4.3 said only the counterparty
   resolves a `counterparty_signs` pledge; §4.5 let either party publish an
   outcome. Now only the counterparty settles it, and the swearer MAY publish a
   counter-claim, signed by the swearer, as recourse against a counterparty
-  outcome they hold to be false. A counter-claim can make the pledge
-  `disputed`; it never settles the pledge by itself. Vectors `v21` and `v22`
-  are rebuilt on `v03`'s pledge with full outcome envelopes, and `v51` pins a
-  counter-claim alone.
-- **§4.4, §4.5 disputes.** A contradiction counts only when dated before the
-  earliest outcome's `dispute_window_ends_at`; after it, the earliest outcome
-  is final, whatever order the envelopes arrive in. A dispute on a pledge with
+  outcome they hold to be false. A counter-claim contradicts whenever it is
+  dated before `expires_at`: every date in an outcome is its signer's own
+  claim, so a window the counterparty sets cannot bound the swearer. It can
+  make the pledge `disputed`, or `expired_unresolved` with no dispute
+  mechanism; it never settles the pledge by itself. Only a named dispute
+  mechanism gives the counterparty's outcome finality against the swearer.
+  Vectors `v21` and `v22` are rebuilt on `v03`'s pledge with full outcome
+  envelopes, `v51` pins a counter-claim alone, and `v52`–`v54` a zero-length
+  counterparty window, its timeout and a counter-claim dated at `expires_at`.
+- **§4.4, §4.5 disputes.** The resolver's own contradiction counts only when
+  dated before the earliest settling outcome's `dispute_window_ends_at`; after
+  it, that outcome stands, whatever order the envelopes arrive in. A dispute on a pledge with
   no dispute mechanism stays `disputed` until `expires_at` and then times out
   to `expired_unresolved`, as §4.5 already said; the §4.4 algorithm now says
   so too. One that names a dispute mechanism stays `disputed`, referred to it.

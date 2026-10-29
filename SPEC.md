@@ -1,6 +1,6 @@
 # OC Pledge Protocol v1.0 — Specification
 
-**Status:** Stable
+**Status:** Draft (the dispute rules in §4.3–§4.5 changed on 2026-10-29; see CHANGELOG)
 **Date:** 2026-05
 **Related:** [OrangeCheck](https://ochk.io/docs/attest) (identity + stake), [OC Lock v2](https://github.com/orangecheck/oc-lock-protocol) (private envelopes), [OC Stamp v1](https://github.com/orangecheck/oc-stamp-protocol) (content attestation), [OC Vote v1](https://github.com/orangecheck/oc-vote-protocol) (offline-tallyable polls), [OC Agent v1](https://github.com/orangecheck/oc-agent-protocol) (delegated authority)
 
@@ -373,7 +373,7 @@ A pledge is in exactly one of these states at any moment:
 - `resolvable` — `resolves_at_normalized <= now < expires_at`, no consistent outcome envelope, no abandonment.
 - `kept` — outcome envelope present with `outcome == kept`, dispute window passed, no contradictory outcome envelope from a party authorized to dispute.
 - `broken` — outcome envelope present with `outcome == broken` AND dispute window passed, OR an abandonment envelope was published before `resolves_at`.
-- `disputed` — a settling outcome (§4.3) and a contradicting one, from the resolver or a swearer counter-claim, dated before the earliest settling outcome's `dispute_window_ends_at`; while `now < expires_at`, or after it when the pledge names a dispute mechanism (§4.5).
+- `disputed` — a settling outcome (§4.3) and a contradicting one: the resolver's own, dated before the earliest settling outcome's `dispute_window_ends_at`, or a swearer counter-claim in force (§4.5); while `now < expires_at`, or after it when the pledge names a dispute mechanism.
 - `expired_unresolved` — `now >= expires_at` AND no consistent outcome envelope AND no abandonment AND not disputed-and-resolved; or a dispute on a pledge with no dispute mechanism, once `now >= expires_at` (§4.5).
 
 `resolves_at_normalized` is `resolves_at.time` if `time:` was used, else the wall-clock timestamp of the Bitcoin block at `resolves_at.block` (or, if not yet mined, `+infinity`).
@@ -390,8 +390,8 @@ state(pledge, outcome, abandonment, now, chain) :=
   first := the settling outcome (from the resolver, §4.3) with the earliest resolved_at,
            or null; a swearer counter-claim alone settles nothing
   if first is not null:
-    if exists outcome o (settling, or a swearer counter-claim) with o.outcome != first.outcome
-         and o.resolved_at < first.dispute_window_ends_at:
+    if exists outcome o with o.outcome != first.outcome and
+         (o is a swearer counter-claim or o.resolved_at < first.dispute_window_ends_at):
       if pledge.dispute.mechanism is null and now >= pledge.expires_at:
         return expired_unresolved
       return disputed
@@ -405,7 +405,7 @@ state(pledge, outcome, abandonment, now, chain) :=
   return pending
 ```
 
-`outcome` here is every outcome envelope in force for the pledge; the order they arrive in does not change the state. A contradicting outcome dated at or after the earliest settling outcome's `dispute_window_ends_at` comes after the window: it does not dispute the pledge, and the earliest settling outcome stands (vector `v47`; within the window, `v48`).
+`outcome` here is every outcome envelope in force for the pledge; the order they arrive in does not change the state. The earliest settling outcome's `dispute_window_ends_at` bounds only the resolver's own later contradictions: one dated at or after it does not dispute the pledge, and the earliest settling outcome stands (vector `v47`; within the window, `v48`). A swearer counter-claim contradicts whenever it is in force, at any time before `expires_at` (§4.5).
 
 An outcome envelope whose `resolved_at` is later than `now` describes a resolution that has not happened yet: it does not enter the algorithm, as the outcome or as a contradicting one, until `now` reaches it.
 
@@ -418,9 +418,11 @@ Two verifiers with the same inputs MUST produce the same state classification.
 When `resolution.mechanism == counterparty_signs`, only the counterparty settles the pledge (§4.3). The swearer MAY publish a counter-claim, an outcome envelope signed by the swearer (§4.3), as recourse against a counterparty outcome they hold to be false. A counter-claim never settles the pledge by itself: with no counterparty outcome, the pledge stays `resolvable` and then `expired_unresolved` (vector `v51`).
 
 - **Consistent**: the counter-claim agrees with the counterparty's outcome (both `kept`, or both `broken`). The state resolves to that outcome after the dispute window passes (§4.4).
-- **Contradictory**: the swearer counter-claims `kept` and the counterparty publishes `broken` (or vice versa), the counter-claim dated before the counterparty outcome's `dispute_window_ends_at`. The state is `disputed`. If the pledge has `dispute.mechanism != null`, the dispute is referred to that mechanism and the pledge stays `disputed` (vector `v50`); otherwise it stays `disputed` until `expires_at` and then times out to `expired_unresolved` (vector `v49`).
+- **Contradictory**: the swearer counter-claims `kept` and the counterparty publishes `broken` (or vice versa), the counter-claim dated before `expires_at`. The state is `disputed`. If the pledge has `dispute.mechanism != null`, the dispute is referred to that mechanism and the pledge stays `disputed` (vector `v50`); otherwise it stays `disputed` until `expires_at` and then times out to `expired_unresolved` (vector `v49`).
 
-Test vectors `v21-bilateral-consistent.json`, `v22-bilateral-contradictory.json` and `v51-state-swearer-counter-claim-alone.json` pin these transitions.
+Every date in an outcome envelope, `resolved_at` and `dispute_window_ends_at` alike, is its signer's own claim, and either party can backdate it. A window the counterparty sets and dates therefore cannot bound the swearer: a counter-claim counts whenever it is in force, even after a counterparty outcome whose window closed the instant it was dated (vector `v52`), and only one dated at or after `expires_at` comes too late (vector `v54`). So a swearer can always turn a counterparty `broken` into `disputed`, or into `expired_unresolved` at `expires_at` when the pledge names no dispute mechanism (vector `v53`). A counter-claim never settles the pledge. Only a named dispute mechanism gives the counterparty's outcome finality against the swearer.
+
+Test vectors `v21-bilateral-consistent.json`, `v22-bilateral-contradictory.json`, `v51-state-swearer-counter-claim-alone.json` and `v52`–`v54` pin these transitions.
 
 ## 5. The abandonment envelope
 
@@ -684,7 +686,7 @@ Brief summary of v1.0 registrations:
 
 `envelope.v` is an integer. Future incompatible changes increment it. Clients MUST reject envelopes whose `v` they do not support. Minor additions (new optional registry values, new evidence witness shapes for new mechanisms) are handled by unknown-field tolerance (§3.7).
 
-v1.0 is the first stable release of OC Pledge. The repository's initial commit drop was published as v0.1.0-alpha (2026-04) and incremented through implementation conformance + the cross-impl test-vector battery before reaching this stable cut.
+v1.0 is the first stable release of OC Pledge. The repository's initial commit drop was published as v0.1.0-alpha (2026-04) and incremented through implementation conformance + the cross-impl test-vector battery before reaching this stable cut. The dispute rules (§4.3–§4.5) changed on 2026-10-29, and the spec is marked Draft again until implementations conform to them.
 
 ## 14. Compliance checklist
 

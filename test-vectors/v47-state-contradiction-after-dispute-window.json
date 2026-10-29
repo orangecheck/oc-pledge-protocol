@@ -1,5 +1,5 @@
 {
-  "description": "state machine: the counterparty's kept outcome's dispute window ends 06-09; a broken outcome dated 06-10 comes after it and does not contradict, so kept is final",
+  "description": "state machine: the resolver's own contradiction after its window. The counterparty resolves kept with a dispute window to 06-09, then broken on 06-10; that comes after the window, so kept stands",
   "kind": "state-transition",
   "inputs": {
     "pledge_id": "38a096c336069cab04dc8beb78b875c42de6dd6a27f06f7ea22bfa58e8da81e7",

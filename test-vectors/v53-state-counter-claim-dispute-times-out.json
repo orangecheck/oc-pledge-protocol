@@ -1,0 +1,63 @@
+{
+  "description": "counterparty_signs with no dispute mechanism: the same zero-length window and counter-claim; at expires_at (06-15) the dispute times out to expired_unresolved",
+  "kind": "state-transition",
+  "inputs": {
+    "pledge_id": "4ba852511f1a99cdee2c90d9ad3e78d3bce46008dbfc53d53075edbf20706366",
+    "pledge": {
+      "swearer": "bc1qcarol000000000000000000000000000000000",
+      "proposition": "I will deliver service-level uptime of at least 99.9 percent to bc1qcounter0000000000000000000000000000000 during the window 2026-05-01 to 2026-06-01.",
+      "resolution": {
+        "mechanism": "counterparty_signs",
+        "query": "counterparty(bc1qcounter0000000000000000000000000000000) signs outcome over pledge_id"
+      },
+      "resolves_at": {
+        "time": "2026-06-01T00:00:00Z"
+      },
+      "expires_at": "2026-06-15T00:00:00Z",
+      "bond": {
+        "attestation_id": "3333333333333333333333333333333333333333333333333333333333333333",
+        "min_sats": 2500000,
+        "min_days": 365
+      },
+      "counterparty": "bc1qcounter0000000000000000000000000000000",
+      "dispute": {
+        "mechanism": null,
+        "params": null
+      },
+      "remediation": "breach_recorded",
+      "sworn_at": "2026-04-20T09:00:00Z",
+      "nonce": "fedcba9876543210fedcba9876543210"
+    },
+    "outcome_envelopes": [
+      {
+        "pledge_id": "4ba852511f1a99cdee2c90d9ad3e78d3bce46008dbfc53d53075edbf20706366",
+        "outcome": "broken",
+        "resolved_at": "2026-06-03T11:00:00Z",
+        "resolved_by": "bc1qcounter0000000000000000000000000000000",
+        "evidence": {
+          "mechanism": "counterparty_signs",
+          "result": "broken",
+          "witness": "counterparty_sig=broken-2026-06-03T11"
+        },
+        "dispute_window_ends_at": "2026-06-03T11:00:00Z"
+      },
+      {
+        "pledge_id": "4ba852511f1a99cdee2c90d9ad3e78d3bce46008dbfc53d53075edbf20706366",
+        "outcome": "kept",
+        "resolved_at": "2026-06-03T12:00:00Z",
+        "resolved_by": "bc1qcarol000000000000000000000000000000000",
+        "evidence": {
+          "mechanism": "counterparty_signs",
+          "result": "kept",
+          "witness": "swearer_sig=kept-2026-06-03T12"
+        },
+        "dispute_window_ends_at": "2026-06-03T12:00:00Z"
+      }
+    ],
+    "abandonment_envelope": null,
+    "now": "2026-06-15T00:00:00Z"
+  },
+  "expected": {
+    "state": "expired_unresolved"
+  }
+}
