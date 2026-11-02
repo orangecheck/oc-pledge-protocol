@@ -100,6 +100,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
   counter-claim not being there stands only when the read floor of the relays
   asked (the number asked, less 2, plus 1, never fewer than one: four of five)
   answered in full, with none cut off; otherwise it is unchecked.
+- **§11 item 15, §3.4.3, §3.4.4 and `NIP_ORANGECHECK_PLEDGE.md` Relay
+  selection.** The read floor also governs `expired_unresolved`, which rests
+  on no outcome and no abandonment, and a `nostr_event_exists` or
+  `stamp_published` lookup that finds no matching event. Two relays are enough
+  to find an event, never to conclude that none exists.
 
 ### Clarified
 

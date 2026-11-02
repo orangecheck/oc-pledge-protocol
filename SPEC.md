@@ -192,7 +192,7 @@ Queries the form:
 kind=<N> author=<npub_or_hex> tag(<name>)=<value> created_at_before=<ISO 8601 UTC>
 ```
 
-Implementations MUST query at least two relays from the family default set (see NIP_ORANGECHECK_PLEDGE.md §relays). An event is considered to exist if any queried relay returns it AND its NIP-01 signature validates AND the named tag and timestamp constraint are satisfied.
+Implementations MUST query at least two relays from the family default set (see NIP_ORANGECHECK_PLEDGE.md §relays). An event is considered to exist if any queried relay returns it AND its NIP-01 signature validates AND the named tag and timestamp constraint are satisfied. It is considered absent only at the read floor (§11 item 15).
 
 #### 3.4.4 `stamp_published`
 
@@ -202,7 +202,7 @@ Queries the existence of a specific OC Stamp envelope. Grammar:
 stamp(content_hash=<sha256:hex>, signer=<addr>)
 ```
 
-The verifier looks up matching OC Stamp kind-30083 events (per [OC Stamp SPEC §7](https://github.com/orangecheck/oc-stamp-protocol/blob/main/SPEC.md#7-nostr-directory-optional)) and validates each. The pledge resolves `kept` if at least one matching stamp is authentic AND its signed_at predates `pledge.resolves_at`.
+The verifier looks up matching OC Stamp kind-30083 events (per [OC Stamp SPEC §7](https://github.com/orangecheck/oc-stamp-protocol/blob/main/SPEC.md#7-nostr-directory-optional)) and validates each. The pledge resolves `kept` if at least one matching stamp is authentic AND its signed_at predates `pledge.resolves_at`. The verifier concludes that no matching stamp exists only at the read floor (§11 item 15).
 
 #### 3.4.5 `http_get_hash`
 
@@ -668,7 +668,7 @@ These restate cryptographic correctness conditions a conforming implementation M
 12. **Resolve the delegation of every agent-signed pledge.** A pledge carrying `via_delegation` MUST NOT verify unless the §7.3 chain was resolved as of the time of verification, including the OC Agent revocation check. A revocation feed that could not be queried is not an empty feed; the verifier MUST treat the delegation as unresolved.
 13. **Refuse an outcome or abandonment only for what binds it.** Refusing a signed outcome or abandonment leaves the pledge in its earlier state, so a verifier MUST NOT refuse one for a field that grants nothing: the length or emptiness of `evidence.result`, `evidence.witness` or `reason`, a line break in `evidence.witness` or `reason`, or a field the spec does not name (§3.7). It refuses a line break only where one would let another envelope produce the same bytes, which is a line feed in `evidence.result` (§4.1). Limits a signer keeps (§4.1, §5.1) are not limits a reader adds. A verifier MAY flag such a field; it still counts the envelope.
 14. **Verify each event before merging relay answers.** A verifier MUST verify each Nostr event under NIP-01 (its `id` is the SHA-256 of its serialized fields, and its `sig` verifies for its `pubkey`) before it merges or deduplicates answers across relays; an event that fails is dropped and never replaces another relay's copy, though the Nostr signature still grants nothing (`NIP_ORANGECHECK_PLEDGE.md` invariant 3).
-15. **Decide an absence only at the read floor.** A pledge's state can rest on an envelope not being there: no abandonment or no outcome keeps it pending or resolvable, and no counter-claim lets a counterparty's outcome stand (§4.4, §4.5). A verifier MAY conclude that such an envelope is absent only when at least the read floor of the relays it asked answered in full, each read paged with `until` until a page came back shorter than the `limit` asked, and none of the relays it asked was cut off. The read floor is the number asked, less the write quorum of 2 (`NIP_ORANGECHECK_PLEDGE.md`, Relay selection), plus one, and never fewer than one: four of five. Otherwise the state is unchecked, never the one the absence would give.
+15. **Decide an absence only at the read floor.** A pledge's state can rest on an event not being there: no abandonment or no outcome keeps it pending or resolvable, or makes it `expired_unresolved` once `expires_at` passes; no counter-claim lets a counterparty's outcome stand (§4.4, §4.5); and a `nostr_event_exists` or `stamp_published` lookup that finds no matching event settles a deterministic outcome (§3.4.3, §3.4.4). A verifier MAY conclude that such an event is absent only when at least the read floor of the relays it asked answered in full, each read paged with `until` until a page came back shorter than the `limit` asked, and none of the relays it asked was cut off. The read floor is the number asked, less the write quorum of 2 (`NIP_ORANGECHECK_PLEDGE.md`, Relay selection), plus one, and never fewer than one: four of five. Otherwise the state is unchecked, never the one the absence would give.
 
 ## 12. Registry for extensions
 
