@@ -86,6 +86,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
   them. It was the age of the oldest output at the address. §7.1 says the same
   for the `@orangecheck/sdk` path (`coverSats`). Vectors `v29` and `v30`.
   `@orangecheck/pledge-core` 3.1.2 passes `min_sats` to the attestation lookup.
+- **§11 item 14.** A verifier checks each Nostr event under NIP-01 before it
+  merges or deduplicates answers across relays, and drops one that fails, so a
+  relay serving junk under another event's id cannot displace that pledge,
+  outcome or abandonment. The Nostr signature still grants nothing;
+  `NIP_ORANGECHECK_PLEDGE.md` invariant 3 and the service-signed convention
+  now name this use beside relay admission.
 
 ### Clarified
 

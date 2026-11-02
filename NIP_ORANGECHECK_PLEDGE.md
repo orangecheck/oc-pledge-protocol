@@ -121,7 +121,7 @@ Mechanism, deadline, bond and outcome class are not tags: read them from the ver
 
 1. The event `content` MUST be the byte-canonical JSON of the corresponding envelope (SPEC §6, RFC 8785).
 2. `sha256(canonical_message)` MUST equal the id within the envelope AND the suffix of the `d` tag (for pledge events; for outcome and abandonment events, the d-tag suffix is the **pledge** id, not the outcome / abandonment id).
-3. The envelope's BIP-322 signature MUST verify (per SPEC §3.5, §4.3, §5.3). The Nostr event's NIP-01 signature is independent and is for relay admission only.
+3. The envelope's BIP-322 signature MUST verify (per SPEC §3.5, §4.3, §5.3). The Nostr event's NIP-01 signature is independent of it: it is for relay admission, and for a verifier to drop junk before it merges relay answers (SPEC §11 item 14), and it grants nothing.
 4. Outcome and abandonment events MUST reference an existing pledge event's id via a `t` tag.
 5. Unknown tags MUST be preserved by relays and MAY be ignored by consumers.
 
@@ -130,7 +130,7 @@ Mechanism, deadline, bond and outcome class are not tags: read them from the ver
 The Nostr event is signed as usual (NIP-01 Schnorr signature over the event id). Two publishing conventions coexist:
 
 - **Self-signed (rare).** When the swearer also has a Nostr identity bound to their Bitcoin address (e.g., via OrangeCheck), they MAY sign the Nostr event with that npub. This lets consumers cross-reference the Nostr publisher with the BIP-322 swearer.
-- **Service-signed (common).** Most pledges are published by the user's client or a directory service using an ephemeral or service Nostr key. Consumers trust the BIP-322 signature inside the envelope; the Nostr signature is for relay admission and replay control only.
+- **Service-signed (common).** Most pledges are published by the user's client or a directory service using an ephemeral or service Nostr key. Consumers trust the BIP-322 signature inside the envelope; the Nostr signature is for relay admission, replay control and dropping junk before relay answers are merged (SPEC §11 item 14), never for trust.
 
 For abandonment and outcome envelopes from a counterparty, the same convention applies. The Nostr publisher is not the trust anchor; the BIP-322 signer inside the envelope is.
 
