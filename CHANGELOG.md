@@ -105,6 +105,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
   on no outcome and no abandonment, and a `nostr_event_exists` or
   `stamp_published` lookup that finds no matching event. Two relays are enough
   to find an event, never to conclude that none exists.
+- **§3.4.3.** A `nostr_event_exists` target is a third party's event, so the
+  read floor's guarantee that it is absent holds only if its author published
+  it to at least two of the relays verifiers ask.
 
 ### Clarified
 

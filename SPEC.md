@@ -192,7 +192,7 @@ Queries the form:
 kind=<N> author=<npub_or_hex> tag(<name>)=<value> created_at_before=<ISO 8601 UTC>
 ```
 
-Implementations MUST query at least two relays from the family default set (see NIP_ORANGECHECK_PLEDGE.md §relays). An event is considered to exist if any queried relay returns it AND its NIP-01 signature validates AND the named tag and timestamp constraint are satisfied. It is considered absent only at the read floor (§11 item 15).
+Implementations MUST query at least two relays from the family default set (see NIP_ORANGECHECK_PLEDGE.md §relays). An event is considered to exist if any queried relay returns it AND its NIP-01 signature validates AND the named tag and timestamp constraint are satisfied. It is considered absent only at the read floor (§11 item 15). That floor rests on the write quorum, and the target here is a third party's event, so its guarantee holds only if that event's author published it to at least two of the relays verifiers ask.
 
 #### 3.4.4 `stamp_published`
 
