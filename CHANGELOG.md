@@ -92,6 +92,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
   outcome or abandonment. The Nostr signature still grants nothing;
   `NIP_ORANGECHECK_PLEDGE.md` invariant 3 and the service-signed convention
   now name this use beside relay admission.
+- **§11 item 15 and `NIP_ORANGECHECK_PLEDGE.md` Relay selection.** A client
+  keeps publishing a pledge, an outcome or an abandonment until at least two
+  of the relays verifiers ask, each asked alone, serve back a copy that
+  verifies (every one, when they ask fewer than two), and reports it as
+  published only then. A state that rests on an abandonment, an outcome or a
+  counter-claim not being there stands only when the read floor of the relays
+  asked (the number asked, less 2, plus 1, never fewer than one: four of five)
+  answered in full, with none cut off; otherwise it is unchecked.
 
 ### Clarified
 
