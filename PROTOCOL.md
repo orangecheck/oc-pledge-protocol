@@ -431,7 +431,7 @@ The six verbs — am, whisper, decide, declare, delegate, **swear** — are now 
 
 ## Live case studies
 
-The three reference shapes were exercised end-to-end by OC contributors against real OrangeCheck bonds before the v1.0 spec cut. The runbook for adding subsequent OC-led pledges is in [`RUNBOOK.md`](./RUNBOOK.md).
+No OC-team pledge is published yet: a signed-out read of five relays on 2026-11-03 found none. The procedure for the three reference shapes, and for any OC-led pledges after them, is in [`RUNBOOK.md`](./RUNBOOK.md); the rows fill in as they are published.
 
 | Shape | Mechanism | Pledge URL | Outcome |
 |---|---|---|---|

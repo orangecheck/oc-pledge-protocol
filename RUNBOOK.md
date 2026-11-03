@@ -1,10 +1,10 @@
 # OC Pledge — eat-your-own-dogfood runbook
 
-**Audience:** anyone publishing OC-team pledges — both the original v1.0 cut sequence (since fired) and any subsequent OC-led commitments that should land alongside the case-studies table in `PROTOCOL.md`.
+**Audience:** anyone publishing OC-team pledges: the three dogfood pledges the case-studies table in `PROTOCOL.md` is waiting for, and any OC-led commitments after them.
 
 **Goal:** exercise the deterministic-mechanism / counterparty-signs / dispute paths end-to-end with real OC-team Bitcoin addresses bonded against real OrangeCheck attestations. Without live envelopes the public-ledger guarantee is theoretical; the runbook is how we keep that guarantee load-bearing as the family evolves.
 
-The original three case studies (research preregistration, bilateral SLA, OSS delivery) fired before the v1.0 spec cut. This document is preserved as the canonical procedure for future OC pledges.
+No OC-team pledge is published yet. A signed-out read on 2026-11-03 of kind 30078 by `#t` `oc-pledge`, `oc-pledge-outcome` and `oc-pledge-abandonment` found no events on any of five relays, and the case-studies table in `PROTOCOL.md` still holds placeholders. The three shapes below (research preregistration, bilateral SLA, OSS delivery) are the procedure for the first ones.
 
 ## Prerequisites
 
@@ -65,7 +65,7 @@ Two OC contributors agree on a deliverable; one signs the pledge, the counterpar
 
 Reference shape pinned in [`examples/sla-commitment.json`](./examples/sla-commitment.json).
 
-To resolve: OC-team-B opens the pledge at `/p/<id>`, runs through the agreed deliverable check, and uses the future-v0.2 outcome-signing flow (or, until then, uses `orangecheck.pledge.create_outcome` from a Python REPL with the bonded wallet adapter).
+To resolve: OC-team-B opens the pledge at `/p/<id>`, runs through the agreed deliverable check, and signs the outcome there: "Are you the counterparty <addr>?", then "Sign the outcome", "Kept" or "Broken", and "Sign and publish".
 
 ### 3 — Open-source delivery (`http_get_hash` deterministic)
 
@@ -87,7 +87,7 @@ Pre-commit to the exact SHA-256 of a release artifact (a tarball, a wheel, a bin
 
 Reference shape pinned in [`examples/oss-delivery.json`](./examples/oss-delivery.json).
 
-To resolve: publish the binary at the URL on or before the deadline. Any verifier (including the future-v0.2 `/p/<id>` deterministic re-evaluator) fetches the URL, confirms `sha256(body) == hash`, and the pledge classifies as `kept`.
+To resolve: publish the binary at the URL on or before the deadline. Any verifier fetches the URL, confirms `sha256(body) == hash`, and publishes a `kept` outcome. pledge.ochk.io does not re-evaluate deterministic mechanisms itself; `/p/<id>` shows the outcome envelopes published to Nostr.
 
 ## Sequence
 
@@ -95,8 +95,8 @@ For each of the three pledges:
 
 1. Open <https://pledge.ochk.io/create> in a browser with your wallet connected.
 2. Fill in the fields above. Watch the live canonical-message preview rebuild on every keystroke; the `pledge_id` derives from `sha256(canonical_message)` and changes if any field changes (including the auto-rotated nonce).
-3. Click **sign with wallet**. Your wallet prompts you to sign the lowercase-hex pledge id (NOT the canonical message — SPEC §3.5; the composer post-Task #3 wires this correctly).
-4. Click **publish to nostr**. Watch the toast for `n/4 relays` confirmation. The composer redirects to `/p/<id>#<base64url envelope>` so you see your pledge instantly even before relay propagation.
+3. Sign the lowercase-hex pledge id shown under "Message to sign" (NOT the canonical message — SPEC §3.5), with the wallet button or by pasting a BIP-322 signature, and click **Sign the pledge**.
+4. Click **Publish to Nostr**. The composer sends the event to every relay and counts it published once two relays, each asked alone, serve back a copy that verifies; then it opens `/p/<id>#<base64url envelope>`. Below two it stays, says "Your pledge isn't published yet", and offers **Publish it again**.
 5. Verify by opening `/p/<id>` (without the fragment) in a fresh tab — the resolver fetches kind-30078 with `#d=oc-pledge:<id>` from the default relay set and re-runs the full verify chain.
 6. Verify externally by piping the envelope JSON into the conformance harness:
    ```sh
@@ -120,4 +120,4 @@ For each new pledge:
 
 ## Why this is a real gate, not a checkbox
 
-Every other family member shipped through this same loop — OC Stamp's first stamps were OC team artifacts, OC Vote's first polls were OC team polls. The "live envelopes from real OC keys against real OrangeCheck bonds" property is what makes the next consumer's first pledge feel like joining a working network rather than testing a draft. v1.0 was cut after this gate fired; future major releases will follow the same discipline.
+Every other family member shipped through this same loop — OC Stamp's first stamps were OC team artifacts, OC Vote's first polls were OC team polls. The "live envelopes from real OC keys against real OrangeCheck bonds" property is what makes the next consumer's first pledge feel like joining a working network rather than testing a draft. v1.0 was cut before this gate fired: no OC-team pledge is published yet (see the top of this runbook). Publishing the three is the open item.

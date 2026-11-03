@@ -39,7 +39,7 @@ This repository is the **normative protocol specification**. No code lives here 
 | [`SPEC.md`](./SPEC.md) | The normative v1.0 specification — canonical messages for pledge / outcome / abandonment, seven resolution mechanisms, state machine, bond verification, error codes, compliance checklist. |
 | [`PROTOCOL.md`](./PROTOCOL.md) | Narrative walkthrough with five flows (preregistration, SLA, OSS delivery, agent-delegated pledges, edge cases). |
 | [`WHY.md`](./WHY.md) | Design rationale. Thirteen load-bearing hypotheses. The explicit refusals (slashing, aggregated reputation, revocation, free-text proofs, trust-ranked dispute, pledge chains). |
-| [`SECURITY.md`](./SECURITY.md) | Threat model, trust assumptions, 22 attack scenarios with status, compliance requirements, report channel. |
+| [`SECURITY.md`](./SECURITY.md) | Threat model, trust assumptions, 27 attack scenarios with status, compliance requirements, report channel. |
 | [`LIFECYCLE.md`](./LIFECYCLE.md) | Normative lifecycle stance — pledges are non-revocable; abandonment is the only structured exit and counts as `broken`. |
 | [`NIP_ORANGECHECK_PLEDGE.md`](./NIP_ORANGECHECK_PLEDGE.md) | The Nostr wire format. Three d-tag namespaces under kind 30078. |
 | [`REGISTRY.md`](./REGISTRY.md) | Authoritative registry of mechanism strings, dispute mechanisms, scope grammar extensions. Refuses `self_proof`, `slashing`, etc. |
@@ -49,7 +49,7 @@ This repository is the **normative protocol specification**. No code lives here 
 
 ## Reference implementation
 
-The TypeScript reference implementation will be published to **npm** from the [`oc-packages`](https://github.com/orangecheck/oc-packages) monorepo as `@orangecheck/pledge-core` (and `@orangecheck/pledge-resolvers` for the seven mechanism resolvers). Not yet published — the spec is shipped first.
+The TypeScript reference implementation is [`@orangecheck/pledge-core`](https://www.npmjs.com/package/@orangecheck/pledge-core) on npm, from the [`oc-packages`](https://github.com/orangecheck/oc-packages) monorepo; the Python one is `orangecheck.pledge` in the `orangecheck` PyPI package. There is no `@orangecheck/pledge-resolvers` package: the SDKs validate each mechanism's query, and evaluating it against public state (SPEC §9.1 step 8) is left to consumers.
 
 ## Test vectors
 

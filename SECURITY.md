@@ -13,16 +13,16 @@ We aim to reply to every report within 30 days. We can't promise a time to a fix
 
 ## Scope
 
-This document covers the **OC Pledge v1.0 protocol specification** in this repository. The reference implementation lives in [`orangecheck/oc-packages`](https://github.com/orangecheck/oc-packages) and has its own `SECURITY.md`. The hosted reference web client at [pledge.ochk.io](https://pledge.ochk.io) is closed-source; report web-client security issues via `security@ochk.io`.
+This document covers the **OC Pledge v1.0 protocol specification** in this repository. The reference implementation lives in [`orangecheck/oc-packages`](https://github.com/orangecheck/oc-packages); report issues in it to `security@ochk.io` too. The hosted reference web client at [pledge.ochk.io](https://pledge.ochk.io) is closed-source; report web-client security issues via `security@ochk.io`.
 
-## Reference implementation status (2026-05)
+## Reference implementation status (2026-11-03)
 
 The threat model below was originally written against the spec alone. Two reference implementations now exist and have been re-walked against every scenario:
 
 - **`@orangecheck/pledge-core`** (TypeScript, npm) — full envelope-only verify path: shape + version + canonical-message reconstruction + id check + BIP-322 signature verify (with §7.3 agent-address override) + §4.4 state classification.
 - **`orangecheck.pledge`** (Python sub-module of the `orangecheck` PyPI package) — same surface as the TypeScript SDK; cross-impl conformance against every vector in `test-vectors/` is enforced in CI.
 
-Both SDKs cover **SPEC §9.1 steps 1–7 plus step 9** as of `@orangecheck/pledge-core@0.2.0` / `orangecheck@0.3.0`:
+Both SDKs cover **SPEC §9.1 steps 1–7 plus step 9**, since `@orangecheck/pledge-core@0.2.0` / `orangecheck@0.3.0`. On main they are `pledge-core` 3.7.0 and `orangecheck` 3.17.0; npm serves `pledge-core` 3.6.0 and PyPI `orangecheck` 3.15.0.
 
 - **Steps 1–4** (version + shape + canonical-message reconstruction + BIP-322): in-SDK, no caller hooks needed.
 - **Step 5 — bond live re-resolution against Bitcoin chain state.** SDK ships `verifyBond` / `verify_bond` as a pure algorithm with a caller-injected attestation lookup. The hosted `/verify` and `/p/<id>` surfaces on pledge.ochk.io supply this hook via `@orangecheck/sdk`'s `check()`, which does Nostr-discovery + Esplora chain query + signature verification, all browser-side. Cache TTL discipline remains the caller's.
@@ -34,7 +34,7 @@ What's still consumer-side after this revision:
 - **Step 8 — deterministic mechanism re-evaluation against public state.** The seven `resolution.mechanism` grammars are validated at the regex level (`validate_resolution_query`); actual chain / Nostr / HTTP / DNS / Vote evaluation against the predicate is left to consumers. The hosted surfaces don't run step 8 themselves; they rely on a published outcome envelope being on Nostr (which the §4.4 state machine then incorporates) for the resolved verdict to surface.
 - **`http_get_hash` majority-of-three and `dns_record` multi-resolver agreement** (SPEC §3.4.5, §3.4.6). The SDKs validate query shape only; consumers ship the resolver discipline at outcome-publication time.
 
-Cross-impl conformance is gated in CI (`oc-packages/.github/workflows/packages.yml::conformance`): every PR runs both SDKs against the live `oc-pledge-protocol/test-vectors/` and fails if either drifts. As of this revision, all 28 vectors pass on both SDKs.
+Cross-impl conformance is gated in CI (`oc-packages/.github/workflows/packages.yml::conformance`): every PR runs both SDKs against the live `oc-pledge-protocol/test-vectors/` and fails if either drifts. The set holds 58 vectors.
 
 ## Threat model
 
@@ -158,19 +158,15 @@ Bilateral pledges are inherently fragile under counterparty malice. Use `dispute
 
 ## Dependency posture
 
-The reference implementation will depend on a narrow set of audited libraries:
+`@orangecheck/pledge-core` depends on one library, `@noble/hashes` (SHA-256). Everything else comes in through hooks the caller supplies:
 
-| Package | Purpose |
-|---|---|
-| `@noble/hashes` | SHA-256 |
-| `@noble/curves` | secp256k1 Schnorr / ECDSA |
-| `bip322-js` | BIP-322 verification |
-| `@orangecheck/sdk` | OrangeCheck attestation resolution |
-| `@orangecheck/stamp-core` | OC Stamp envelope verification (for `stamp_published` mechanism) |
-| `@orangecheck/vote-core` | OC Vote tally function (for `vote_resolves` mechanism) |
-| `@orangecheck/agent-core` | OC Agent delegation resolution (for `via_delegation` pledges) |
+| Hook | What it does | What pledge.ochk.io supplies |
+|---|---|---|
+| `verifyBip322` | BIP-322 signature verification | a BIP-322 verifier |
+| `verifyBond`'s `lookup` | OrangeCheck bond resolution (§9.1 step 5) | `@orangecheck/sdk`'s `check()` |
+| `delegationLookup` | OC Agent delegation resolution (§7.3) | `@orangecheck/agent-core`'s `verifyDelegation` |
 
-Implementations SHOULD pin to audited versions and migrate to `@noble`-based BIP-322 verifiers when available.
+Mechanism evaluation (`stamp_published`, `vote_resolves` and the rest, §9.1 step 8) is not in the SDK at all. Implementations SHOULD pin the libraries behind their hooks to audited versions.
 
 ## Report a protocol-level concern
 

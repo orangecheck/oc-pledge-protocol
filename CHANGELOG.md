@@ -226,9 +226,9 @@ separator (`oc-pledge/v1` → `oc-pledge/v2`).
 - `orangecheck` 0.3.0 (PyPI) — bumps to 1.0.0 in oc-packages
   alongside this protocol cut.
 
-## [Unreleased] — 2026-05
+## Reference implementations before 1.0.0 — 2026-05
 
-### Reference implementations — v0.2 cut-line cleared
+### v0.2 cut-line cleared
 
 Two SECURITY-flagged consumer-side responsibilities have moved into the
 reference web surfaces. The protocol spec is unchanged; this entry just
