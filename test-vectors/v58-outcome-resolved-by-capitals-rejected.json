@@ -1,0 +1,30 @@
+{
+  "description": "v13 with resolved_by written as a bech32 address in capitals. The resolver is discovered by its `t` tag and matched against the pledge counterparty by exact string, so a verifier MUST reject it with E_OUTCOME_MALFORMED (SPEC §2, §4.3). The id is computed over these bytes",
+  "kind": "malformed-input",
+  "inputs": {
+    "outcome_envelope": {
+      "v": 1,
+      "kind": "pledge-outcome",
+      "id": "b0990e59d3877befbdf4ad6eac274d0f227199dec60e7df22c3a85358137603c",
+      "pledge_id": "38a096c336069cab04dc8beb78b875c42de6dd6a27f06f7ea22bfa58e8da81e7",
+      "outcome": "kept",
+      "resolved_at": "2026-06-02T10:00:00Z",
+      "resolved_by": "BC1QCOUNTER0000000000000000000000000000000",
+      "evidence": {
+        "mechanism": "counterparty_signs",
+        "result": "kept",
+        "witness": "counterparty_sig=H1+placeholderBIP322signaturebase64=="
+      },
+      "dispute_window_ends_at": "2026-06-09T10:00:00Z",
+      "sig": {
+        "alg": "bip322",
+        "pubkey": "BC1QCOUNTER0000000000000000000000000000000",
+        "value": "AAAA"
+      }
+    }
+  },
+  "expected": {
+    "error": "E_OUTCOME_MALFORMED",
+    "reason": "a bech32 address MUST be written in lowercase (§2)"
+  }
+}

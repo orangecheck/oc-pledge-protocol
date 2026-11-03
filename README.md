@@ -44,7 +44,7 @@ This repository is the **normative protocol specification**. No code lives here 
 | [`NIP_ORANGECHECK_PLEDGE.md`](./NIP_ORANGECHECK_PLEDGE.md) | The Nostr wire format. Three d-tag namespaces under kind 30078. |
 | [`REGISTRY.md`](./REGISTRY.md) | Authoritative registry of mechanism strings, dispute mechanisms, scope grammar extensions. Refuses `self_proof`, `slashing`, etc. |
 | [`CHANGELOG.md`](./CHANGELOG.md) | Version history. |
-| [`test-vectors/`](./test-vectors/) | 54 cross-implementation conformance fixtures. Real SHA-256 ids; round-trip verified at authoring time. |
+| [`test-vectors/`](./test-vectors/) | 58 cross-implementation conformance fixtures. Real SHA-256 ids; round-trip verified at authoring time. |
 | [`examples/`](./examples/) | Three minimal envelope examples: research preregistration, SLA, OSS delivery. |
 
 ## Reference implementation
@@ -53,7 +53,7 @@ The TypeScript reference implementation will be published to **npm** from the [`
 
 ## Test vectors
 
-The [`test-vectors/`](./test-vectors/) directory holds 54 cross-implementation conformance fixtures grouped as:
+The [`test-vectors/`](./test-vectors/) directory holds 58 cross-implementation conformance fixtures grouped as:
 
 - **Pledge envelopes (v01–v10):** all seven resolution mechanisms, agent-delegated, edge cases (resolves_at == expires_at, block-height resolution).
 - **Outcome envelopes (v11–v16):** kept / broken / disputed / expired_unresolved across deterministic and signed mechanisms.
@@ -62,7 +62,7 @@ The [`test-vectors/`](./test-vectors/) directory holds 54 cross-implementation c
 - **Bond verification (v18–v20, v29–v30):** valid, insufficient sats, spent UTXO, and the age of the covering coins.
 - **State transitions (v21–v27, v31–v32, v47–v54):** a swearer's counter-claim agreeing with, contradicting or standing without a counterparty outcome, pending/resolvable/kept/broken/expired-unresolved transitions, outcomes dated after `now` or after `expires_at`, the resolver's own contradiction after its dispute window, a counter-claim after a zero-length window or at `expires_at`, and a dispute timing out at `expires_at` with no dispute mechanism.
 - **Delegation scope check (v46):** which `pledge:create` scopes a pledge satisfies: the ceiling in both its forms, `mechanism`, `counterparty` and `null`, and the scopes a verifier refuses.
-- **Malformed input (v28, v33, v42–v45):** empty-nonce rejection, an agent address equal to the swearer, the string `"null"` where null is meant, and digits outside ASCII.
+- **Malformed input (v28, v33, v42–v45, v55–v58):** empty-nonce rejection, an agent address equal to the swearer, the string `"null"` where null is meant, digits outside ASCII, and a bech32 address in capitals as swearer, agent, counterparty or resolver.
 
 Each vector has fixed `inputs` and `expected` fields. A conforming implementation produces byte-identical canonical messages and matching SHA-256 ids for every vector. See [`test-vectors/README.md`](./test-vectors/README.md).
 

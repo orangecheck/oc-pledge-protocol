@@ -1,6 +1,6 @@
 # OC Pledge Protocol v1.0 — Specification
 
-**Status:** Draft (the dispute rules in §4.3–§4.5 changed on 2026-10-29; see CHANGELOG)
+**Status:** Draft (the dispute rules in §4.3–§4.5 changed on 2026-10-29, and §2 gave each address one spelling on 2026-11-03; see CHANGELOG)
 **Date:** 2026-05
 **Related:** [OrangeCheck](https://ochk.io/docs/attest) (identity + stake), [OC Lock v2](https://github.com/orangecheck/oc-lock-protocol) (private envelopes), [OC Stamp v1](https://github.com/orangecheck/oc-stamp-protocol) (content attestation), [OC Vote v1](https://github.com/orangecheck/oc-vote-protocol) (offline-tallyable polls), [OC Agent v1](https://github.com/orangecheck/oc-agent-protocol) (delegated authority)
 
@@ -34,6 +34,8 @@ A swearer MAY be their own counterparty (a self-pledge with bilateral structure 
 ## 2. Identities
 
 All actors are identified by **mainnet Bitcoin addresses** (P2WPKH, P2TR, or P2PKH). The address is the full identity: there are no usernames, keyservers, or accounts in the protocol.
+
+An address is written in one spelling. A bech32 or bech32m address (one that starts, ignoring case, with `bc1`, `tb1` or `bcrt1`) is written in lowercase; a base58 address is case-sensitive and is written as encoded. BIP-173 lets the same bech32 address be written in capitals, but discovery (the `t` tags of the Nostr binding) and every address comparison in this protocol (`sig.pubkey` against `swearer.address`, `agent_address` against `swearer.address`, an outcome's `resolved_by` against the pledge, the bond's attestation address) are by exact string. A second spelling of one key would go unlisted under the lowercase tag, and could pass a check that two addresses differ. Signers and verifiers refuse a bech32 address that holds a capital letter (`A`–`Z`) in `swearer.address`, `counterparty`, `agent_address` or an outcome's `resolved_by`, with `E_PLEDGE_MALFORMED` or `E_OUTCOME_MALFORMED` (vectors `v55`–`v58`). The check is on case only: it needs no address decoding, and the vectors use placeholder addresses that do not decode.
 
 A pledge MUST include a **bond** referencing an OrangeCheck attestation, with two minimum thresholds: `min_sats` and `min_days`. The reference is **self-declared** and **re-verifiable**: a verifier MUST re-resolve the attestation against current chain state and confirm the bonded UTXOs still meet both thresholds at verification time. The protocol never holds the bonded sats; enforcement is by **public exposure**, not slashing. See §8 for the bond verification algorithm.
 
@@ -257,7 +259,7 @@ When `via_delegation` is present (agent-signed pledge — see §7.3), the signat
 | `v` | Integer. Current version is `1`. Verifiers MUST reject unknown versions with `E_UNSUPPORTED_VERSION`. |
 | `kind` | MUST equal `"pledge"`. |
 | `id` | MUST equal `H(canonical_message)` as hex (§3.2). |
-| `swearer.address` | MUST match `swearer:` in the canonical message. |
+| `swearer.address` | MUST match `swearer:` in the canonical message. A bech32 address MUST be lowercase (§2, vector `v55`). |
 | `swearer.alg` | MUST equal `"bip322"` in v1. |
 | `proposition` | MUST equal the canonical message's `proposition:` value. Single line, ≤ 512 UTF-8 bytes. |
 | `resolution.mechanism` | MUST be one of the seven values in §3.4. |
@@ -267,14 +269,14 @@ When `via_delegation` is present (agent-signed pledge — see §7.3), the signat
 | `bond.attestation_id` | 64-hex. SHOULD be the SHA-256 of an OrangeCheck attestation canonical message signed by `swearer.address`. |
 | `bond.min_sats` | Non-negative integer. |
 | `bond.min_days` | Non-negative integer. |
-| `counterparty` | Bitcoin address or null. Required non-null when `resolution.mechanism == counterparty_signs`. MUST NOT be the string `"null"`: the canonical message writes null as `null`, so that string would sign the same bytes as no counterparty, and a copy could swap one for the other under the same id. Signers and verifiers refuse it with `E_PLEDGE_MALFORMED` (vector `v42`). |
+| `counterparty` | Bitcoin address or null. Required non-null when `resolution.mechanism == counterparty_signs`. MUST NOT be the string `"null"`: the canonical message writes null as `null`, so that string would sign the same bytes as no counterparty, and a copy could swap one for the other under the same id. Signers and verifiers refuse it with `E_PLEDGE_MALFORMED` (vector `v42`). A bech32 address MUST be lowercase (§2, vector `v57`). |
 | `dispute.mechanism` | null, `"vote_resolves"`, or `"named_oracle"`. Not the string `"null"`, for the same reason as `counterparty` (vector `v45`). |
 | `dispute.params` | Single-line canonical params string for the dispute mechanism, or null. MUST NOT be the string `"null"`, for the same reason as `counterparty` (vector `v43`). |
 | `remediation` | MUST equal `"breach_recorded"` in v1.0. |
 | `sworn_at` | ISO 8601 UTC. The swearer's claim of signing time. Not load-bearing for resolution; the resolution mechanism's witness is. |
 | `nonce` | 32 lowercase hex chars. MUST be non-empty. SHOULD be uniformly random. |
 | `via_delegation` | Optional 64-hex OC Agent delegation id. If present, `sig` is produced by `agent_address`, and the verifier follows the agent-delegation verification path (§7.3). |
-| `agent_address` | Optional Bitcoin address; required iff `via_delegation` is present. MUST differ from `swearer.address` (§7.3). |
+| `agent_address` | Optional Bitcoin address; required iff `via_delegation` is present. MUST differ from `swearer.address` (§7.3). A bech32 address MUST be lowercase (§2), so the swearer's own key in capitals is refused rather than read as a different address (vector `v56`). |
 | `sig.alg` | MUST equal `"bip322"` in v1. |
 | `sig.pubkey` | MUST equal `swearer.address` when `via_delegation` is absent; MUST equal `agent_address` when present. |
 | `sig.value` | MUST verify under BIP-322 by `sig.pubkey` over the lowercase-hex `pledge_id`. |
@@ -360,6 +362,8 @@ A resolver MUST write `evidence.result` and `evidence.witness` each as one non-e
 | `dns_record` | `"deterministic"` | `null`. |
 | `counterparty_signs` | `<counterparty.address>` | BIP-322 by counterparty over `outcome_id` (hex). |
 | `vote_resolves` | `"deterministic"` | `null`. The OC Vote tally is itself a pure function. |
+
+A `resolved_by` address is written in the one spelling of §2: a bech32 address in capitals is refused with `E_OUTCOME_MALFORMED` (vector `v58`).
 
 Under `counterparty_signs` the swearer MAY also publish an outcome envelope, `resolved_by` the swearer's address and signed by the swearer over `outcome_id`: a **counter-claim** (§4.5). It can contradict the counterparty's outcome; it never settles the pledge by itself. An outcome envelope from anyone else is not an outcome for this pledge.
 
@@ -520,7 +524,7 @@ A principal MAY delegate `pledge:create` scope to an agent under an [OC Agent v1
 - `sig.pubkey`: equals `agent_address`
 - `sig.value`: BIP-322 by agent over the pledge id
 
-`agent_address` MUST differ from `swearer.address`. A verifier MUST reject an envelope where they are equal with `E_PLEDGE_MALFORMED`, before it resolves any delegation (vector `v33`). A pledge the swearer signs directly carries neither `via_delegation` nor `agent_address`.
+`agent_address` MUST differ from `swearer.address`. A verifier MUST reject an envelope where they are equal with `E_PLEDGE_MALFORMED`, before it resolves any delegation (vector `v33`). A bech32 address in capitals is refused first (§2), so the swearer's key cannot pass as an agent by its case (vector `v56`). A pledge the swearer signs directly carries neither `via_delegation` nor `agent_address`.
 
 The pledge counts in the **principal's** public ledger, not the agent's. Verifier algorithm:
 
@@ -628,7 +632,7 @@ A **minimal verification** skips bond re-resolution (step 5) and mechanism re-ev
 | Code | Meaning |
 |---|---|
 | `E_UNSUPPORTED_VERSION` | Envelope `v` is unknown. |
-| `E_PLEDGE_MALFORMED` | Pledge envelope shape / field types / required fields invalid. Includes empty nonce, missing `bond`, both `time` and `block` in `resolves_at`. |
+| `E_PLEDGE_MALFORMED` | Pledge envelope shape / field types / required fields invalid. Includes empty nonce, missing `bond`, both `time` and `block` in `resolves_at`, a bech32 address in capitals (§2). |
 | `E_PLEDGE_BAD_ID` | Reconstructed canonical message does not hash to declared `id`. |
 | `E_PLEDGE_BAD_SIG` | BIP-322 signature did not verify under `sig.pubkey` over hex `id`. |
 | `E_RESOLUTION_UNKNOWN` | `resolution.mechanism` not in §3.4 set. |
@@ -638,7 +642,7 @@ A **minimal verification** skips bond re-resolution (step 5) and mechanism re-ev
 | `E_BOND_SPENT` | The bonded UTXO was spent at or before the verifier's clock. |
 | `E_BOND_INSUFFICIENT_SATS` | Resolved `sats_bonded < pledge.bond.min_sats`. |
 | `E_BOND_INSUFFICIENT_DAYS` | Resolved `days_unspent < pledge.bond.min_days`. |
-| `E_OUTCOME_MALFORMED` | Outcome envelope shape invalid. |
+| `E_OUTCOME_MALFORMED` | Outcome envelope shape invalid. Includes a bech32 `resolved_by` in capitals (§2). |
 | `E_OUTCOME_BAD_ID` | Outcome canonical-message hash mismatch. |
 | `E_OUTCOME_BAD_SIG` | Outcome signature required but did not verify. |
 | `E_OUTCOME_EVIDENCE_MISMATCH` | Recomputed deterministic evidence differs from declared evidence. |
@@ -701,6 +705,7 @@ A client is OC Pledge v1.0 compliant if and only if:
 - [ ] Canonicalizes envelopes per §6 (RFC 8785)
 - [ ] Refuses pledges with `resolution.mechanism` outside §3.4 with `E_RESOLUTION_UNKNOWN`
 - [ ] Refuses pledges with empty nonce with `E_PLEDGE_MALFORMED`
+- [ ] Refuses a bech32 address in capitals in `swearer.address`, `counterparty`, `agent_address` or `resolved_by` (§2)
 - [ ] Re-resolves bonds against live chain state per §8 before trusting any pledge for consequential decisions
 - [ ] Implements the §4.4 state-machine transition as a pure function
 - [ ] Recomputes deterministic outcome evidence on-demand for §3.4.1, §3.4.3, §3.4.4, §3.4.5, §3.4.6 mechanisms

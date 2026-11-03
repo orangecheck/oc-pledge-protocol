@@ -10,6 +10,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 - **Status: Draft.** The spec is marked Draft while the dispute rules below
   change, and returns to Stable once implementations conform to them.
+- **§2 one spelling per address.** A bech32 or bech32m address (`bc1`, `tb1`,
+  `bcrt1`) is written in lowercase; base58 stays as encoded. BIP-173 lets the
+  same address be written in capitals, but discovery tags and every address
+  comparison in a pledge are by exact string, so a capitals spelling went
+  unlisted under the lowercase tag, and an agent written as the swearer's key
+  in capitals passed the rule that the two differ (§7.3, v33). Signers and
+  verifiers refuse a bech32 address holding a capital in `swearer.address`,
+  `counterparty` and `agent_address` with `E_PLEDGE_MALFORMED`, and in an
+  outcome's `resolved_by` with `E_OUTCOME_MALFORMED`. The check is on case
+  only. Vectors `v55`–`v58`.
 - **§4.3, §4.5 the swearer's counter-claim.** §4.3 said only the counterparty
   resolves a `counterparty_signs` pledge; §4.5 let either party publish an
   outcome. Now only the counterparty settles it, and the swearer MAY publish a

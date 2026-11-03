@@ -1,0 +1,46 @@
+{
+  "description": "pledge whose swearer.address is a bech32 address in capitals. It names the same key as the lowercase spelling, but discovery (`t` tags) and every address comparison are by exact string, so a verifier MUST reject it with E_PLEDGE_MALFORMED (SPEC §2, §3.6). The id is computed over these bytes, so only the spelling is wrong",
+  "kind": "malformed-input",
+  "inputs": {
+    "envelope": {
+      "v": 1,
+      "kind": "pledge",
+      "id": "53f46726d648c38942aaaf870e474beb2bcd6388d03c13130416a661239c01e8",
+      "swearer": {
+        "address": "BC1QALICE000000000000000000000000000000000",
+        "alg": "bip322"
+      },
+      "proposition": "I will not spend the bonded UTXO before block 920000.",
+      "resolution": {
+        "mechanism": "chain_state",
+        "query": "address(bc1qalice000000000000000000000000000000000).utxo_count >= 1 AND address(bc1qalice000000000000000000000000000000000).balance >= 500000"
+      },
+      "resolves_at": {
+        "block": 920000
+      },
+      "expires_at": "2026-12-31T00:00:00Z",
+      "bond": {
+        "attestation_id": "1111111111111111111111111111111111111111111111111111111111111111",
+        "min_sats": 500000,
+        "min_days": 180
+      },
+      "counterparty": null,
+      "dispute": {
+        "mechanism": null,
+        "params": null
+      },
+      "remediation": "breach_recorded",
+      "sworn_at": "2026-04-24T18:30:00Z",
+      "nonce": "0123456789abcdef0123456789abcdef",
+      "sig": {
+        "alg": "bip322",
+        "pubkey": "BC1QALICE000000000000000000000000000000000",
+        "value": "AAAA"
+      }
+    }
+  },
+  "expected": {
+    "error": "E_PLEDGE_MALFORMED",
+    "reason": "a bech32 address MUST be written in lowercase (§2)"
+  }
+}

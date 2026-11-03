@@ -69,6 +69,7 @@ If any of these diverge, the implementation is non-conformant. Typical bugs:
 - Hashing a lone surrogate as anything but U+FFFD (v37).
 - Accepting the string `"null"` as a counterparty, dispute params or dispute mechanism (v42, v43, v45).
 - Matching digits with a Unicode-aware `\d` (v44).
+- Accepting a bech32 address in capitals, which names the same key as its lowercase spelling but is compared and tagged by exact string: as swearer, agent (where it passes as an address that differs from the swearer's), counterparty or resolver (v55–v58).
 - Letting a scope constraint the verifier does not recognise pass the scope check (v46).
 - Counting the resolver's own contradiction dated after the earliest settling outcome's dispute window (v47), or keeping a pledge with no dispute mechanism `disputed` after `expires_at` (v49).
 - Letting the counterparty's `dispute_window_ends_at` shut out a swearer counter-claim (v52, v53).
@@ -143,6 +144,10 @@ New implementations should add a similar test.
 | `v44-pledge-time-non-ascii-digits-rejected.json` | C | A pledge whose `sworn_at` year is in Arabic-Indic digits, its id the hash of its own canonical message: MUST be rejected (SPEC §0). |
 | `v45-pledge-dispute-mechanism-null-string-rejected.json` | C | The v01 pledge with `dispute.mechanism` the string `"null"`: same id as v01, MUST be rejected; `twin` (v01) verifies (SPEC §3.6). |
 | `v46-delegation-scope-check.json` | B | 31 delegation scope cases: whether the pledge satisfies a `pledge:create` scope, and which one (SPEC §7.3, REGISTRY.md §4). |
+| `v55-pledge-swearer-capitals-rejected.json` | C | The v01 pledge with `swearer.address` in capitals, its id the hash of its own canonical message: MUST be rejected with `E_PLEDGE_MALFORMED` (SPEC §2). |
+| `v56-pledge-agent-is-swearer-in-capitals-rejected.json` | C | v33 with `agent_address` the swearer's address in capitals: MUST be rejected with `E_PLEDGE_MALFORMED`, not read as a different address (SPEC §2, §7.3). |
+| `v57-pledge-counterparty-capitals-rejected.json` | C | The v03 pledge with `counterparty` in capitals, its id the hash of its own canonical message: MUST be rejected with `E_PLEDGE_MALFORMED` (SPEC §2). |
+| `v58-outcome-resolved-by-capitals-rejected.json` | C | The v13 outcome with `resolved_by` in capitals, its id the hash of its own canonical message: MUST be rejected with `E_OUTCOME_MALFORMED` (SPEC §2). |
 
 ## Round-trip verification
 
