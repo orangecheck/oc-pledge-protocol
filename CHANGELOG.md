@@ -19,7 +19,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
   verifiers refuse a bech32 address holding a capital in `swearer.address`,
   `counterparty` and `agent_address` with `E_PLEDGE_MALFORMED`, and in an
   outcome's `resolved_by` with `E_OUTCOME_MALFORMED`. The check is on case
-  only. Vectors `v55`–`v58`.
+  only; it does not validate the address. A pledge or outcome already
+  published with a capital in one of these fields is malformed under this
+  revision, and its signer signs it again in lowercase. Vectors `v55`–`v58`.
 - **§4.3, §4.5 the swearer's counter-claim.** §4.3 said only the counterparty
   resolves a `counterparty_signs` pledge; §4.5 let either party publish an
   outcome. Now only the counterparty settles it, and the swearer MAY publish a
