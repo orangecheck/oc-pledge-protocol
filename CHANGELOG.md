@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ### Changed
 
+- **Reference relays** (`NIP_ORANGECHECK_PLEDGE.md`, `RUNBOOK.md`): name `nostr.mom` in place of `relay.damus.io`, as `@orangecheck/nostr-core` 0.8.2's default set does and the composer now publishes to. Non-normative.
 - **Status: Draft.** The spec is marked Draft while the dispute rules below
   change, and returns to Stable once implementations conform to them.
 - **§2 one spelling per address.** A bech32 or bech32m address (`bc1`, `tb1`,

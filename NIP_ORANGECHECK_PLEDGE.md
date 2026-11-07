@@ -187,7 +187,7 @@ Implementations SHOULD publish each pledge / outcome / abandonment to at least t
 - `wss://relay.ochk.io`
 - `wss://nos.lol`
 - `wss://relay.primal.net`
-- `wss://relay.damus.io`
+- `wss://nostr.mom`
 - `wss://nostr.oxtr.dev`
 
 A client SHOULD keep publishing a pledge, an outcome (a counterparty's, or a swearer's counter-claim, SPEC §4.5) or an abandonment until at least two of the relays verifiers ask, each asked alone, serve back a copy that verifies, or every one of them does when verifiers ask fewer than two (the write quorum SPEC §11 item 15's read floor assumes), and SHOULD NOT report it as published until then.

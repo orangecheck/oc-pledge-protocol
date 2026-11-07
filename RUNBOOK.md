@@ -12,7 +12,7 @@ No OC-team pledge is published yet. A signed-out read on 2026-11-03 of kind 3007
   - Check / create at <https://attest.ochk.io/create>.
   - Note the resulting `attestation_id` (64-hex SHA-256 of the OrangeCheck canonical message).
 - A wallet that supports BIP-322 message signing for the bonded address (UniSat, Xverse, Leather, OKX, Sparrow, etc).
-- Network access to `wss://relay.ochk.io`, `wss://nos.lol`, `wss://relay.primal.net`, `wss://relay.damus.io`, `wss://nostr.oxtr.dev` (the default relay set the composer publishes to).
+- Network access to `wss://relay.ochk.io`, `wss://nos.lol`, `wss://relay.primal.net`, `wss://nostr.mom`, `wss://nostr.oxtr.dev` (the default relay set the composer publishes to).
 
 The composer at <https://pledge.ochk.io/create> handles every step below — signing happens in your wallet, publishing happens to Nostr from your browser, and the resulting `/p/<id>` URL is sharable.
 
