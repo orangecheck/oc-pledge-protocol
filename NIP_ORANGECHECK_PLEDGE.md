@@ -200,7 +200,7 @@ Verifiers MUST query at least two relays from the default set when resolving `no
 
 Kind 30078 is **addressable / parameter-replaceable**: relays replace prior events with the same `(pubkey, kind, d-tag)` tuple. For OC Pledge:
 
-- A **pledge** event is content-addressed (`d = oc-pledge:<id>` where id hashes the canonical message). A "replacement" with the same d-tag must carry an envelope with the same id, hence the same signed fields, or fail BIP-322 verification.
+- A **pledge** event is content-addressed (`d = oc-pledge:<id>` where id hashes the canonical message). A "replacement" with the same d-tag must carry an envelope with the same id, hence the same signed fields. One with a different id fails invariant 2: its id is not the d-tag suffix.
 - An **outcome** event is namespaced by pledge id (`d = oc-pledge-outcome:<pledge_id>`). The Nostr `(pubkey, kind, d-tag)` tuple means a replacement with the same publisher npub overwrites the prior outcome — useful for deterministic-outcome corrections (e.g., a verifier republishing with a more recent chain hash). For non-deterministic outcomes (`counterparty_signs`), each authorized resolver may publish independently; relays index by pubkey, so two parties' contradictory outcomes are both observable.
 - An **abandonment** event has the same shape (`d = oc-pledge-abandonment:<pledge_id>`). A swearer can publish at most one abandonment per pledge; later abandonments from the same publisher overwrite earlier ones at the relay layer.
 
