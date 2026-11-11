@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ### Changed
 
+- **§6 canonical bytes** (2026-11-11): says the canonical JSON bytes, with their final LF, serialize an envelope and never feed an id. `pledge_id`, `outcome_id` and `abandonment_id` are `H` of a canonical message with no trailing LF, and a canonical JSON string without the LF is the same canonicalization. Non-normative; no id, signature or vector changes.
 - **Reference relays** (`NIP_ORANGECHECK_PLEDGE.md`, `RUNBOOK.md`): name `nostr.mom` in place of `relay.damus.io`, as `@orangecheck/nostr-core` 0.8.2's default set does and the composer now publishes to. Non-normative.
 - **Status: Draft.** The spec is marked Draft while the dispute rules below
   change, and returns to Stable once implementations conform to them.

@@ -499,6 +499,8 @@ Canonical form (all three envelope kinds):
 - Strings serialized with `\uXXXX` escapes only for control characters and `"` / `\`; all other codepoints literal.
 - Final byte is LF (`0x0a`).
 
+These bytes serialize an envelope; they never feed an id. `pledge_id`, `outcome_id` and `abandonment_id` are each `H` of a canonical message (§3.1, §4.1, §5.1), which has no trailing LF. An implementation that returns the canonical JSON as a string without the final LF has the same canonicalization; the LF belongs to the byte form.
+
 Reference: [RFC 8785 JSON Canonicalization Scheme](https://www.rfc-editor.org/rfc/rfc8785).
 
 The pledge envelope contains no array field that requires stable per-element sorting. RFC 8785 alone is sufficient. The same applies to outcome and abandonment envelopes.
