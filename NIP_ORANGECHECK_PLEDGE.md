@@ -56,7 +56,7 @@ NIP-01 relays index single-letter tags only, and some (strfry among them) close 
     ["oc-swearer",   "<swearer_btc_address>"],
     ["oc-proto",     "oc-pledge/v1"]
   ],
-  "content":    "<canonical JSON of the pledge envelope>",
+  "content":    "<the pledge envelope as JSON; SHOULD be its canonical JSON>",
   "pubkey":     "<ephemeral or service Nostr pubkey>",
   "created_at": <unix_seconds>,
   "sig":        "<NIP-01 Schnorr signature>"
@@ -76,7 +76,7 @@ NIP-01 relays index single-letter tags only, and some (strfry among them) close 
     ["oc-pledge-id", "<pledge_id>"],
     ["oc-proto",     "oc-pledge/v1"]
   ],
-  "content":    "<canonical JSON of the outcome envelope>",
+  "content":    "<the outcome envelope as JSON; SHOULD be its canonical JSON>",
   "pubkey":     "<ephemeral or resolver Nostr pubkey>",
   "created_at": <unix_seconds>,
   "sig":        "<NIP-01 Schnorr signature>"
@@ -96,7 +96,7 @@ NIP-01 relays index single-letter tags only, and some (strfry among them) close 
     ["oc-pledge-id", "<pledge_id>"],
     ["oc-proto",     "oc-pledge/v1"]
   ],
-  "content":    "<canonical JSON of the abandonment envelope>",
+  "content":    "<the abandonment envelope as JSON; SHOULD be its canonical JSON>",
   "pubkey":     "<ephemeral or service Nostr pubkey>",
   "created_at": <unix_seconds>,
   "sig":        "<NIP-01 Schnorr signature>"
@@ -119,7 +119,7 @@ Mechanism, deadline, bond and outcome class are not tags: read them from the ver
 
 ### Required invariants
 
-1. The event `content` MUST be the byte-canonical JSON of the corresponding envelope (SPEC §6, RFC 8785).
+1. The event `content` is the corresponding envelope as JSON, and a publisher SHOULD write its byte-canonical JSON (SPEC §6, RFC 8785). A reader MUST parse the content and recompute the id from the envelope's fields (invariant 2), and MUST NOT hash the bytes of `content`: content that differs from the canonical JSON in key order, whitespace or the final LF is still the same envelope.
 2. `sha256(canonical_message)` MUST equal the id within the envelope AND the suffix of the `d` tag (for pledge events; for outcome and abandonment events, the d-tag suffix is the **pledge** id, not the outcome / abandonment id).
 3. The envelope's BIP-322 signature MUST verify (per SPEC §3.5, §4.3, §5.3). The Nostr event's NIP-01 signature is independent of it: it is for relay admission, and for a verifier to drop junk before it merges relay answers (SPEC §11 item 14), and it grants nothing.
 4. Outcome and abandonment events MUST reference an existing pledge event's id via a `t` tag.
@@ -200,7 +200,7 @@ Verifiers MUST query at least two relays from the default set when resolving `no
 
 Kind 30078 is **addressable / parameter-replaceable**: relays replace prior events with the same `(pubkey, kind, d-tag)` tuple. For OC Pledge:
 
-- A **pledge** event is content-addressed (`d = oc-pledge:<id>` where id hashes the canonical message). A "replacement" with the same d-tag must carry the same envelope bytes, or fail BIP-322 verification.
+- A **pledge** event is content-addressed (`d = oc-pledge:<id>` where id hashes the canonical message). A "replacement" with the same d-tag must carry an envelope with the same id, hence the same signed fields, or fail BIP-322 verification.
 - An **outcome** event is namespaced by pledge id (`d = oc-pledge-outcome:<pledge_id>`). The Nostr `(pubkey, kind, d-tag)` tuple means a replacement with the same publisher npub overwrites the prior outcome — useful for deterministic-outcome corrections (e.g., a verifier republishing with a more recent chain hash). For non-deterministic outcomes (`counterparty_signs`), each authorized resolver may publish independently; relays index by pubkey, so two parties' contradictory outcomes are both observable.
 - An **abandonment** event has the same shape (`d = oc-pledge-abandonment:<pledge_id>`). A swearer can publish at most one abandonment per pledge; later abandonments from the same publisher overwrite earlier ones at the relay layer.
 

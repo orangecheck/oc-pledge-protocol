@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ### Changed
 
+- **NIP event content** (2026-11-11): an event's content is the envelope as JSON, and invariant 1's MUST on byte-canonical content is now a SHOULD for publishers. A reader parses the content and recomputes the id from the fields, and does not hash the bytes of the content, so content that differs from the canonical JSON in key order, whitespace or the final LF is still the same envelope. Replaceable behavior says a replacement pledge event carries the same id, not the same bytes. Nothing already published becomes non-conformant.
 - **§6 canonical bytes** (2026-11-11): says the canonical JSON bytes, with their final LF, serialize an envelope and never feed an id. `pledge_id`, `outcome_id` and `abandonment_id` are `H` of a canonical message with no trailing LF, and a canonical JSON string without the LF is the same canonicalization. Non-normative; no id, signature or vector changes.
 - **Reference relays** (`NIP_ORANGECHECK_PLEDGE.md`, `RUNBOOK.md`): name `nostr.mom` in place of `relay.damus.io`, as `@orangecheck/nostr-core` 0.8.2's default set does and the composer now publishes to. Non-normative.
 - **Status: Draft.** The spec is marked Draft while the dispute rules below
