@@ -17,10 +17,18 @@ Each `.json` file in this directory is an independent vector. Three vector shape
     "canonical_message": "<exact LF-terminated bytes as a JSON string>",
     "canonical_message_bytes_len": <integer>,
     "pledge_id" | "outcome_id" | "abandonment_id": "<64-hex SHA-256>",
-    "envelope": { ...full envelope JSON with sig.value as a placeholder... }
+    "envelope": { ...full envelope JSON; sig.value is a placeholder, except in v59–v63... }
+  },
+  "signature_check": {
+    "address_type": "p2pkh" | "p2sh_p2wpkh" | "p2wpkh" | "p2tr",
+    "format": "bip137" | "bip322-simple",
+    "signed_message": "<the hex pledge_id, the string the wallet signed>",
+    "expected": { "outcome": "ACCEPT" } | { "outcome": "REJECT", "error_code": "E_PLEDGE_BAD_SIG" }
   }
 }
 ```
+
+`signature_check` is present only in v59–v63.
 
 ### Shape B — verification or transition vectors
 
@@ -45,6 +53,8 @@ Given the `inputs` of an envelope vector, a compliant implementation MUST:
 2. Compute `id = sha256(canonical_message_bytes)` and match `expected.pledge_id` / `outcome_id` / `abandonment_id`.
 3. Serialize the envelope with RFC 8785 JSON canonicalization, matching `expected.envelope` when re-parsed.
 4. Return the id as lowercase hex.
+
+For an envelope vector with `signature_check`, a compliant implementation MUST also verify `expected.envelope` with SPEC §9.1 step 4 and a real BIP-322 verifier: `ACCEPT` means the signature verifies, `REJECT` means verification fails with `error_code`.
 
 For Shape B vectors, a compliant implementation MUST produce the `expected.state` (for state-transition vectors), the `expected.code` (for bond-verification vectors) or, for each of a scope-check vector's `inputs.cases`, the result at the same place in `expected.cases` (`ok` and the first `matched_scope`, or `E_DELEGATION_SCOPE_VIOLATED`), given the inputs and any relevant public-state fixtures. Bond vectors that carry `now` and `utxos` (the attested address's confirmed unspent outputs, `block_time` in Unix seconds) also give `expected.days_unspent`; an implementation that ages coins itself MUST derive it from them per SPEC §8.
 
@@ -77,9 +87,9 @@ If any of these diverge, the implementation is non-conformant. Typical bugs:
 
 ## A note on signatures
 
-BIP-322 signatures over ECDSA addresses (P2PKH, P2WPKH) are **non-deterministic** because ECDSA uses random `k`. Vectors cannot specify an exact `sig.value` and expect reproducibility across wallets. The `sig.value` field in the `expected.envelope` block is a placeholder (`"AAAA"` for pledge / outcome / abandonment envelopes). The implementation-side assertion is that the signature **verifies** under the named pubkey over the hex id, not that it equals a specific blob.
+In v01–v58, the `sig.value` field in the `expected.envelope` block is a placeholder (`"AAAA"` for pledge / outcome / abandonment envelopes), not a signature. Those vectors test the canonical message, the id and the envelope; a verifier that runs them needs its signature check stubbed.
 
-BIP-322 signatures over Schnorr addresses (P2TR, BIP-340) are deterministic when RFC 6979-style nonce derivation is used, but vendor wallets vary. Treat Schnorr `sig.value` fields as verify-only.
+v59–v63 carry real signatures from disclosed burn keys (see "Signature vectors" below). Two wallets signing the same id need not produce the same bytes: an ECDSA wallet may not use RFC 6979 nonces, and a BIP-340 (P2TR) signature takes fresh auxiliary randomness. The assertion is that a signature **verifies** under the named pubkey over the hex id, never that it equals a stored one.
 
 ## Test harness
 
@@ -91,6 +101,8 @@ The forthcoming `@orangecheck/pledge-core` suite in `oc-packages/pledge-core/` w
 4. State-transition fixtures produce the named `expected.state`.
 5. Bond-verification fixtures produce the named `expected.code` (or `OK`).
 6. Malformed-input fixtures raise the named `expected.error`.
+
+It also verifies each vector with `signature_check` through the real `@orangecheck/bip322` verifier, expects the verdict the vector names, and checks that the set covers all four address types plus a refused signature.
 
 New implementations should add a similar test.
 
@@ -148,6 +160,26 @@ New implementations should add a similar test.
 | `v56-pledge-agent-is-swearer-in-capitals-rejected.json` | C | v33 with `agent_address` the swearer's address in capitals: MUST be rejected with `E_PLEDGE_MALFORMED`, not read as a different address (SPEC §2, §7.3). |
 | `v57-pledge-counterparty-capitals-rejected.json` | C | The v03 pledge with `counterparty` in capitals, its id the hash of its own canonical message: MUST be rejected with `E_PLEDGE_MALFORMED` (SPEC §2). |
 | `v58-outcome-resolved-by-capitals-rejected.json` | C | The v13 outcome with `resolved_by` in capitals, its id the hash of its own canonical message: MUST be rejected with `E_OUTCOME_MALFORMED` (SPEC §2). |
+| `v59-sig-p2pkh.json` | A | v01's pledge sworn by a P2PKH address, legacy BIP-137 signature: MUST verify. |
+| `v60-sig-p2sh-p2wpkh.json` | A | The same, P2SH-P2WPKH, BIP-322 simple signature: MUST verify. |
+| `v61-sig-p2wpkh.json` | A | The same, P2WPKH, BIP-322 simple signature: MUST verify. |
+| `v62-sig-p2tr.json` | A | The same, P2TR key path, BIP-322 simple signature: MUST verify. |
+| `v63-sig-tampered.json` | A | v61 with one signature byte flipped: MUST NOT verify (`E_PLEDGE_BAD_SIG`). |
+
+### Signature vectors (v59–v63)
+
+These are v01's pledge with its swearer replaced, wherever v01 names it (the `swearer` line, the `chain_state` query, `swearer.address` and `sig.pubkey`), by an address of one of four **disclosed burn keys**. The private keys are published in `generate-signatures.mjs` and must never hold funds: anyone can spend what is sent to their addresses. They are the keys `oc-stamp-protocol`'s v10–v14 use; keys #1 and #2 are also `oc-attest-protocol`'s tv21 and tv22.
+
+| Key | Private key (hex) | Address type | Address | Vectors |
+|---|---|---|---|---|
+| #1 | `01` repeated 32 times | P2WPKH | `bc1q0xcqpzrky6eff2g52qdye53xkk9jxkvrh6yhyw` | v61, v63 |
+| #2 | `02` repeated 32 times | P2TR, key path (BIP-86) | `bc1p5e6v9v2j5wp3y6c79gaqdqltq7jdv45fswnnm7exmmp2020mqepsmcx06p` | v62 |
+| #3 | `03` repeated 32 times | P2PKH | `16yH2E12NYA5pg1d4BB7wtXXnBTZ8Lws7L` | v59 |
+| #4 | `04` repeated 32 times | P2SH-P2WPKH | `38Sqvnn4PbsHHfarwki7bm2vSeYvuZDgpz` | v60 |
+
+The wallet signs the 64-character lowercase hex pledge id (SPEC §3.5), so `signature_check.signed_message` equals `expected.pledge_id`. SPEC §2 lists P2WPKH, P2TR and P2PKH; §3.6 verifies `sig.value` under BIP-322 for whatever address `sig.pubkey` names, and v60 covers the nested SegWit form.
+
+`node test-vectors/generate-signatures.mjs` writes v59–v63 again from v01. It loads bip322-js 3, bitcoinjs-lib 6, ecpair 2 and @bitcoinerlab/secp256k1 from `oc-packages/wallet-adapter/node_modules` in a clone next to this repository, or from the directory in `OC_SIGNER_NODE_MODULES`. v59–v61 and v63 come out byte for byte the same; v62's P2TR signature differs on each run and still verifies.
 
 ## Round-trip verification
 
@@ -156,6 +188,8 @@ The vector generator at authoring time round-trips at least one pledge envelope 
 ## How these were generated
 
 A one-shot Node.js script under `/tmp` at authoring time computed every canonical message and SHA-256 id deterministically from the `inputs` block. The script verifies a self-test before writing files: it serializes vector `v01` canonically, hashes the bytes, and asserts the result equals the expected id. If you reimplement the canonical-message builder in a different language, you should be able to reproduce every id in this directory exactly.
+
+v59–v63 are the exception: `generate-signatures.mjs`, committed here, writes them (see "Signature vectors" above).
 
 ## License
 

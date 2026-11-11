@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) 
 
 ## [Unreleased]
 
+### Added
+
+- **Signature vectors** v59–v63: v01's pledge sworn by one disclosed burn key per address type (P2PKH in BIP-137 form; P2SH-P2WPKH, P2WPKH and P2TR in BIP-322 simple form), each MUST verify, plus v61 with one signature byte flipped, which MUST NOT (`E_PLEDGE_BAD_SIG`). Each carries a `signature_check` block; `test-vectors/generate-signatures.mjs` writes them. Non-normative; nothing a client MUST do changes.
+
 ### Changed
 
 - **Reference relays** (`NIP_ORANGECHECK_PLEDGE.md`, `RUNBOOK.md`): name `nostr.mom` in place of `relay.damus.io`, as `@orangecheck/nostr-core` 0.8.2's default set does and the composer now publishes to. Non-normative.
